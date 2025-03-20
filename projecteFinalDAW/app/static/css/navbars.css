@@ -1,0 +1,114 @@
+body {
+
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    margin-top: 3%;
+}
+
+.messages{
+
+    background-color: #37e7e7;
+    font-family: Arial, sans-serif;
+    margin-top: 3%;
+    padding: 1rem 1rem 1rem 1rem;
+    border: none;
+    border-radius: 10px;
+}
+
+.errors{
+
+    width: auto;
+    background-color: #ff0000;
+    font-family: Arial, sans-serif;
+    margin-top: 1rem;
+    padding: 1rem 1rem 1rem 1rem;
+    border: none;
+    border-radius: 10px;
+}
+
+.topbar{
+
+    left: -50px;
+    top: 0.1%;
+    display: flex;
+    
+    align-items: center;
+    background-color: aliceblue;
+    color: black;
+    padding: 1rem 5rem ;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logoweb{
+    width: 4%;
+    height: 5%;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Empuja los elementos hacia arriba y abajo */
+    align-items: center;
+    height: calc(100vh - 70px); /* Ajusta la altura para dejar espacio para la barra horizontal */
+    width: 10%;
+    position: fixed; /* Para que no se mueva al hacer scroll */
+    top: 50px; /* Baja la barra lateral para dejar espacio para la barra horizontal */
+    left: 0;
+    background-color: aliceblue;
+    color: black;
+    padding-top: 20px;
+}
+
+.divLogos {
+    width: 100%; /* Para que ocupe todo el ancho de la sidebar */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: auto; /* Empuja el contenido hacia abajo */
+    padding-bottom: 20px; /* Espaciado opcional */
+}
+
+.logos {
+    width: 50%;
+    height: auto;
+
+    margin-bottom: 10%;
+}
+
+.sidebar a {
+
+    display: block;
+    color: black;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+}
+.sidebar a:hover {
+    background-color: #575757;
+}
+.content {
+    margin-left: 10%;
+    padding: 5%;
+}
+
+.content{
+    background-color: #f0f0f0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scaleX(0px);
+    }
+    to {
+        opacity: 1;
+        transform: scaleY(100%);
+    }
+}
+
+
+.content {
+    animation: fadeIn 0.5s ease-in-out;
+}

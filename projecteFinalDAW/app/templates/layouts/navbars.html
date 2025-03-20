@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barra de Navegación</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/navbars.css' %}">
+    
+</head>
+<body>
+
+    <div class="topbar">
+        <img class="logoweb" src="{% static 'logo.png' %}" alt="Logo de la web" class="logo">
+        
+        {% if user.is_authenticated %}
+            <p>Benvingut {{user.username}}</p>
+            
+            <li>
+                <a href="{% url 'indexLogat' %}">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'logout' %}">Logout</a>
+            </li>
+        {% else %}
+            <li>
+                <a href="{% url 'index' %}">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'login' %}">Logar-se</a>
+            </li>
+            <li>
+                <a href="{% url 'register' %}">Registrar-se</a>
+            </li>
+        {% endif %}
+    </div>
+
+    <div class="sidebar">
+        <h2>Menú</h2>
+        <div>
+            <a href="{% url 'groups' %}"><img class="logos" src="{% static 'historial.png' %}" alt="historial de compra">Historial</a>
+        </div>
+        <div>
+            <a href="{% url 'groups' %}"><img class="logos" src="{% static 'grupo.png' %}" alt="Grups">Grups</a>
+        </div>
+        <div>
+            <a href="{% url 'groups' %}"><img class="logos" src="{% static 'corazon.png' %}" alt="Productes Favorits">Favorits</a>
+        </div>
+        <div class="divLogos">
+            <img class="logos" src="{% static 'lidl.png' %}" alt="Logo de lidl">
+            <img class="logos" src="{% static 'mercadona.png' %}" alt="Logo de mercadona">
+        </div>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+    
+</body>
+</html></div>

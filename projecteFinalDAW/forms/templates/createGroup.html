@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear un grup</title>
+    
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+
+    <div class="content">
+
+        {% if group %}
+
+            <h2>Ja formes part del grup {{ group.name }}</h2>
+            
+        {% else %}
+
+            <h1>Crear un grup</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">Crear</button>
+
+            </form>
+
+        {% endif %}
+
+        {% if error %}
+            <div class="errors">
+                {{error}}
+            </div>
+        {% endif %} 
+    </div>
+    {% endblock  %}
+</body>
+</html>

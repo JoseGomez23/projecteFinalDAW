@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registre</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+    <div class="divLogo">
+
+        {% if user.is_authenticated %}
+            <a class="" href="{% url 'indexLogat' %}">
+                <img src="{% static 'logo.png' %}" alt="Logo de la web" class="logo">
+            </a>
+        {% else %}
+            <a class="" href="{% url 'index' %}">
+                <img src="{% static 'logo.png' %}" alt="Logo de la web" class="logo">
+            </a>
+        {% endif %}
+    </div>
+    
+    <div class="divSupers">
+
+        <p>Trobaràs productes dels següents supermercats.</p>
+
+        <div class="divLogos">
+
+            <img src="{% static 'lidl.png' %}" alt="Logo de lidl">
+            <img src="{% static 'mercadona.png' %}" alt="Logo de mercadona">
+        </div>  
+        
+    </div>
+   
+
+    <div class="divContent">
+        <h1>Registre</h1>
+
+        {{error}}
+
+        <form method="post">
+
+            {% csrf_token %}
+            {{form.as_p}}
+            <p>Si ja tens un compte <a href="{% url 'login' %}">Inicia sessió</a></p>
+            <button type="submit">Registrar-se</button>
+        </form>
+    </div>
+
+</body>
+</html>
