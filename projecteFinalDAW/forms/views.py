@@ -103,15 +103,12 @@ def groups(request):
             
             userGroup = UsuarioGrupo.objects.filter(user=request.user).first()
 
-            group = userGroup.group  # Grupo del usuario que invita
-
-            # 🔹 Generar un token único basado en UUID
+            group = userGroup.group  
+            
             invite_token = str(uuid.uuid4())
 
-            # 🔹 Crear la URL de invitación
             invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
 
-            # 🔹 Enviar el correo al usuario invitado con el enlace
             send_mail(
                 'Benvingut al grup!',
                 f'Has estat convidat a unir-te al grup {group.name}. '

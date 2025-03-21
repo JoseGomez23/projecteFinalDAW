@@ -17,8 +17,8 @@ def indexLogat(request):
     title = "Categories"
 
     if response.status_code == 200:
-        data = response.json()  # Convertir la respuesta en JSON
-        categorias = data.get("results", [])  # Extraer solo la lista de categorías
+        data = response.json() 
+        categorias = data.get("results", [])  
     else:
         categorias = []
 
@@ -32,13 +32,12 @@ def subcategories(request, categoria_id):
     title = "Subcategories"
 
     if response.status_code == 200:
-        data = response.json().get("results", [])  # Extraer las categorías principales
+        data = response.json().get("results", [])  
         subcategorias = []
 
-        # Buscar la categoría específica por su ID
         for categoria in data:
             if categoria["id"] == categoria_id:
-                subcategorias = categoria.get("categories", [])  # Obtener sus subcategorías
+                subcategorias = categoria.get("categories", [])  
                 break
     else:
         subcategorias = []
@@ -50,14 +49,13 @@ def products(request, categoria_id):
     response = requests.get(url)
 
     if response.status_code == 200:
-        data = response.json()  # Obtenemos el JSON de la categoría específica
+        data = response.json()  
         productos = []
-
-        # Verificar si hay subcategorías
+       
         for subcategoria in data.get("categories", []):
-            for producto in subcategoria.get("products", []):  # Extraer productos de cada subcategoría
-                if producto.get("published", False):  # Filtrar solo productos publicados
-                    productos.append(producto)  # Pasamos el objeto completo sin modificar
+            for producto in subcategoria.get("products", []): 
+                if producto.get("published", False): 
+                    productos.append(producto)  
     else:
         productos = []
 
