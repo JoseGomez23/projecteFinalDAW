@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productes</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    <div class="content">
+        <h1>Productes</h1>
+        <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+        <div class="divProducts-container">
+            {% for product in products %}
+                <div class="divProducts">
+                    <img src="{{ product.thumbnail }}" alt="{{ product.display_name }}">
+                    <strong>{{ product.display_name }}</strong>
+                    <span>{{ product.price_instructions.unit_price }}€</span>
+                    <a href="{{ product.share_url }}" target="_blank">Veure Producte</a>
+                </div>
+            {% empty %}
+                <p>No hay productos disponibles.</p>
+            {% endfor %}
+        </div>
+    </div>  
+    {% endblock %}
+</body>
+</html>

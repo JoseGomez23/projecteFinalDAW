@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import UsuarioGrupo, GrupFamiliar
 from django.shortcuts import get_object_or_404
-
+import requests
 # Create your views here.
 
 def index(request):
@@ -10,7 +10,60 @@ def index(request):
 
 @login_required
 def indexLogat(request):
-    return render(request, 'indexLogat.html')
+    
+    url = "https://tienda.mercadona.es/api/categories/"
+    response = requests.get(url)
+    
+    title = "Categories"
+
+    if response.status_code == 200:
+        data = response.json()  # Convertir la respuesta en JSON
+        categorias = data.get("results", [])  # Extraer solo la lista de categorías
+    else:
+        categorias = []
+
+    print(data)
+    return render(request, "indexLogat.html", {"categories": categorias, "title": title})
+
+def subcategories(request, categoria_id):
+    url = "https://tienda.mercadona.es/api/categories/"
+    response = requests.get(url)
+    
+    title = "Subcategories"
+
+    if response.status_code == 200:
+        data = response.json().get("results", [])  # Extraer las categorías principales
+        subcategorias = []
+
+        # Buscar la categoría específica por su ID
+        for categoria in data:
+            if categoria["id"] == categoria_id:
+                subcategorias = categoria.get("categories", [])  # Obtener sus subcategorías
+                break
+    else:
+        subcategorias = []
+
+    return render(request, "categories.html", {"categories": subcategorias, "title": title})
+
+def products(request, categoria_id):
+    url = f"https://tienda.mercadona.es/api/categories/{categoria_id}"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()  # Obtenemos el JSON de la categoría específica
+        productos = []
+
+        # Verificar si hay subcategorías
+        for subcategoria in data.get("categories", []):
+            for producto in subcategoria.get("products", []):  # Extraer productos de cada subcategoría
+                if producto.get("published", False):  # Filtrar solo productos publicados
+                    productos.append(producto)  # Pasamos el objeto completo sin modificar
+    else:
+        productos = []
+
+    return render(request, "products.html", {"products": productos})
+    
+    
 
 @login_required
 def groups(request):
