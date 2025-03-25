@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import UsuarioGrupo, GrupFamiliar
+from .models import UsuarioGrupo, GrupFamiliar, FavoriteProducts
 from django.shortcuts import get_object_or_404
 import requests
+from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
@@ -22,7 +23,6 @@ def indexLogat(request):
     else:
         categorias = []
 
-    print(data)
     return render(request, "indexLogat.html", {"categories": categorias, "title": title})
 
 def subcategories(request, categoria_id):
@@ -50,16 +50,19 @@ def products(request, categoria_id):
 
     if response.status_code == 200:
         data = response.json()  
-        productos = []
+        products = []
        
         for subcategoria in data.get("categories", []):
             for producto in subcategoria.get("products", []): 
                 if producto.get("published", False): 
-                    productos.append(producto)  
+                    products.append(producto)  
     else:
-        productos = []
+        products = []
+        
+    favorites = FavoriteProducts.objects.filter(user=request.user).values_list("product_id", flat=True)
 
-    return render(request, "products.html", {"products": productos})
+
+    return render(request, "products.html", {"products": products, "favorites": favorites})
     
     
 
@@ -96,11 +99,45 @@ def acceptInvite(request, group_id, invite_token):
 
     group = get_object_or_404(GrupFamiliar, id=group_id)
 
-    # 🔹 Verificar si el usuario ya está en el grupo
+    
     if UsuarioGrupo.objects.filter(user=request.user, group=group).exists():
         return render(request, 'acceptInvite.html', {'error': 'Ja ets membre d\'aquest grup!'})
 
-    # 🔹 Agregar al usuario al grupo
     UsuarioGrupo.objects.create(user=request.user, group=group)
 
     return render(request, 'acceptInvite.html', {'message': 'Has estat afegit al grup correctament!'})
+
+@login_required
+def addFavorite(request, product_id):
+    
+    if request.method == "POST":
+        favorite, created = FavoriteProducts.objects.get_or_create(user=request.user, product_id=product_id)
+        return JsonResponse({"message": "Añadido a favoritos" if created else "Ya estaba en favoritos"})
+    return JsonResponse({"error": "Método no permitido"}, status=405)
+
+@login_required
+def showFavorites(request):
+    
+    favorites = FavoriteProducts.objects.filter(user=request.user)
+    products = []
+
+    for favorite in favorites:
+        url = f"https://tienda.mercadona.es/api/products/{favorite.product_id}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            products.append(data)
+
+    return render(request, "favorites.html", {"products": products})
+
+@login_required
+def removeFavorites(request, product_id):
+    if request.method == "POST":
+        try:
+            favorite = FavoriteProducts.objects.get(user=request.user, product_id=product_id)
+            favorite.delete()
+            return JsonResponse({"message": "Eliminado de favoritos"})
+        except FavoriteProducts.DoesNotExist:
+            return JsonResponse({"error": "El producto no estaba en favoritos"}, status=404)
+    return JsonResponse({"error": "Método no permitido"}, status=405)
+

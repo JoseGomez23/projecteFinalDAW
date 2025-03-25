@@ -187,6 +187,18 @@ body {
     color: black;
 }
 
+.price{
+
+    gap: 1rem;
+    align-items: center;
+    text-align: center;
+    
+}
+
+.oldPrice{
+    text-decoration: line-through;
+    color: red;
+}
 
 @keyframes fadeIn {
     from {

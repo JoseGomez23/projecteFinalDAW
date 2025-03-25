@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productes favorits</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+
+    <script src="{% static 'js/ajax.js' %}" defer></script>
+
+    <div class="content">
+        <h1>Productes favorits</h1>
+        <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+        <div class="divProducts-container">
+            {% for product in products %}
+                <div class="divProducts">
+                    <img src="{{ product.thumbnail }}" alt="{{ product.display_name }}">
+                    <strong>{{ product.display_name }}</strong>
+                    <span>{{ product.price_instructions.unit_price }}€</span>
+                    <a href="{{ product.share_url }}" target="_blank">Veure Producte</a>
+
+                    {% if product.id|stringformat:"s" in products %}
+                    <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false)">
+                        <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                    </button>
+                    {% else %}
+                        <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true)">
+                            <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                        </button>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No hi ha productes favorits.</p>
+            {% endfor %}
+        </div>
+    {% endblock %}
+</body>
+</html>

@@ -15,3 +15,16 @@ class UsuarioGrupo(models.Model):
 
     def __str__(self):
         return self.group.name + ' - ' + self.user.username
+    
+    
+class FavoriteProducts(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  
+    product_id = models.CharField(max_length=255) 
+
+    class Meta:
+        unique_together = ('user', 'product_id')  
+        
+    def __str__(self):
+        return f"{self.user.username} - {self.product_id}"
+    
+    

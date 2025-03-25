@@ -6,6 +6,7 @@
     <title>Barra de Navegación</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/navbars.css' %}">
+    <link rel="icon" href="{% static 'sup.ico' %}" type="image/x-icon">
     
 </head>
 <body>
@@ -44,7 +45,7 @@
             <a href="{% url 'groups' %}"><img class="logos" src="{% static 'grupo.png' %}" alt="Grups">Grups</a>
         </div>
         <div>
-            <a href="{% url 'groups' %}"><img class="logos" src="{% static 'corazon.png' %}" alt="Productes Favorits">Favorits</a>
+            <a href="{% url 'favorites' %}"><img class="logos" src="{% static 'corazon.png' %}" alt="Productes Favorits">Favorits</a>
         </div>
         <div class="divLogos">
             <img class="logos" src="{% static 'lidl.png' %}" alt="Logo de lidl">
