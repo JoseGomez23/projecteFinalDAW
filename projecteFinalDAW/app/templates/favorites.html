@@ -18,9 +18,16 @@
         <div class="divProducts-container">
             {% for product in products %}
                 <div class="divProducts">
-                    <img src="{{ product.thumbnail }}" alt="{{ product.display_name }}">
-                    <strong>{{ product.display_name }}</strong>
-                    <span>{{ product.price_instructions.unit_price }}€</span>
+                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                    <strong>{{ product.name }}</strong>
+
+                    <div class="price">
+                        {% if product.old_price %}
+                            <span class="oldPrice">{{ product.old_price }}€</span>
+                        {% endif %}
+                        <span>{{ product.price }}€</span>
+                    </div>
+
                     <a href="{{ product.share_url }}" target="_blank">Veure Producte</a>
 
                     {% if product.id|stringformat:"s" in products %}

@@ -15,14 +15,16 @@
         <img class="logoweb" src="{% static 'logo.png' %}" alt="Logo de la web" class="logo">
         
         {% if user.is_authenticated %}
-            <p>Benvingut {{user.username}}</p>
+            <h2>Benvingut {{user.username}}</h2>
             
             <li>
                 <a href="{% url 'indexLogat' %}">Home</a>
             </li>
+            <div>
             <li>
                 <a href="{% url 'logout' %}">Logout</a>
             </li>
+            </div>
         {% else %}
             <li>
                 <a href="{% url 'index' %}">Home</a>

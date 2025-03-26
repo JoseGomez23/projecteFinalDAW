@@ -28,16 +28,18 @@
                     <span>{{ product.price_instructions.unit_price }}€</span>
                     </div>
                     
-                    <a href="{{ product.share_url }}" target="_blank">Veure Producte</a>
-                    
-                    {% if product.id|stringformat:"s" in favorites %}
-                        <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true)">
-                            <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
-                        </button>
-                    {% else %}
-                        <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false)">
-                            <img src="{% static 'en.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
-                        </button>
+                    {% if user.is_authenticated %}
+                        <a href="{{ product.share_url }}" target="_blank">Veure Producte</a>
+                        
+                        {% if product.id|stringformat:"s" in favorites %}
+                            <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true)">
+                                <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                            </button>
+                        {% else %}
+                            <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false)">
+                                <img src="{% static 'en.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                            </button>
+                        {% endif %}
                     {% endif %}
                 </div>
             {% empty %}

@@ -6,11 +6,8 @@ import requests
 from django.http import JsonResponse
 # Create your views here.
 
-def index(request):
-    return render(request, 'index.html')
 
-@login_required
-def indexLogat(request):
+def index(request):
     
     url = "https://tienda.mercadona.es/api/categories/"
     response = requests.get(url)
@@ -59,7 +56,10 @@ def products(request, categoria_id):
     else:
         products = []
         
-    favorites = FavoriteProducts.objects.filter(user=request.user).values_list("product_id", flat=True)
+    favorites = []
+    
+    if request.user.is_authenticated:    
+        favorites = FavoriteProducts.objects.filter(user=request.user).values_list("product_id", flat=True)
 
 
     return render(request, "products.html", {"products": products, "favorites": favorites})
@@ -110,10 +110,32 @@ def acceptInvite(request, group_id, invite_token):
 @login_required
 def addFavorite(request, product_id):
     
+    url = f"https://tienda.mercadona.es/api/products/{product_id}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        
+    name = data.get("display_name", "")
+    price = data.get("unit_price", 0)
+    old_price = data.get("price_instructions.previous_unit_price", 0)
+    image = data.get("thumbnail", "")
+    
+    #print(name)
+    #print(image)
+    
+    price_info = data.get("price_instructions", {})
+    price = price_info.get("unit_price", 0)
+    old_price = price_info.get("previous_unit_price", 0)
+    
+    print(price)
+    #print(old_price)
+    
     if request.method == "POST":
-        favorite, created = FavoriteProducts.objects.get_or_create(user=request.user, product_id=product_id)
+        favorite, created = FavoriteProducts.objects.get_or_create(user=request.user, product_id=product_id, name=name, image=image, price=price, old_price=old_price)
         return JsonResponse({"message": "Añadido a favoritos" if created else "Ya estaba en favoritos"})
     return JsonResponse({"error": "Método no permitido"}, status=405)
+    
+    
 
 @login_required
 def showFavorites(request):
@@ -122,11 +144,13 @@ def showFavorites(request):
     products = []
 
     for favorite in favorites:
-        url = f"https://tienda.mercadona.es/api/products/{favorite.product_id}"
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            products.append(data)
+        products.append({
+            "id": favorite.product_id,
+            "name": favorite.name,
+            "price": favorite.price,
+            "old_price": favorite.old_price,
+            "image": favorite.image
+        })
 
     return render(request, "favorites.html", {"products": products})
 

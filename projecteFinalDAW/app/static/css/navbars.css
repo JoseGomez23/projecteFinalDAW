@@ -192,12 +192,25 @@ body {
     gap: 1rem;
     align-items: center;
     text-align: center;
-    
+
 }
 
 .oldPrice{
     text-decoration: line-through;
     color: red;
+}
+
+.profileUtils {
+
+    display: flex;
+    justify-content: flex-end; /* Alinea los elementos a la derecha */
+    align-items: center;
+    gap: 1rem;
+    margin-right: 1rem; /* Añade un margen opcional a la derecha */
+}
+
+.name{
+    text-align: left;
 }
 
 @keyframes fadeIn {

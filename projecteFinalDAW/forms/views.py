@@ -105,23 +105,29 @@ def groups(request):
 
             group = userGroup.group  
             
-            invite_token = str(uuid.uuid4())
+            if email:  
+                invite_token = str(uuid.uuid4())
 
-            invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
+                invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
 
-            send_mail(
-                'Benvingut al grup!',
-                f'Has estat convidat a unir-te al grup {group.name}. '
-                f'Fes clic al següent enllaç per acceptar la invitació: {invite_url}',
-                settings.DEFAULT_FROM_EMAIL,
-                [user.email],
-                fail_silently=False,
-            )
+                send_mail(
+                    'Benvingut al grup!',
+                    f'Has estat convidat a unir-te al grup {group.name}. '
+                    f'Fes clic al següent enllaç per acceptar la invitació: {invite_url}',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [user.email],
+                    fail_silently=False,
+                )
 
-            return render(request, 'addGroupMember.html', {
-                'form': AddUserToGroup(),
-                'message': 'Correu enviat correctament, avisa a l\'usuari de la teva invitació', 'group': group, 'members': members
-            })
+                return render(request, 'addGroupMember.html', {
+                    'form': AddUserToGroup(),
+                    'message': 'Correu enviat correctament, avisa a l\'usuari de la teva invitació', 'group': group, 'members': members
+                })
+            else:
+                return render(request, 'addGroupMember.html', {
+                    'form': AddUserToGroup(),
+                    'error': 'L\'usuari no té un correu electrònic vinculat', 'group': group, 'members': members
+                })
 
     
 @login_required
@@ -155,7 +161,7 @@ def createGroup(request):
             'form': CreateGroup(),
             'error': 'Ja existeix un grup amb aquest nom'
             })
-        
+    
 def logout(request):
     _logout(request)
     return redirect('groups')

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuració d'usuari</title>
+</head>
+<body>
+    
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+        <div class="content">   
+            <form>
+                {{form.as_p}}
+                <button type="submit">Guardar</button>
+            </form> 
+        </div>
+    {% load static %}
+    {% endblock %}
+
+</body>
+</html>
