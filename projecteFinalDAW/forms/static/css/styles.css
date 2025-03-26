@@ -110,6 +110,7 @@ button{
     cursor: pointer;
 }
 
+
 /* Animación de fade-in */
 @keyframes fadeIn {
     from {
