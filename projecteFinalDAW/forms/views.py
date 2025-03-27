@@ -155,7 +155,7 @@ def createGroup(request):
             group = GrupFamiliar.objects.create(name=request.POST['name'])
             userGroup = UsuarioGrupo.objects.create(user=request.user, group=group)
             userGroup.save()
-            return redirect('indexLogat')
+            return redirect('groups')
         except IntegrityError:
             return render(request, 'createGroup.html', {
             'form': CreateGroup(),

@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import Config
-from django.shortcuts import render
 from .forms import Config
+from app.models import FavoriteProducts, GrupFamiliar, UsuarioGrupo
 # Create your views here.
 
 @login_required
@@ -42,5 +42,34 @@ def configuration(request):
             form = Config(initial={"username": username, "email": email})
             return render(request, "userConfiguration.html", {"form": form, "error": "Has de canviar algun camp per poder actualitzar la configuració"})
     
+@login_required
+def deleteAccount(request):
+    if request.method == 'GET':
+        
+        usuario_grupo = UsuarioGrupo.objects.filter(user=request.user).first()
+        group_name = None
 
+        if usuario_grupo:
+            group = GrupFamiliar.objects.filter(id=usuario_grupo.group_id).first()
+            if group:
+                group_name = group.name
+
+        qtFavProducts = FavoriteProducts.objects.filter(user=request.user).count()
+        
+        return render(request, "deleteUser.html", {"group": group_name, "qtFavProducts": qtFavProducts})
+    elif request.method == 'POST':
+        
+        userGroup = UsuarioGrupo.objects.get(user=request.user)
+        group = userGroup.group
+        userGroup.delete()
+        
+        if not UsuarioGrupo.objects.filter(group=group).exists():
+            group.delete()
+        
+        user = request.user
+        user.delete()
+        
+        return redirect("index")
+    else:
+        return render(request, "userConfiguration.html", {"error": "S'ha produït un error a l'hora d'eliminar l'usuari"})
 

@@ -127,7 +127,7 @@ def addFavorite(request, product_id):
     price = price_info.get("unit_price", 0)
     old_price = price_info.get("previous_unit_price", 0)
     
-    print(price)
+    #print(price)
     #print(old_price)
     
     if request.method == "POST":
