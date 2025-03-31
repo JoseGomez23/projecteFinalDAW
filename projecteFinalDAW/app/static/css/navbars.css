@@ -273,6 +273,61 @@ hr {
     border-top: 5px solid #000; /* Aumenta el grosor */
     border-radius: 10px; /* Redondea las puntas */
 }
+
+.divTotal{
+    position: fixed;
+    top: 20%;
+    right: 5%;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 30px 30px 30px 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    max-width: 200px;
+}
+
+
+.divCartProducts {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    width: 70%;
+    padding: 1rem;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 1%;
+}
+
+.divCartProducts .productField {
+
+    flex: 1; 
+    white-space: normal; 
+    word-wrap: break-word; 
+}
+
+.listButtons{
+
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.buttonImg{
+    
+    width: 30px;
+    height: 30px;
+}
+
+.listButtons:hover{
+    background-color: lightgray;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -283,6 +338,7 @@ hr {
         transform: scaleY(100%);
     }
 }
+
 
 
 .content {

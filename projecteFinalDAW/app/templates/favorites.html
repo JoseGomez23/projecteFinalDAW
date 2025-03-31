@@ -27,9 +27,18 @@
                         {% endif %}
                         <span>{{ product.price }}€</span>
                     </div>
+                    <hr>
+                    {% if product.id|stringformat:"s" in shopingList %}
+                        {% for product_id, quantity in qnty %}
+                            {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
+                                <button id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}')">En el carret: {{ quantity }}</button>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
 
-                    <a href="{{ product.share_url }}" target="_blank">Veure Producte</a>
-
+                        <button id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}')">No esta al carret</button>
+                    {% endif %}
+                
                     {% if product.id|stringformat:"s" in products %}
                     <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false)">
                         <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
@@ -44,6 +53,7 @@
                 <p>No hi ha productes favorits.</p>
             {% endfor %}
         </div>
+    </div>
     {% endblock %}
 </body>
 </html>

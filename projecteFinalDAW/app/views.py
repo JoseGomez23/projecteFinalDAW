@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import UsuarioGrupo, GrupFamiliar, FavoriteProducts
+from .models import UsuarioGrupo, GrupFamiliar, FavoriteProducts, ShoppingCartList
 from django.shortcuts import get_object_or_404
 import requests
 from django.http import JsonResponse
+import json
 # Create your views here.
 
 
@@ -57,12 +58,15 @@ def products(request, categoria_id):
         products = []
         
     favorites = []
+    shopingList = []
     
     if request.user.is_authenticated:    
         favorites = FavoriteProducts.objects.filter(user=request.user).values_list("product_id", flat=True)
+        shopingList = ShoppingCartList.objects.filter(user=request.user).values_list("product_id", flat=True)
+        qnty = ShoppingCartList.objects.filter(user=request.user).values_list("product_id", "quantity")
+        
 
-
-    return render(request, "products.html", {"products": products, "favorites": favorites})
+    return render(request, "products.html", {"products": products, "favorites": favorites, "shopingList": shopingList, "qnty": qnty})
     
     
 
@@ -151,8 +155,11 @@ def showFavorites(request):
             "old_price": favorite.old_price,
             "image": favorite.image
         })
+        
+    shopingList = ShoppingCartList.objects.filter(user=request.user).values_list("product_id", flat=True)
+    qnty = ShoppingCartList.objects.filter(user=request.user).values_list("product_id", "quantity")
 
-    return render(request, "favorites.html", {"products": products})
+    return render(request, "favorites.html", {"products": products, "shopingList": shopingList, "qnty": qnty})
 
 @login_required
 def removeFavorites(request, product_id):
@@ -164,4 +171,112 @@ def removeFavorites(request, product_id):
         except FavoriteProducts.DoesNotExist:
             return JsonResponse({"error": "El producto no estaba en favoritos"}, status=404)
     return JsonResponse({"error": "Método no permitido"}, status=405)
+
+
+@login_required
+def addProductToList(request, product_id):
+    if request.method == "POST":
+    
+        url = f"https://tienda.mercadona.es/api/products/{product_id}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            
+        name = data.get("display_name", "")
+        price = data.get("unit_price", 0)
+        old_price = data.get("price_instructions.previous_unit_price", 0)
+        image = data.get("thumbnail", "")
+        
+        #print(name)
+        #print(image)
+        
+        price_info = data.get("price_instructions", {})
+        price = price_info.get("unit_price", 0)
+        old_price = price_info.get("previous_unit_price", 0)
+        
+        if request.method == "POST":
+            list, created = ShoppingCartList.objects.get_or_create(
+                user=request.user, 
+                product_id=product_id, 
+                defaults={"name": name, "image": image, "price": price, "old_price": old_price, "quantity": 1}
+            )
+            if not created:
+                if list.quantity < 99:
+                    list.quantity += 1
+                    list.save()
+                else:
+                    return JsonResponse({"message": "Maximum quantity reached"})
+            
+            return JsonResponse({"message": "Añadido al carrito" if created else "Cantidad incrementada en el carrito", "quantity": list.quantity})
+    else:
+        
+        return JsonResponse({"error": "Método no permitido"}, status=405) 
+    
+@login_required
+def addOneProduct(request, product_id):
+    try:
+        if request.method == "POST":
+            shoppingCartItem = ShoppingCartList.objects.get(user=request.user, product_id=product_id)
+            if shoppingCartItem.quantity < 99:
+                shoppingCartItem.quantity
+                shoppingCartItem.quantity += 1
+                shoppingCartItem.save()
+                return JsonResponse({"quantity": shoppingCartItem.quantity})
+            else:
+                return JsonResponse({"message": "Maximum quantity reached"})
+        else:
+            return JsonResponse({"error": "Invalid request method"}, status=400)
+    except ShoppingCartList.DoesNotExist:
+        return JsonResponse({"error": "Product not found in shopping cart"}, status=404)
+    
+@login_required
+def removeOneProduct(request, product_id):
+    try:
+        if request.method == "POST":
+            shopping_cart_item = ShoppingCartList.objects.get(user=request.user, product_id=product_id)
+            if shopping_cart_item.quantity > 1: 
+                shopping_cart_item.quantity -= 1
+                shopping_cart_item.save()
+                return JsonResponse({"quantity": shopping_cart_item.quantity})
+            else:
+                return JsonResponse({"message": "Product removed from cart"})
+        else:
+            return JsonResponse({"error": "Invalid request method"}, status=400)
+    except ShoppingCartList.DoesNotExist:
+        return JsonResponse({"error": "Product not found in shopping cart"}, status=404)
+
+@login_required
+def removeProductFromList(request, product_id):
+    if request.method == "POST":
+        try:
+            shopping_cart_item = ShoppingCartList.objects.get(user=request.user, product_id=product_id)
+            shopping_cart_item.delete()
+            return JsonResponse({"message": "Product removed from cart"})
+        except ShoppingCartList.DoesNotExist:
+            return JsonResponse({"error": "Product not found in shopping cart"}, status=404)
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=400)
+    
+@login_required
+def removeChecked(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist("checkbox")  
+        if selected_ids:
+            print(selected_ids)
+            ShoppingCartList.objects.filter(product_id__in=selected_ids).delete() 
+            return redirect("shoppingCartList")
+        else:
+            return redirect("shoppingCartList")
+    return redirect("shoppingCartList")
+@login_required
+def shoppingCartList(request):
+    
+    if request.method == "GET":
+        
+        shoppingCart = ShoppingCartList.objects.filter(user=request.user)
+        
+        totalPrice = sum(item.price * item.quantity for item in shoppingCart)
+        
+        return render(request, "shoppingCart.html", {"shoppingCart": shoppingCart, "totalPrice": totalPrice})
+    
 

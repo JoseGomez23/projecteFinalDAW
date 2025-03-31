@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping cart</title>
+</head>
+<body>
+    
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+    
+    <div class="content">
+        {{ message }}
+        <form id="buyForm" method="post" action="{% url 'removeCheckedProducts' %}">
+            {% csrf_token %}
+            {% for product in shoppingCart %}
+                <div id="product{{product.product_id}}" class="divCartProducts">
+                    <input onclick="checkProduct('{{ product.product_id }}')" type="checkbox" id="checkbox{{ product.product_id }}" name="checkbox" value="{{ product.product_id }}">
+                    <h2 id="name{{ product.product_id}}" class="productField">{{ product.name }}</h2>
+                    <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image" style="height: 50px; width: 50px;">
+                    <p id="price{{product.product_id}}" class="productField">{{ product.price }}€</p>
+                    <button id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}')"> - </button>
+                    <p id="quantity{{ product.product_id }}">{{ product.quantity }}</p>
+                    <button id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}')"> + </button>
+                    
+                    <button class="listButtons" id="removeButton{{ product.product_id }}" type="button" onclick="removeProduct('{{ product.product_id }}')">
+                        <img class="buttonImg" src="{% static 'basura.png' %}" alt="Eliminar producte">
+                    </button>
+                </div>
+            {% endfor %}
+        
+            <div class="divTotal">
+                <p>Això nomes és un preu de referencia, pot variar de l’original i ser diferent dels supermercats de la teva zona. Es un preu aproximat.</p>
+                <p id="total">Total = {{ totalPrice }}€</p>
+                <button type="submit">Comprar</button>
+            </div>
+        </form>
+    </div>
+        <script defer src="{% static 'js/ajax.js' %}"></script> 
+    {% endblock %}
+</body>
+</html>

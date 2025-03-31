@@ -12,6 +12,12 @@ urlpatterns = [
     path("addFavorite/<int:product_id>/", views.addFavorite , name="addFavorite"),
     path("removeFavorite/<int:product_id>/", views.removeFavorites , name="removeFavorite"),
     path('favorites/', views.showFavorites, name="favorites"),
+    path('addProductToList/<int:product_id>/', views.addProductToList, name="addProductToList"),
+    path('shoppingCartList/', views.shoppingCartList, name="shoppingCartList"),
+    path('addOneProduct/<int:product_id>/' , views.addOneProduct, name="addOneProduct"),
+    path('removeOneProduct/<int:product_id>/' , views.removeOneProduct, name="removeOneProduct"),
+    path('removeProduct/<int:product_id>/' , views.removeProductFromList, name="removeProduct"),
+    path('removeChecked/', views.removeChecked, name="removeCheckedProducts"),
     path('groups/', views.groups, name="groups") 
 ]
 
