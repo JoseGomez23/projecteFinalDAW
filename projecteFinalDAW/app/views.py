@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import UsuarioGrupo, GrupFamiliar, FavoriteProducts, ShoppingCartList
+from .models import UsuarioGrupo, GrupFamiliar, FavoriteProducts, ShoppingCartList, history as History
 from django.shortcuts import get_object_or_404
 import requests
 from django.http import JsonResponse
+import uuid
 import json
+from datetime import datetime, timedelta
 # Create your views here.
 
 
@@ -60,32 +62,41 @@ def products(request, categoria_id):
     favorites = []
     shopingList = []
     
+    userGroups = UsuarioGrupo.objects.filter(user=request.user)
+    group = [userGroup.group for userGroup in userGroups]
+    
+    print(group)
+    
+    
     if request.user.is_authenticated:    
         favorites = FavoriteProducts.objects.filter(user=request.user).values_list("product_id", flat=True)
         shopingList = ShoppingCartList.objects.filter(user=request.user).values_list("product_id", flat=True)
         qnty = ShoppingCartList.objects.filter(user=request.user).values_list("product_id", "quantity")
         
 
-    return render(request, "products.html", {"products": products, "favorites": favorites, "shopingList": shopingList, "qnty": qnty})
+    return render(request, "products.html", {"products": products, "favorites": favorites, "shopingList": shopingList, "qnty": qnty, "groups": group})
     
     
 
 @login_required
 def groups(request):
-    try:
-        userGroup = UsuarioGrupo.objects.get(user=request.user)
-        group = userGroup.group
-        members = group.members.all()
-    except UsuarioGrupo.DoesNotExist:
-        group = None
-        members = None
-
-    return render(request, 'grups.html', {'group': group, 'members': members})
+    user_groups = UsuarioGrupo.objects.filter(user=request.user).select_related('group')
+    
+    groups_with_members = []
+    for user_group in user_groups:
+        group = user_group.group
+        members = UsuarioGrupo.objects.filter(group=group).select_related('user')
+        groups_with_members.append({
+            'group': group,
+            'members': [member.user for member in members]
+        })
+    
+    return render(request, 'grups.html', {'groups_with_members': groups_with_members})
 
 @login_required
-def leaveGroup(request):
+def leaveGroup(request, group_id):
     try:
-        userGroup = UsuarioGrupo.objects.get(user=request.user)
+        userGroup = UsuarioGrupo.objects.get(user=request.user, group_id=group_id)
         group = userGroup.group
         userGroup.delete()
         
@@ -257,17 +268,7 @@ def removeProductFromList(request, product_id):
     else:
         return JsonResponse({"error": "Invalid request method"}, status=400)
     
-@login_required
-def removeChecked(request):
-    if request.method == "POST":
-        selected_ids = request.POST.getlist("checkbox")  
-        if selected_ids:
-            print(selected_ids)
-            ShoppingCartList.objects.filter(product_id__in=selected_ids).delete() 
-            return redirect("shoppingCartList")
-        else:
-            return redirect("shoppingCartList")
-    return redirect("shoppingCartList")
+
 @login_required
 def shoppingCartList(request):
     
@@ -278,5 +279,96 @@ def shoppingCartList(request):
         totalPrice = sum(item.price * item.quantity for item in shoppingCart)
         
         return render(request, "shoppingCart.html", {"shoppingCart": shoppingCart, "totalPrice": totalPrice})
-    
 
+@login_required
+def history(request):
+    if request.method == "GET":
+        history_items = History.objects.filter(user=request.user)
+        cart_items = ShoppingCartList.objects.filter(user=request.user)
+
+        cart_item_ids = list(cart_items.values_list("product_id", flat=True))
+
+        return render(request, "history.html", {"history": history_items, "cartItems": cart_item_ids})
+
+@login_required
+def addFromHistory(request, product_id, ticket_id):
+    if request.method == "POST":
+        
+        historyTicket = History.objects.filter(user=request.user, ticket_id=ticket_id).first()
+        
+        historyTicketProducts = historyTicket.products if historyTicket else []
+        
+        
+        
+        separated_products = []
+        for product in historyTicketProducts:
+            separated_products.append(product.get("product_id"))
+            
+            
+            
+        print(separated_products)
+        print(product_id)
+        
+        product_id = str(product_id)
+        
+        separated_products_str = ", ".join(separated_products)
+        
+        if product_id in separated_products_str:
+            product_data = next((product for product in historyTicketProducts if product.get("product_id") == product_id), None)
+            if product_data:
+                ShoppingCartList.objects.get_or_create(
+                    user=request.user,
+                    product_id=product_id,
+                    defaults={
+                    "name": product_data.get("name", ""),
+                    "image": product_data.get("image", ""),
+                    "price": product_data.get("price", 0),
+                    "old_price": product_data.get("old_price", 0),
+                    "quantity": 1
+                    }
+                    )
+                
+                return JsonResponse({"message": "Product added to cart", "product": product_data})
+            else:
+                return JsonResponse({"error": "Product not found in history"}, status=404)
+        
+        else:
+            return JsonResponse({"error": "Product not found in history"}, status=404)
+            
+    return JsonResponse({"error": "Invalid request method"}, status=400)
+
+@login_required
+def removeChecked(request):
+    if request.method == "POST":
+        selected_ids = request.POST.getlist("checkbox")
+
+        if selected_ids:
+            selected_items = ShoppingCartList.objects.filter(product_id__in=selected_ids)
+
+            if selected_items.exists():
+                new_ticket_id = f"TICKET-{uuid.uuid4().hex[:8]}"  
+
+                products_list = [
+                    {
+                        "product_id": item.product_id,
+                        "name": item.name,
+                        "price": float(item.price),
+                        "old_price": float(item.old_price) if item.old_price else None,
+                        "image": item.image,
+                        "quantity": item.quantity
+                    }
+                    for item in selected_items
+                ]
+
+                History.objects.create(
+                    user=request.user,
+                    ticket_id=new_ticket_id,
+                    products=products_list
+                )
+
+                selected_items.delete()
+
+        return redirect("shoppingCartList")
+
+    return redirect("shoppingCartList")
+    

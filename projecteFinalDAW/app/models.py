@@ -10,8 +10,11 @@ class GrupFamiliar(models.Model):
         return self.name
 
 class UsuarioGrupo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  
     group = models.ForeignKey(GrupFamiliar, on_delete=models.CASCADE, related_name="members")  
+
+    class Meta:
+        unique_together = ('user', 'group')  
 
     def __str__(self):
         return self.group.name + ' - ' + self.user.username
@@ -49,13 +52,29 @@ class ShoppingCartList(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.name} - {self.quantity}"
     
+
 class history(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product_id = models.CharField(max_length=255)
-    name = models.CharField(max_length=255, null=False, blank=False)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    old_price = models.DecimalField(null=True, blank=True, max_digits=6, decimal_places=2)
-    image = models.URLField(null=True, blank=True)
-    quantity = models.IntegerField(default=1)
+    ticket_id = models.CharField(max_length=255)
+    products = models.JSONField(default=list) 
+    date = models.DateTimeField(auto_now_add=True)
+
+    def add_product(self, product):
+        """Agrega un producto al historial sin sobrescribir productos anteriores."""
+        if not self.products:
+            self.products = []
+        
+        
+        for p in self.products:
+            if p["product_id"] == product["product_id"]:
+                p["quantity"] += product["quantity"]
+                break
+        else:
+            self.products.append(product)
+
+        self.save()
+
+    def __str__(self):
+        return f"Historial de {self.user.username} - Ticket {self.ticket_id}"
     
     

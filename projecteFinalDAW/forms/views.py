@@ -72,62 +72,65 @@ def login(request):
                 return redirect(next_url)
             
 @login_required
-def groups(request):
+def groups(request, group_id):
+    user_groups = UsuarioGrupo.objects.filter(user=request.user)
+    groups = [user_group.group for user_group in user_groups]
     
-    try:
-        userGroup = UsuarioGrupo.objects.get(user=request.user)
-        group = userGroup.group
-        members = group.members.all()
-    except UsuarioGrupo.DoesNotExist:
-        group = None
-        members = None
     
-    if request.method == 'GET':
-        
-        return render(request, 'addGroupMember.html', {'form': AddUserToGroup() , 'group': group, 'members': members})
 
-    
+    if request.method == 'GET':
+        return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'groups': groups})
     else:
-        
         try:
             user = User.objects.get(username=request.POST['username'])
             email = user.email
         except User.DoesNotExist:
-            return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'error': 'L\'usuari no existeix', 'group': group, 'members': members})
-        
+            return render(request, 'addGroupMember.html', {
+                'form': AddUserToGroup(),
+                'error': 'L\'usuari no existeix',
+                'groups': groups
+            })
+
         try:
-            
-            UsuarioGrupo.objects.get(user=user)
-            return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'error': 'L\'usuari ja pertany a un grup', 'group': group, 'members': members})
-        except UsuarioGrupo.DoesNotExist:
-            
-            userGroup = UsuarioGrupo.objects.filter(user=request.user).first()
+            group = GrupFamiliar.objects.get(id=group_id)
+        except GrupFamiliar.DoesNotExist:
+            return render(request, 'addGroupMember.html', {
+                'form': AddUserToGroup(),
+                'error': 'El grup no existeix',
+                'groups': groups
+            })
 
-            group = userGroup.group  
-            
-            if email:  
-                invite_token = str(uuid.uuid4())
+        if UsuarioGrupo.objects.filter(user=user, group=group).exists():
+            return render(request, 'addGroupMember.html', {
+                'form': AddUserToGroup(),
+                'error': 'L\'usuari ja pertany a aquest grup',
+                'groups': groups
+            })
 
-                invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
+        if email:
+            invite_token = str(uuid.uuid4())
+            invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
 
-                send_mail(
-                    'Benvingut al grup!',
-                    f'Has estat convidat a unir-te al grup {group.name}. '
-                    f'Fes clic al següent enllaç per acceptar la invitació: {invite_url}',
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user.email],
-                    fail_silently=False,
-                )
+            send_mail(
+                'Benvingut al grup!',
+                f'Has estat convidat a unir-te al grup {group.name} (ID: {group.id}). '
+                f'Fes clic al següent enllaç per acceptar la invitació: {invite_url}',
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                fail_silently=False,
+            )
 
-                return render(request, 'addGroupMember.html', {
-                    'form': AddUserToGroup(),
-                    'message': 'Correu enviat correctament, avisa a l\'usuari de la teva invitació', 'group': group, 'members': members
-                })
-            else:
-                return render(request, 'addGroupMember.html', {
-                    'form': AddUserToGroup(),
-                    'error': 'L\'usuari no té un correu electrònic vinculat', 'group': group, 'members': members
-                })
+            return render(request, 'addGroupMember.html', {
+                'form': AddUserToGroup(),
+                'message': 'Correu enviat correctament, avisa a l\'usuari de la teva invitació',
+                'groups': groups
+            })
+        else:
+            return render(request, 'addGroupMember.html', {
+                'form': AddUserToGroup(),
+                'error': 'L\'usuari no té un correu electrònic vinculat',
+                'groups': groups
+            })
 
     
 @login_required

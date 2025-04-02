@@ -5,7 +5,7 @@ urlpatterns = [
 
     path('', views.index, name="index"),
     path('indexLogat/', views.index, name="indexLogat"),
-    path('leaveGroup/', views.leaveGroup, name="leaveGroup"),
+    path('leaveGroup/<int:group_id>/', views.leaveGroup, name="leaveGroup"),
     path('acceptInvite/<int:group_id>/<str:invite_token>/', views.acceptInvite, name="acceptInvite"),
     path('subcategories/<int:categoria_id>/', views.subcategories, name="subcategories"),
     path('products/<int:categoria_id>/', views.products, name="products"),
@@ -18,6 +18,8 @@ urlpatterns = [
     path('removeOneProduct/<int:product_id>/' , views.removeOneProduct, name="removeOneProduct"),
     path('removeProduct/<int:product_id>/' , views.removeProductFromList, name="removeProduct"),
     path('removeChecked/', views.removeChecked, name="removeCheckedProducts"),
-    path('groups/', views.groups, name="groups") 
+    path('history/', views.history, name="history"),
+    path('addFromHistory/<int:product_id>/<str:ticket_id>/', views.addFromHistory, name="addFromHistory"),
+    path('groups/', views.groups, name="groups")    
 ]
 

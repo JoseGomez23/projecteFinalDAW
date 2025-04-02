@@ -11,30 +11,26 @@
 
     <div class="content">
     
-        {% if group %}
-            <h1>Afegir Integrant al grup familiar</h1>
-            <form method="post">
+        
+        <h1>Afegir Integrant al grup familiar</h1>
+        <form method="post">
 
-                {% csrf_token %}
-                {{form.as_p}}
-                <button type="submit">Afegir</button>
-            </form>
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Afegir</button>
+        </form>
 
-            {% if message %}
-                <div class="messages">
-                    {{message}}
-                </div>
-            {% endif %} 
+        {% if message %}
+            <div class="messages">
+                {{message}}
+            </div>
+        {% endif %} 
 
-            {% if error %}
-                <div class="errors">
-                    {{error}}
-                </div>
-            {% endif %} 
-        {% else %}
-            <h2>No pots invitar a usuaris si no formes part d'un grup.</h2>
-            <p>Pots crear un grup i unir-te <a href="{% url 'createGroup' %}">Aqui</a></p>
-        {% endif %}
+        {% if error %}
+            <div class="errors">
+                {{error}}
+            </div>
+        {% endif %} 
     </div>
 
     {% endblock  %}

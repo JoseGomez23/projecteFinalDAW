@@ -12,21 +12,14 @@
 
     <div class="content">
 
-        {% if group %}
-
-            <h2>Ja formes part del grup {{ group.name }}</h2>
+        <h1>Crear un grup</h1>
+        <form method="post">
             
-        {% else %}
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Crear</button>
 
-            <h1>Crear un grup</h1>
-            <form method="post">
-                {% csrf_token %}
-                {{form.as_p}}
-                <button type="submit">Crear</button>
-
-            </form>
-
-        {% endif %}
+        </form>
 
         {% if error %}
             <div class="errors">

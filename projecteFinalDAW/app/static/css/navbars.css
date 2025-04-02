@@ -310,23 +310,30 @@ hr {
     word-wrap: break-word; 
 }
 
-.listButtons{
-
+.listButtons, .tickButton {
     border: none;
-    border-radius: 10px;
-    background-color: white;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 50%;
+    background-color: transparent; 
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 1s ease, background-color 0.3s ease;
+    
 }
 
-.buttonImg{
-    
+.buttonImg {
     width: 30px;
     height: 30px;
+    border-radius: 50%; 
+    
 }
 
-.listButtons:hover{
+.listButtons:hover {
+    transform: rotate(180deg);
     background-color: lightgray;
 }
+
 
 @keyframes fadeIn {
     from {

@@ -26,7 +26,7 @@
                     <button id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}')"> + </button>
                     
                     <button class="listButtons" id="removeButton{{ product.product_id }}" type="button" onclick="removeProduct('{{ product.product_id }}')">
-                        <img class="buttonImg" src="{% static 'basura.png' %}" alt="Eliminar producte">
+                        <img class="buttonImg" src="{% static 'x.webp' %}" alt="Eliminar producte">
                     </button>
                 </div>
             {% endfor %}

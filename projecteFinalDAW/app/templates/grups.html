@@ -6,30 +6,40 @@
     <title>Grup Familiar</title>
 </head>
 <body>
-
     {% extends 'layouts/navbars.html' %}
     {% block content %}
     <div class="content">
-
-        {% if group %}
-        
-            <h2>Nom del grup: {{ group.name }}</h2>
-            <h3>Membres del grup:</h3>
-            <ul>
-                {% for member in members %}
-                    <li>{{ member.user.username }}</li>
-                {% endfor %}
-            </ul>
-            <a href="{% url 'addGroupMember' %}">Afegir integrants</a>
-            <a href="{% url 'leaveGroup' %}">Sortir del grup</a>
+        {% if groups_with_members %}
+            <h2>Els teus grups:</h2>
+            {% for group_data in groups_with_members %}
+            
+                <div class="group-header">
+                    <h2>{{ group_data.group.name }}</h3>
+                </div>
+                <h4>Membres del grup:</h4>
+                <ul class="member-list">
+                    {% for user in group_data.members %}
+                    <li class="member-item">
+                        {{ user.username }}
+                        {% if user == request.user %}
+                            <span class="badge-you">(You)</span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="group-actions">
+                    <a href="{% url 'addGroupMember' group_data.group.id %}" class="btn-add">Afegir integrants</a>
+                    <a href="{% url 'leaveGroup' group_data.group.id %}" class="btn-leave">Sortir del grup</a>
+                </div>
+            <br>
+            {% endfor %}
         {% else %}
             <h2>No formes part de cap grup.</h2>
-            <p>Pots crear un grup i unir-te <a href="{% url 'createGroup' %}">Aqui</a></p>
         {% endif %}
+        <div class="create-group">
+            <p>Pots crear un nou grup <a href="{% url 'createGroup' %}" class="btn-create">Aquí</a></p>
+        </div>
     </div>
-
-    {% endblock  %}
-
-    
+    {% endblock %}
 </body>
 </html>

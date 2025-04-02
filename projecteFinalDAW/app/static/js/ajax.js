@@ -238,6 +238,30 @@ function buyProducts(){
     .catch(error => console.error("Error:", error));
 }
 
+function addProductHistory(productId, ticketId) {
+    let url = `/addFromHistory/${productId}/${ticketId}/`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),  
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        let buttons = document.querySelectorAll(`[id^="addButton${productId}"]`);
+        buttons.forEach(button => {
+            button.outerHTML = `<button class="tickButton" id="addedButton${productId}" type="button">
+                    <img class="buttonImg" src="/static/tick.png" alt="Producte ja a la llista">
+                    </button>`;
+        });
+    })
+    .catch(error => console.error("O aqui:", error));
+}
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
