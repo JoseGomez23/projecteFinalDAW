@@ -14,7 +14,7 @@
         <h1>Productes</h1>
         <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
         <select id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
-            <option value="user">Totes les categories</option>
+            <option value="user">El meu perfil</option>
             {% for group in groups %}
             <option value="{{ group.id }}">{{ group.name }}</option>
             {% endfor %}

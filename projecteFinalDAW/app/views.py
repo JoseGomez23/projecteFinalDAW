@@ -412,14 +412,25 @@ def shoppingCartList(request, group_id=""):
         return render(request, "shoppingCart.html", {"shoppingCart": shoppingCart, "totalPrice": totalPrice, "groups": group, "groupVar": groupVar, "group_id": group_id})
 
 @login_required
-def history(request):
+def history(request, group_id=None):
     if request.method == "GET":
-        history_items = History.objects.filter(user=request.user)
-        cart_items = ShoppingCartList.objects.filter(user=request.user)
+        if group_id and group_id != "user":
+            group = GrupFamiliar.objects.get(id=group_id)
+            history_items = History.objects.filter(user=request.user, group_id=group)
+        else:
+            history_items = History.objects.filter(user=request.user, group_id=None)
 
+        cart_items = ShoppingCartList.objects.filter(user=request.user, group_id=group_id if group_id != "user" else None)
         cart_item_ids = list(cart_items.values_list("product_id", flat=True))
 
-        return render(request, "history.html", {"history": history_items, "cartItems": cart_item_ids})
+        user_groups = UsuarioGrupo.objects.filter(user=request.user).select_related('group')
+        groups = [user_group.group for user_group in user_groups]
+
+        return render(request, "history.html", {
+            "history": history_items,
+            "cartItems": cart_item_ids,
+            "groups": groups
+        })
 
 @login_required
 def addFromHistory(request, product_id, ticket_id):
@@ -428,14 +439,10 @@ def addFromHistory(request, product_id, ticket_id):
         historyTicket = History.objects.filter(user=request.user, ticket_id=ticket_id).first()
         
         historyTicketProducts = historyTicket.products if historyTicket else []
-        
-        
-        
+         
         separated_products = []
         for product in historyTicketProducts:
             separated_products.append(product.get("product_id"))
-            
-            
             
         print(separated_products)
         print(product_id)

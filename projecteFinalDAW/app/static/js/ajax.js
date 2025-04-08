@@ -424,11 +424,11 @@ function refreshFavoriteGroups(group_id) {
     .then(html => {
         let parser = new DOMParser();
         let doc = parser.parseFromString(html, "text/html");
-        let productsElement = doc.querySelector(".divProducts-container"); // Selecciona el contenedor de productos
+        let productsElement = doc.querySelector(".divProducts-container"); 
         if (productsElement) {
             let productsContainer = document.querySelector(".divProducts-container");
             if (productsContainer) {
-                productsContainer.innerHTML = productsElement.innerHTML; // Actualiza el contenido del contenedor
+                productsContainer.innerHTML = productsElement.innerHTML;
             } else {
                 console.error("Error: No se encontró el contenedor de productos en el documento actual.");
             }
@@ -471,23 +471,58 @@ function refreshGroupsList(group_id) {
         let parser = new DOMParser();
         let doc = parser.parseFromString(html, "text/html");
 
-        // Extraer todos los productos de la nueva respuesta
         let newProducts = doc.querySelectorAll(".divCartProducts");
 
-        // Extraer el total actualizado
         let newTotal = doc.querySelector(".divTotal");
 
-        // Limpiar la lista de productos actual
         let cartContainer = document.querySelector(".content");
         cartContainer.querySelectorAll(".divCartProducts").forEach(el => el.remove());
 
-        // Agregar los productos actualizados
         newProducts.forEach(product => cartContainer.appendChild(product));
 
-        // Actualizar el total
         let currentTotal = cartContainer.querySelector(".divTotal");
         if (currentTotal && newTotal) {
             currentTotal.innerHTML = newTotal.innerHTML;
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function refreshGroupTickets(group_id) {
+    let url = "";
+
+    if (group_id != "user") {
+        url = `/history/${group_id}`;
+    } else {
+        url = `/history/`;
+    }
+
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Server response error");
+        }
+        return response.text();
+    })
+    .then(html => {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(html, "text/html");
+        let ticketsElement = doc.querySelector("#ticketsContainer"); // Selecciona el contenedor de tickets
+        if (ticketsElement) {
+            let ticketsContainer = document.getElementById("ticketsContainer");
+            if (ticketsContainer) {
+                ticketsContainer.innerHTML = ticketsElement.innerHTML; // Actualiza el contenido del contenedor
+            } else {
+                console.error("Error: No se encontró el contenedor de tickets en el documento actual.");
+            }
+        } else {
+            console.error("Error: Contenedor de tickets no encontrado en la respuesta.");
         }
     })
     .catch(error => console.error("Error:", error));

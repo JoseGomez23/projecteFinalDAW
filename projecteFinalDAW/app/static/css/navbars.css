@@ -334,6 +334,62 @@ hr {
     background-color: lightgray;
 }
 
+.div-groupButtons {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Espacio entre los botones */
+}
+
+.groupButtons{
+
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+.group-box {
+    position: relative;
+    padding: 1rem;
+    border-radius: 10px;
+    background: white;
+    z-index: 1;
+    overflow: hidden; /* importante para cortar el pseudo-elemento */
+  }
+  
+  .group-box::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 4px; /* grosor del borde */
+    border-radius: 10px;
+    background: linear-gradient(270deg, gray, white, gray, white);
+    background-size: 300% 300%;
+    animation: none;
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+    transition: background-position 0.5s ease, animation 0.5s ease;
+  }
+  
+  /* 🎯 Efecto al hacer hover */
+  .group-box:hover::before {
+    animation: moveGradient 3s linear infinite;
+  }
+  
+  /* 🔄 Animación del gradiente */
+  @keyframes moveGradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 0%;
+    }
+  }
 
 @keyframes fadeIn {
     from {

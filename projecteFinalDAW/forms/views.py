@@ -137,15 +137,9 @@ def groups(request, group_id):
 def createGroup(request):
     
     if request.method == 'GET':
-        try:
-            userGroup = UsuarioGrupo.objects.get(user=request.user)
-            group = userGroup.group
-            members = group.members.all()
-        except UsuarioGrupo.DoesNotExist:
-            group = None
-            members = None
+        
 
-        return render(request, 'createGroup.html', {'form': CreateGroup(), 'group': group, 'members': members})
+        return render(request, 'createGroup.html', {'form': CreateGroup()})
     else:
         
         if request.POST['name'] == '':

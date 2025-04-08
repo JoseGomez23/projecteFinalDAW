@@ -28,6 +28,7 @@ urlpatterns = [
     path('removeProduct/<int:product_id>/<int:group_id>/' , views.removeProductFromList, name="removeProductGroups"),
     path('removeChecked/<str:group_id>/', views.removeChecked, name="removeCheckedProducts"),
     path('history/', views.history, name="history"),
+    path('history/<int:group_id>/', views.history, name="historyGroups"),
     path('addFromHistory/<int:product_id>/<str:ticket_id>/', views.addFromHistory, name="addFromHistory"),
     path('groups/', views.groups, name="groups")    
 ]

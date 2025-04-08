@@ -28,10 +28,10 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    <div class="group-actions">
-                        <a href="{% url 'addGroupMember' group_data.group.id %}" class="btn-add">Afegir integrants</a>
-                        <a href="{% url 'leaveGroup' group_data.group.id %}" class="btn-leave">Sortir del grup</a>
-                        <a href="{% url 'shoppingCartList' group_data.group.id %}">Consultar carret</a>
+                    <div class="div-groupButtons">
+                        <a class="groupButtons" href="{% url 'addGroupMember' group_data.group.id %}" class="btn-add">Afegir integrants</a>
+                        <a class="groupButtons" href="{% url 'leaveGroup' group_data.group.id %}" class="btn-leave">Sortir del grup</a>
+                        <a class="groupButtons" href="{% url 'shoppingCartList' group_data.group.id %}">Consultar carret</a>
                     </div>
                 </div>
             <br>

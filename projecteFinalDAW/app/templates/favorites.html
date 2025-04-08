@@ -15,7 +15,7 @@
     <div class="content">
         <h1>Productes favorits</h1>
         <select id="groupsDropdown" onchange="refreshFavoriteGroups(this.value) ">
-            <option value="user">Totes les categories</option>
+            <option value="user">El meu perfil</option>
             {% for group in groups %}
             <option value="{{ group.id }}">{{ group.name }}</option>
             {% endfor %}
