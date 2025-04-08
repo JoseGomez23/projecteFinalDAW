@@ -64,8 +64,9 @@ def products(request, categoria_id, group_id=""):
         favorites = []
         shopingList = []
         
-        userGroups = UsuarioGrupo.objects.filter(user=request.user)
-        group = [userGroup.group for userGroup in userGroups]
+        if request.user.is_authenticated:
+            userGroups = UsuarioGrupo.objects.filter(user=request.user)
+            group = [userGroup.group for userGroup in userGroups]
         
         #print(group)
         
@@ -74,16 +75,21 @@ def products(request, categoria_id, group_id=""):
             favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             shopingList = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             qnty = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
-            
 
-        return render(request, "products.html", {
-            "products": products,
-            "favorites": favorites,
-            "shopingList": shopingList,
-            "qnty": qnty,
-            "groups": group,
-            "categoria_id": categoria_id
-        })
+            return render(request, "products.html", {
+                "products": products,
+                "favorites": favorites,
+                "shopingList": shopingList,
+                "qnty": qnty,
+                "groups": group,
+                "categoria_id": categoria_id
+            })
+        
+        else:
+            return render(request, "products.html", {
+                "products": products,
+                "categoria_id": categoria_id
+            })
     
     else:
         
