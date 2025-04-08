@@ -13,23 +13,26 @@
             <h2>Els teus grups:</h2>
             {% for group_data in groups_with_members %}
             
-                <div class="group-header">
-                    <h2>{{ group_data.group.name }}</h3>
-                </div>
-                <h4>Membres del grup:</h4>
-                <ul class="member-list">
-                    {% for user in group_data.members %}
-                    <li class="member-item">
-                        {{ user.username }}
-                        {% if user == request.user %}
-                            <span class="badge-you">(You)</span>
-                        {% endif %}
-                    </li>
-                    {% endfor %}
-                </ul>
-                <div class="group-actions">
-                    <a href="{% url 'addGroupMember' group_data.group.id %}" class="btn-add">Afegir integrants</a>
-                    <a href="{% url 'leaveGroup' group_data.group.id %}" class="btn-leave">Sortir del grup</a>
+                <div class="group-box">
+                    <div class="group-header">
+                        <h2>{{ group_data.group.name }}</h3>
+                    </div>
+                    <h4>Membres del grup:</h4>
+                    <ul class="member-list">
+                        {% for user in group_data.members %}
+                        <li class="member-item">
+                            {{ user.username }}
+                            {% if user == request.user %}
+                                <span class="badge-you">(You)</span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="group-actions">
+                        <a href="{% url 'addGroupMember' group_data.group.id %}" class="btn-add">Afegir integrants</a>
+                        <a href="{% url 'leaveGroup' group_data.group.id %}" class="btn-leave">Sortir del grup</a>
+                        <a href="{% url 'shoppingCartList' group_data.group.id %}">Consultar carret</a>
+                    </div>
                 </div>
             <br>
             {% endfor %}

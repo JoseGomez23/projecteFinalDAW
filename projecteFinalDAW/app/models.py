@@ -22,7 +22,8 @@ class UsuarioGrupo(models.Model):
     
 class FavoriteProducts(models.Model):
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(GrupFamiliar, on_delete=models.CASCADE, null=True, blank=True)
     product_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, null=False, blank=False)
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -30,7 +31,7 @@ class FavoriteProducts(models.Model):
     image = models.URLField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('user', 'product_id')  
+        unique_together = ('user', 'product_id', 'group_id')  
         
     def __str__(self):
         return f"{self.user.username} - {self.product_id}"
@@ -39,6 +40,7 @@ class FavoriteProducts(models.Model):
 class ShoppingCartList(models.Model):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(GrupFamiliar, on_delete=models.CASCADE, null=True, blank=True)
     product_id = models.CharField(max_length=255)
     name = models.CharField(max_length=255, null=False, blank=False)
     price = models.DecimalField(max_digits=6, decimal_places=2)
@@ -47,7 +49,7 @@ class ShoppingCartList(models.Model):
     quantity = models.IntegerField(default=1)
     
     class Meta:
-        unique_together = ('user', 'product_id')
+        unique_together = ('user', 'product_id', 'group_id')
         
     def __str__(self):
         return f"{self.user.username} - {self.name} - {self.quantity}"
@@ -55,12 +57,12 @@ class ShoppingCartList(models.Model):
 
 class history(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    group_id = models.ForeignKey(GrupFamiliar, on_delete=models.CASCADE, null=True, blank=True)
     ticket_id = models.CharField(max_length=255)
     products = models.JSONField(default=list) 
     date = models.DateTimeField(auto_now_add=True)
 
     def add_product(self, product):
-        """Agrega un producto al historial sin sobrescribir productos anteriores."""
         if not self.products:
             self.products = []
         

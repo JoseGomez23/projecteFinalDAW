@@ -1,8 +1,29 @@
-function toggleFavorite(productId, isFavorite) {
+function getSelectedGroupId() {
+
+    value = document.getElementById('groupsDropdown').value;
+    //alert(value);
+    return value;
+}
+
+function toggleFavorite(productId, isFavorite, group_id) {
     let button = document.getElementById(`favoriteButton${productId}`);
-    let url = isFavorite ? `/removeFavorite/${productId}/` : `/addFavorite/${productId}/`;
+    //alert(group_id);
+
+    if(group_id == undefined){
+        
+        group_id = "user";
+    }
+    //let url = "";
+
+    if(group_id != "user") {
+
+        url = isFavorite ? `/removeGroupFavorite/${productId}/${group_id}/` : `/addGroupFavorite/${productId}/${group_id}/`;
+    } else {
+
+        url = isFavorite ? `/removeFavorite/${productId}/` : `/addFavorite/${productId}/`;
+    }
     let newImageSrc = isFavorite ? "/static/en.png" : "/static/ea.png";
-    let newOnClick = `toggleFavorite('${productId}', ${!isFavorite})`;
+    let newOnClick = `toggleFavorite('${productId}', ${!isFavorite}, '${group_id}')`;
 
     fetch(url, {
         method: "POST",
@@ -25,8 +46,17 @@ function toggleFavorite(productId, isFavorite) {
 }
 
 
-function addProductToCart(productId) {
-    let url = `/addProductToList/${productId}/`;
+function addProductToCart(productId, group_id) {
+
+    if(group_id == undefined) {
+        group_id = "user";
+    }
+
+    if (group_id != "user") {
+        url = `/addProductToList/${productId}/${group_id}/`;
+    } else {
+        url = `/addProductToList/${productId}/`;
+    }
 
     fetch(url, {
         method: "POST",
@@ -39,15 +69,27 @@ function addProductToCart(productId) {
     .then(response => response.json())
     .then(data => {
         if (data.quantity !== undefined) {
-            let button = document.getElementById(`addToCartButton${productId}`);
+            let button = document.getElementById(`addToCartButton${productId}`, getSelectedGroupId());
             button.innerText = `En el carret: ${data.quantity}`;
         }
     })
     .catch(error => console.error("Error:", error));
 }
 
-function addOne(productId) {
-    let url = `/addOneProduct/${productId}/`;
+function addOne(productId, group_id) {
+
+    if(group_id == undefined || group_id == "") {
+        group_id = "user";
+    }
+
+
+    let url = "";
+
+    if (group_id != "user") {
+        url = `/addOneProduct/${productId}/${group_id}/`;
+    } else {
+        url = `/addOneProduct/${productId}/`;
+    }
 
     fetch(url, {
         method: "POST",
@@ -64,8 +106,17 @@ function addOne(productId) {
             p.innerText = `${data.quantity}`;
         }
 
+        let url2 = "";
 
-        return fetch(`/shoppingCartList/`, {
+        if (url == `/addOneProduct/${productId}/${group_id}/`){
+
+            url2 = `/shoppingCartList/${group_id}/`;
+        } else {
+
+            url2 = `/shoppingCartList/`;
+        }
+
+        return fetch(url2 , {
             method: "GET",
             headers: {
                 "X-CSRFToken": getCookie("csrftoken"),
@@ -88,8 +139,19 @@ function addOne(productId) {
     .catch(error => console.error("Error:", error));
 }
 
-function deleteOne(productId) {
-    let url = `/removeOneProduct/${productId}/`;
+function deleteOne(productId, group_id) {
+
+    if(group_id == undefined || group_id == "") {
+        group_id = "user";
+    }
+
+    let url = "";
+
+    if (group_id != "user") {
+        url = `/removeOneProduct/${productId}/${group_id}/`;
+    } else {
+        url = `/removeOneProduct/${productId}/`;
+    }
 
     fetch(url, {
         method: "POST",
@@ -108,7 +170,16 @@ function deleteOne(productId) {
             }
         }
 
-        return fetch(`/shoppingCartList/`, {
+        let url2 = "";
+        if (url == `/removeOneProduct/${productId}/${group_id}/`){
+
+            url2 = `/shoppingCartList/${group_id}/`;
+        } else{
+
+            url2 = `/shoppingCartList/`;
+        }  
+
+        return fetch(url2 , {
             method: "GET",
             headers: {
                 "X-CSRFToken": getCookie("csrftoken"),
@@ -131,8 +202,19 @@ function deleteOne(productId) {
     .catch(error => console.error("Error:", error));
 }
 
-function removeProduct(productId) {
-    let url = `/removeProduct/${productId}/`;
+function removeProduct(productId, group_id) {
+    
+    if(group_id == undefined || group_id == "") {
+        group_id = "user";
+    }
+
+    let url = "";
+    
+    if (group_id != "user") {
+        url = `/removeProduct/${productId}/${group_id}/`;
+    } else {
+        url = `/removeProduct/${productId}/`;
+    }
 
     fetch(url, {
         method: "POST",
@@ -154,7 +236,15 @@ function removeProduct(productId) {
         let product = document.getElementById(`product${productId}`);
         product.remove();
 
-        return fetch(`/shoppingCartList/`, {
+        let url2 = "";
+
+        if (url == `/removeProduct/${productId}/${group_id}/`){
+            url2 = `/shoppingCartList/${group_id}/`;
+        } else {
+            url2 = `/shoppingCartList/`;
+        }
+
+        return fetch(url2 , {
             method: "GET",
             headers: {
                 "X-CSRFToken": getCookie("csrftoken"),
@@ -261,6 +351,148 @@ function addProductHistory(productId, ticketId) {
     })
     .catch(error => console.error("O aqui:", error));
 }
+
+function getCategoryId() {
+    const pathParts = window.location.pathname.split('/');
+    return pathParts[2];
+}
+
+function refreshGroupProducts(group_id) {
+    let url = "";
+
+    category = getCategoryId();
+
+    if (group_id != "user") {
+        url = `/products/${category}/${group_id}`;
+    } else {
+        url = `/products/${category}/`;
+    }
+
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Server response error");
+        }
+        return response.text();
+    })
+    .then(html => {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(html, "text/html");
+        let productsElement = doc.querySelector("#productsContainer");
+        if (productsElement) {
+            let productsContainer = document.getElementById("productsContainer");
+            if (productsContainer) {
+                productsContainer.innerHTML = productsElement.innerHTML;
+            } else {
+                console.error("Error: No hi ha cap contenedor de productes en el document actual.");
+            }
+        } else {
+            console.error("Error: Contenidor no trobat");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function refreshFavoriteGroups(group_id) {
+    let url = "";
+
+    if (group_id != "user") {
+        url = `/favorites/${group_id}`;
+    } else {
+        url = `/favorites/`;
+    }
+
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Server response error");
+        }
+        return response.text();
+    })
+    .then(html => {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(html, "text/html");
+        let productsElement = doc.querySelector(".divProducts-container"); // Selecciona el contenedor de productos
+        if (productsElement) {
+            let productsContainer = document.querySelector(".divProducts-container");
+            if (productsContainer) {
+                productsContainer.innerHTML = productsElement.innerHTML; // Actualiza el contenido del contenedor
+            } else {
+                console.error("Error: No se encontró el contenedor de productos en el documento actual.");
+            }
+        } else {
+            console.error("Error: Contenedor de productos no encontrado en la respuesta.");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+
+function refreshGroupsList(group_id) {
+    if (!group_id) {
+        group_id = "user";
+    }
+
+    let url = "";
+
+    if (group_id != "user") {
+        url = `/shoppingCartList/${group_id}/`;
+    }
+    else {
+        url = `/shoppingCartList/`;
+    }
+
+    fetch(url, {
+        method: "GET",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Error en la respuesta del servidor");
+        }
+        return response.text();
+    })
+    .then(html => {
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(html, "text/html");
+
+        // Extraer todos los productos de la nueva respuesta
+        let newProducts = doc.querySelectorAll(".divCartProducts");
+
+        // Extraer el total actualizado
+        let newTotal = doc.querySelector(".divTotal");
+
+        // Limpiar la lista de productos actual
+        let cartContainer = document.querySelector(".content");
+        cartContainer.querySelectorAll(".divCartProducts").forEach(el => el.remove());
+
+        // Agregar los productos actualizados
+        newProducts.forEach(product => cartContainer.appendChild(product));
+
+        // Actualizar el total
+        let currentTotal = cartContainer.querySelector(".divTotal");
+        if (currentTotal && newTotal) {
+            currentTotal.innerHTML = newTotal.innerHTML;
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
 
 function getCookie(name) {
     let cookieValue = null;

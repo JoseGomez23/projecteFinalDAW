@@ -13,30 +13,39 @@
     
     <div class="content">
         {{ message }}
-        <form id="buyForm" method="post" action="{% url 'removeCheckedProducts' %}">
-            {% csrf_token %}
-            {% for product in shoppingCart %}
-                <div id="product{{product.product_id}}" class="divCartProducts">
-                    <input onclick="checkProduct('{{ product.product_id }}')" type="checkbox" id="checkbox{{ product.product_id }}" name="checkbox" value="{{ product.product_id }}">
-                    <h2 id="name{{ product.product_id}}" class="productField">{{ product.name }}</h2>
-                    <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image" style="height: 50px; width: 50px;">
-                    <p id="price{{product.product_id}}" class="productField">{{ product.price }}€</p>
-                    <button id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}')"> - </button>
-                    <p id="quantity{{ product.product_id }}">{{ product.quantity }}</p>
-                    <button id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}')"> + </button>
-                    
-                    <button class="listButtons" id="removeButton{{ product.product_id }}" type="button" onclick="removeProduct('{{ product.product_id }}')">
-                        <img class="buttonImg" src="{% static 'x.webp' %}" alt="Eliminar producte">
-                    </button>
+        {% if groupVar %}
+            <form id="buyForm" method="post" action="{% url 'removeCheckedProducts' groupVar %}">
+
+                <h1>Carret de la compra</h1>
+                {{ error}}
+                <hidden id="groupId" name="groupId" value="user"></hidden>
+
+                {% csrf_token %}
+                {% for product in shoppingCart %}
+                    <div id="product{{product.product_id}}" class="divCartProducts">
+                        <input onclick="checkProduct('{{ product.product_id }}')" type="checkbox" id="checkbox{{ product.product_id }}" name="checkbox" value="{{ product.product_id }}">
+                        <h2 id="name{{ product.product_id}}" class="productField">{{ product.name }}</h2>
+                        <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image" style="height: 50px; width: 50px;">
+                        <p id="price{{product.product_id}}" class="productField">{{ product.price }}€</p>
+                        <button id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}', '{{ group_id }}')"> - </button>
+                        <p id="quantity{{ product.product_id }}">{{ product.quantity }}</p>
+                        <button id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}', '{{ group_id }}')"> + </button>
+                        
+                        <button class="listButtons" id="removeButton{{ product.product_id }}" type="button" onclick="removeProduct('{{ product.product_id }}', '{{ group_id }}')">
+                            <img class="buttonImg" src="{% static 'x.webp' %}" alt="Eliminar producte">
+                        </button>
+                    </div>
+                {% endfor %}
+            
+                <div class="divTotal">
+                    <p>Això nomes és un preu de referencia, pot variar de l’original i ser diferent dels supermercats de la teva zona. Es un preu aproximat.</p>
+                    <p id="total">Total = {{ totalPrice }}€</p>
+                    <button type="submit">Comprar</button>
                 </div>
-            {% endfor %}
-        
-            <div class="divTotal">
-                <p>Això nomes és un preu de referencia, pot variar de l’original i ser diferent dels supermercats de la teva zona. Es un preu aproximat.</p>
-                <p id="total">Total = {{ totalPrice }}€</p>
-                <button type="submit">Comprar</button>
-            </div>
-        </form>
+            </form>
+        {% else %}
+            <h1>Aquest grup no existeix.</h1>
+        {% endif %}
     </div>
         <script defer src="{% static 'js/ajax.js' %}"></script> 
     {% endblock %}
