@@ -166,7 +166,10 @@ def acceptInvite(request, group_id, invite_token):
 
     group = get_object_or_404(GrupFamiliar, id=group_id)
 
-    
+    # Check if the invite token matches
+    if group.invite_token != invite_token:
+        return render(request, 'acceptInvite.html', {'error': 'El token d\'invitació no és vàlid!'})
+
     if UsuarioGrupo.objects.filter(user=request.user, group=group).exists():
         return render(request, 'acceptInvite.html', {'error': 'Ja ets membre d\'aquest grup!'})
 
@@ -474,6 +477,8 @@ def addFromHistory(request, product_id, ticket_id):
             return JsonResponse({"error": "Product not found in history"}, status=404)
             
     return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
 
 @login_required
 def removeChecked(request, group_id=""):

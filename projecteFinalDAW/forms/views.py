@@ -8,6 +8,9 @@ from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
+import base64
+from .utils import generate_qr_code
+
 
 from app.models import UsuarioGrupo, GrupFamiliar
 
@@ -79,7 +82,15 @@ def groups(request, group_id):
     
 
     if request.method == 'GET':
-        return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'groups': groups})
+        
+        group = GrupFamiliar.objects.get(id=group_id)
+        invite_token = group.invite_token
+        invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group_id, invite_token]))
+
+        buffer = generate_qr_code(invite_url)
+        qrCode = base64.b64encode(buffer.getvalue()).decode()
+        
+        return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'groups': groups, 'qrCode': qrCode})
     else:
         try:
             user = User.objects.get(username=request.POST['username'])
@@ -108,7 +119,7 @@ def groups(request, group_id):
             })
 
         if email:
-            invite_token = str(uuid.uuid4())
+            invite_token = GrupFamiliar.objects.get(id=group_id).invite_token
             invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
 
             send_mail(
@@ -137,7 +148,6 @@ def groups(request, group_id):
 def createGroup(request):
     
     if request.method == 'GET':
-        
 
         return render(request, 'createGroup.html', {'form': CreateGroup()})
     else:
@@ -149,7 +159,7 @@ def createGroup(request):
             })
         
         try:
-            group = GrupFamiliar.objects.create(name=request.POST['name'])
+            group = GrupFamiliar.objects.create(name=request.POST['name'], invite_token=str(uuid.uuid4()))
             userGroup = UsuarioGrupo.objects.create(user=request.user, group=group)
             userGroup.save()
             return redirect('groups')

@@ -31,7 +31,16 @@
                 {{error}}
             </div>
         {% endif %} 
+
+        {% if qrCode %}
+        <div>
+            <h2>O si tens un lector de QR's a mà</h2>
+            <img style="height: 400px; width: 400px;" src="data:image/png;base64,{{ qrCode }}" alt="QR Code">
+        </div>
+        {% endif %}
     </div>
+
+    
 
     {% endblock  %}
 </body>

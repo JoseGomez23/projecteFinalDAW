@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'forms',
     'app',
-    'user'
+    'qrcode',
+    'user',
+    
 ]
 
 MIDDLEWARE = [
