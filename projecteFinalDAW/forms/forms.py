@@ -15,3 +15,6 @@ class AddUserToGroup(forms.Form):
     
 class CreateGroup(forms.Form):
     name = forms.CharField(label="Nom del grup", max_length=100)
+
+class QrCode(forms.Form):
+    image = forms.ImageField(label="QR Code", required=True)

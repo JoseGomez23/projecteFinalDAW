@@ -1,18 +1,20 @@
 import uuid
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from projecteFinalDAW import settings
-from .forms import Login, Register, AddUserToGroup, CreateGroup
+from .forms import Login, Register, AddUserToGroup, CreateGroup, QrCode
 from django.contrib.auth import authenticate, login as _login, logout as _logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 import base64
+import aspose.barcode as barcode
 from .utils import generate_qr_code
-
-
 from app.models import UsuarioGrupo, GrupFamiliar
+import os
+from app.models import GrupFamiliar
+import re
 
 # Create your views here.
 def register(request):
@@ -142,8 +144,63 @@ def groups(request, group_id):
                 'error': 'L\'usuari no té un correu electrònic vinculat',
                 'groups': groups
             })
+         
+@login_required   
+def qrReader(request):
+    if request.method == 'POST' and request.FILES.get('image'):
+        qr_image = request.FILES['image']
+        
+        # Guardar la imagen temporalmente
+        with open('temp_qr_image.jpg', 'wb') as temp_file:
+            for chunk in qr_image.chunks():
+                temp_file.write(chunk)
+        
+        # Leer el código QR desde la imagen temporal
+        reader = barcode.barcoderecognition.BarCodeReader('temp_qr_image.jpg')
+        recognized_results = reader.read_bar_codes()
+        
+        # Eliminar la imagen temporal después de procesarla
+        os.remove('temp_qr_image.jpg')
+        
+        result = ""
+        # Mostrar resultados
+        # Remove unused variable
+        for result in recognized_results:
+            raw_text = result.code_text
+            
+            # Eliminar todo después de '/acceptInvite/9/'
+            if '/acceptInvite/' in raw_text:
+                raw_text = re.sub(r'(/acceptInvite/\d+/).*', r'\1', raw_text)
+
+            # Buscar el ID con regex
+            match = re.search(r'/acceptInvite/(\d+)', raw_text)
+            if match:
+                invite_token = GrupFamiliar.objects.get(id=match.group(1)).invite_token
+                
+                result = raw_text + invite_token
+            else:
+               
+                result = "No s'ha pogut extraure informació del QR."
+        
+        
+            print(raw_text)
+        
+            if result.startswith('http://127.0.0.1:8000/acceptInvite/'):
+                print("bomba")
+                return render(request, 'readQr.html', {'results': result, 'form': QrCode()})
+            else:
+                print("nobomba")
+                return render(request, 'readQr.html', {'error': 'Onde vas maquina con otro QR que no es de esta web', 'form': QrCode()})
+        
+        
+    else:
+
+        return render(request, 'readQr.html', {'form': QrCode()})
 
     
+    # If no conditions are met, return a default response
+    return render(request, 'readQr.html', {'error': 'No s\'ha pogut processar la sol·licitud.', 'form': QrCode()})
+
 @login_required
 def createGroup(request):
     
@@ -168,7 +225,8 @@ def createGroup(request):
             'form': CreateGroup(),
             'error': 'Ja existeix un grup amb aquest nom'
             })
-    
+            
+
 def logout(request):
     _logout(request)
     return redirect('groups')

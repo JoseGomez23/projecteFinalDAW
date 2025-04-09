@@ -41,7 +41,7 @@
         {% endif %}
         <div class="create-group">
             <p>Pots crear un nou grup <a href="{% url 'createGroup' %}" class="btn-create">Aquí</a></p>
-            <p>O pots escanejar un QR i unirte a un grup existent <a href="">Aqui</a></p>
+            <p>O pots escanejar un QR i unirte a un grup existent <a href="{% url 'qrCodeReader' %}">Aqui</a></p>
         </div>
     </div>
     {% endblock %}
