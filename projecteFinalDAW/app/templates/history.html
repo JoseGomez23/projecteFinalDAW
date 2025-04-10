@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Historial</title>
 </head>
 <body>
     {% extends 'layouts/navbars.html' %}
@@ -13,7 +13,7 @@
         <form method="post">
             {% if history %}
                 <h2>Historial de comandes</h2>
-                <select id="groupsDropdown" onchange="refreshGroupTickets(this.value)">
+                <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupTickets(this.value)">
                     <option value="user">El meu perfil</option>
                     {% for group in groups %}
                     <option value="{{ group.id }}">{{ group.name }}</option>

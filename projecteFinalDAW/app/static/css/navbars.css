@@ -30,32 +30,149 @@ body {
 
     left: -50px;
     top: 0.1%;
-    display: flex;
-    
-    align-items: center;
     background-color: aliceblue;
-    color: black;
     padding: 1rem 5rem ;
     position: fixed;
     top: 0;
     width: 100%;
+    height: 7%;
     z-index: 1000;
 }
 
-.logoweb{
-    width: 4%;
-    height: 5%;
+.topbarItems{
+    display: flex;
+    
+    align-items: center;
+    height: 100%;
 }
+
+.logoweb{
+    margin-left: 1%;
+    width: auto;
+    height: 100%;
+}
+
+.topbarUsername{
+    margin-left: 3.5%; 
+    font-size: 1.2rem;
+    color: black;
+    font-size: 2rem;
+}
+
+.userThings {
+    position: absolute;
+    right: 10rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem; 
+}
+
+.userThings a {
+    order: -1; 
+}
+
+.userDropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 150px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    padding: 10px 0;
+}
+
+.dropdown-menu a {
+    color: black;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    border: none;
+    border-radius: 5px;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f1f1f1;
+}
+
+/* MOSTRAR el menú cuando se hace hover en el contenedor */
+.userDropdown:hover .dropdown-menu {
+    display: block;
+    z-index: 1001;
+    transform: translateX(-5px);
+}
+
+/* Estilo opcional para la imagen del usuario */
+.userImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.shoppingCart{
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.3s ease; /* Añadido para la animación */
+}
+
+.shoppingCart:hover{
+    transform: rotate(-15deg);
+}
+
+.homeButton{
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    margin-left: 2rem;
+    transition: transform 0.3s ease; 
+    background-color: transparent;
+}
+
+.homeButton:hover{
+    transform: rotate(-10deg);
+}
+
+
+.groupsDropdown{
+    margin-top: 1rem;
+    border-radius: 10px;
+    background-color: white;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.groupsDropdown option{
+
+    text-decoration: none;
+    color: black;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    border-radius: 10px;
+    background-color: white;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+
+
 
 .sidebar {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Empuja los elementos hacia arriba y abajo */
+    justify-content: space-between; 
     align-items: center;
-    height: calc(100vh - 70px); /* Ajusta la altura para dejar espacio para la barra horizontal */
+    height: calc(100vh - 70px); 
     width: 10%;
-    position: fixed; /* Para que no se mueva al hacer scroll */
-    top: 50px; /* Baja la barra lateral para dejar espacio para la barra horizontal */
+    position: fixed; 
+    top: 50px;
     left: 0;
     background-color: aliceblue;
     color: black;
@@ -63,12 +180,31 @@ body {
 }
 
 .divLogos {
-    width: 100%; /* Para que ocupe todo el ancho de la sidebar */
+    width: 100%; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: auto; /* Empuja el contenido hacia abajo */
-    padding-bottom: 20px; /* Espaciado opcional */
+    margin-top: auto; 
+    padding-bottom: 20px; 
+}
+
+.divNav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    width: 100%;
+    margin-top: 10%;
+    text-align: center;
+}
+
+.sidebarUrls{
+    display: flex;
+    
+    align-items: center;
+    justify-content: center; 
+    width: auto;
+    text-align: center;
 }
 
 .logos {
@@ -84,9 +220,10 @@ body {
     color: black;
     padding: 1rem 1.5rem;
     text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 .sidebar a:hover {
-    background-color: #575757;
+    background-color: lightgray;
 }
 .content {
     margin-left: 10%;
@@ -115,10 +252,9 @@ body {
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     
-    /* Asegura que todo el contenido se organice en columna */
+    
     display: flex;
     flex-direction: column;
-     /* Para que todas las tarjetas tengan la misma altura */
 }
 
 .divProducts img {
@@ -136,7 +272,7 @@ body {
 
 .divProducts a {
     display: block;
-    margin-top: auto; /* Empuja el botón hacia abajo */
+    margin-top: auto; 
     padding: 5px;
     background-color: white;
     border: 1px solid black;
@@ -164,9 +300,9 @@ body {
 
 .categories-container {
     display: flex;
-    flex-wrap: wrap;  /* Permite que los botones pasen a la siguiente línea si no caben */
+    flex-wrap: wrap;  
     justify-content: center;
-    gap: 10px;  /* Espaciado entre botones */
+    gap: 10px; 
     padding: 20px;
 }
 
@@ -203,10 +339,10 @@ body {
 .profileUtils {
 
     display: flex;
-    justify-content: flex-end; /* Alinea los elementos a la derecha */
+    justify-content: flex-end; 
     align-items: center;
     gap: 1rem;
-    margin-right: 1rem; /* Añade un margen opcional a la derecha */
+    margin-right: 1rem; 
 }
 
 .name{
@@ -268,10 +404,10 @@ body {
 
 hr {
     width: 60%;
-    margin: 1rem auto; /* Centra el elemento horizontalmente */
+    margin: 1rem auto; 
     border: none;
-    border-top: 5px solid #000; /* Aumenta el grosor */
-    border-radius: 10px; /* Redondea las puntas */
+    border-top: 5px solid #000; 
+    border-radius: 10px; 
 }
 
 .divTotal{
@@ -348,21 +484,28 @@ hr {
     border: 1px solid black;
     border-radius: 10px;
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
+
+.groupButtons:hover{
+    
+    background-color: lightgray;
+}
+
 .group-box {
     position: relative;
     padding: 1rem;
     border-radius: 10px;
     background: white;
     z-index: 1;
-    overflow: hidden; /* importante para cortar el pseudo-elemento */
+    overflow: hidden; 
   }
   
   .group-box::before {
     content: "";
     position: absolute;
     inset: 0;
-    padding: 4px; /* grosor del borde */
+    padding: 4px; 
     border-radius: 10px;
     background: linear-gradient(270deg, gray, white, gray, white);
     background-size: 300% 300%;
@@ -376,12 +519,12 @@ hr {
     transition: background-position 0.5s ease, animation 0.5s ease;
   }
   
-  /* 🎯 Efecto al hacer hover */
+  
   .group-box:hover::before {
     animation: moveGradient 3s linear infinite;
   }
   
-  /* 🔄 Animación del gradiente */
+  
   @keyframes moveGradient {
     0% {
       background-position: 0% 50%;

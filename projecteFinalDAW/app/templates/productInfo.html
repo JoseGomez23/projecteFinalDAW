@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informació del producte</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+    
+    <div class="content">
+        {% if product %}
+            <h1>{{product.name}}</h1>
+            <img src="{{product.image}}" alt="{{product.name}}">
+            <p>Preu: {{product.price}}€</p>
+            {% if product.origin %}
+            <p>Òrigen: {{product.origin}}</p>
+            {% else %}
+            <p>Òrigen: Desconegut</p>
+            {% endif %}
+            {% if product.brand %}
+            <p>Marca: {{product.brand}}</p>
+            {% else %}
+            <p>Marca: Desconeguda</p>
+            {% endif %}
+            {% if product.usage_instructions %}
+            <p>Instruccions d'ús: {{product.usage_instructions}}</p>
+            {% else %}
+            <p>Instruccions d'ús: No disponibles</p>
+            {% endif %}
+            
+        {% endif %}
+    </div>  
+    <script defer src="{% static 'js/ajax.js' %}"></script> 
+    {% endblock %}
+
+    
+</body>
+</html>

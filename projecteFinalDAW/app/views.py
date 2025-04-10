@@ -55,9 +55,9 @@ def products(request, categoria_id, group_id=""):
             products = []
         
             for subcategoria in data.get("categories", []):
-                for producto in subcategoria.get("products", []): 
-                    if producto.get("published", False): 
-                        products.append(producto)  
+                for product in subcategoria.get("products", []): 
+                    if product.get("published", False): 
+                        products.append(product)  
         else:
             products = []
             
@@ -101,9 +101,9 @@ def products(request, categoria_id, group_id=""):
             products = []
         
             for subcategoria in data.get("categories", []):
-                for producto in subcategoria.get("products", []): 
-                    if producto.get("published", False): 
-                        products.append(producto)  
+                for product in subcategoria.get("products", []): 
+                    if product.get("published", False): 
+                        products.append(product)  
         else:
             products = []
             
@@ -278,14 +278,14 @@ def removeFavorites(request, product_id, group_id=""):
                 favorite.delete()
                 return JsonResponse({"message": "Eliminado de favoritos"})
             except FavoriteProducts.DoesNotExist:
-                return JsonResponse({"error": "El producto no estaba en favoritos"}, status=404)
+                return JsonResponse({"error": "El producte no estava a favorits"}, status=404)
         else:
             try:
                 favorite = FavoriteProducts.objects.get(user=request.user, group_id=group_id, product_id=product_id)
                 favorite.delete()
                 return JsonResponse({"message": "Eliminado de favoritos"})
             except FavoriteProducts.DoesNotExist:
-                return JsonResponse({"error": "El producto no estaba en favoritos"}, status=404)
+                return JsonResponse({"error": "El producte no estava a favorits"}, status=404)
     return JsonResponse({"error": "Método no permitido"}, status=405)
 
 
@@ -500,7 +500,7 @@ def removeChecked(request, group_id=""):
             
         selected_ids = request.POST.getlist("checkbox")
         
-        print(group_id_def)
+        #print(group_id_def)
         #print(selected_ids)
         #print(group_id)
     
@@ -509,9 +509,11 @@ def removeChecked(request, group_id=""):
         if selected_ids:
             if group is None:
                 selected_items = ShoppingCartList.objects.filter(user=request.user, product_id__in=selected_ids, group_id=None)
+                redirect_url = "/shoppingCartList/"
                 
             else:
                 selected_items = ShoppingCartList.objects.filter(product_id__in=selected_ids, group_id=group)
+                redirect_url = "/shoppingCartList/" + str(group_id_def) + "/"
                 
             if selected_items.exists():
                 new_ticket_id = f"TICKET-{uuid.uuid4().hex[:8]}"
@@ -539,6 +541,35 @@ def removeChecked(request, group_id=""):
                 
                 
 
-        return redirect("/shoppingCartList/" + str(group_id_def) + "/") 
+        return redirect(redirect_url) 
 
-    return redirect("redirect_url")  # Redirect if the method is not POST
+    return redirect("redirect_url")  
+
+
+def productInfo(request, product_id, group_id=""):
+    
+    url = f"https://tienda.mercadona.es/api/products/{product_id}"
+    
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        
+    price_info = data.get("price_instructions", {})
+    details = data.get("details", {})
+        
+    photos = data.get("photos", [])
+    
+
+    product = {
+        "name": data.get("display_name", ""),
+        "price": price_info.get("unit_price", 0),
+        "old_price": price_info.get("previous_unit_price", 0),
+        "image": data.get("thumbnail", ""),
+        "brand": details.get("brand", ""),
+        "origin": details.get("origin", ""),
+        "usage_instructions": details.get("usage_instructions", "")
+    }
+    
+    producte = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
+    
+    return render(request, "productInfo.html", {"product": product, "producte": producte})

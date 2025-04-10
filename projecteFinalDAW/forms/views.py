@@ -190,7 +190,7 @@ def qrReader(request):
                 return render(request, 'readQr.html', {'results': result, 'form': QrCode()})
             else:
                 print("nobomba")
-                return render(request, 'readQr.html', {'error': 'Onde vas maquina con otro QR que no es de esta web', 'form': QrCode()})
+                return render(request, 'readQr.html', {'error': 'Aquest lector només accepta QR de la pròpia web.', 'form': QrCode()})
         
         
     else:
@@ -198,7 +198,6 @@ def qrReader(request):
         return render(request, 'readQr.html', {'form': QrCode()})
 
     
-    # If no conditions are met, return a default response
     return render(request, 'readQr.html', {'error': 'No s\'ha pogut processar la sol·licitud.', 'form': QrCode()})
 
 @login_required

@@ -30,6 +30,8 @@ urlpatterns = [
     path('history/', views.history, name="history"),
     path('history/<int:group_id>/', views.history, name="historyGroups"),
     path('addFromHistory/<int:product_id>/<str:ticket_id>/', views.addFromHistory, name="addFromHistory"),
+    path('productInfo/<int:product_id>/', views.productInfo, name="productInfo"),
+    path('productInfo/<int:product_id>/<int:group_id>', views.productInfo, name="productInfoG"),
     path('groups/', views.groups, name="groups")    
 ]
 
