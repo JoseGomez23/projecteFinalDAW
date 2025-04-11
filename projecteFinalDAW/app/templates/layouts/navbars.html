@@ -19,6 +19,7 @@
                 <h2 class="topbarUsername" >Benvingut {{user.username}}</h2>
                 
                 <a href="{% url 'indexLogat' %}"><img alt="Inici" class="homeButton" src="{% static 'casa.png' %}"></a>
+                <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
                 <div class="userThings">
                     <div>
                         <a href="{% url 'shoppingCartList' %}"><img class="shoppingCart" src="{% static 'carrito.png' %}"></img></a>

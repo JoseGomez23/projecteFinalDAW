@@ -573,3 +573,6 @@ def productInfo(request, product_id, group_id=""):
     producte = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
     
     return render(request, "productInfo.html", {"product": product, "producte": producte})
+
+def showMap(request):
+    return render(request, "map2.html")
