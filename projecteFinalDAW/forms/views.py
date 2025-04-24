@@ -12,9 +12,11 @@ import base64
 import aspose.barcode as barcode
 from .utils import generate_qr_code
 from app.models import UsuarioGrupo, GrupFamiliar
+from user.models import ApiToken
 import os
 from app.models import GrupFamiliar
 import re
+from datetime import datetime, timedelta
 
 # Create your views here.
 def register(request):
@@ -72,9 +74,43 @@ def login(request):
                 })
             else:
                 
+                user = User.objects.get(username=request.POST['username'])
+
+                apiToken = ApiToken.objects.filter(user=user).first()
+                
+                if apiToken:
+                    apiToken.token = str(uuid.uuid4())
+                    apiToken.exp_date = datetime.now() + timedelta(hours=1)
+                    apiToken.save()
+                    
+                    
+                else:
+                    token_str = str(uuid.uuid4())
+                    exp_date = datetime.now() + timedelta(hours=1)
+
+                    apiToken = ApiToken.objects.create(
+                        user=user,
+                        token=token_str,
+                        exp_date=exp_date
+                    )
+                
                 _login(request, user)
+
                 next_url = request.GET.get('next', 'indexLogat')
-                return redirect(next_url)
+                response = redirect(next_url)
+                
+                response['Authorization'] = f'{apiToken.token}'
+                
+                response.set_cookie(
+                key='Authorization',
+                value=f'{apiToken.token}',  # Estilo típico de auth header
+                httponly=True,  # Importante para seguridad
+                secure=True,  # Solo HTTPS
+                samesite='Lax',  # Puedes usar 'Strict' o 'None' si es necesario
+                expires=apiToken.exp_date  # Expira cuando expire el token
+    )
+
+    return response
             
 @login_required
 def groups(request, group_id):
@@ -227,5 +263,6 @@ def createGroup(request):
             
 
 def logout(request):
+        
     _logout(request)
-    return redirect('groups')
+    return redirect('login')

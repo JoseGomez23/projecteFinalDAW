@@ -59,12 +59,16 @@ def deleteAccount(request):
         return render(request, "deleteUser.html", {"group": group_name, "qtFavProducts": qtFavProducts})
     elif request.method == 'POST':
         
-        userGroup = UsuarioGrupo.objects.get(user=request.user)
-        group = userGroup.group
-        userGroup.delete()
+        userGroup = UsuarioGrupo.objects.filter(user=request.user)
         
-        if not UsuarioGrupo.objects.filter(group=group).exists():
-            group.delete()
+        print(userGroup)
+        
+        if userGroup:
+            group = userGroup.group
+            userGroup.delete()
+            
+            if not UsuarioGrupo.objects.filter(group=group).exists():
+                group.delete()
         
         user = request.user
         user.delete()
