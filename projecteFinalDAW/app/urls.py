@@ -33,6 +33,7 @@ urlpatterns = [
     path('productInfo/<int:product_id>/', views.productInfo, name="productInfo"),
     path('productInfo/<int:product_id>/<int:group_id>', views.productInfo, name="productInfoG"),
     path('marketsMap/', views.showMap, name="map"),
+    path('refreshFavorites/', views.refreshFavorites, name="refreshFavorites"),
     path('groups/', views.groups, name="groups")    
 ]
 

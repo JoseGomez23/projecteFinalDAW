@@ -21,6 +21,10 @@
             {% endfor %}
         </select>
         <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+        <form method="post" id="updateProductsForm" action="{% url 'refreshFavorites' %}">
+            <button>Actualitzar productes</button>
+            {% csrf_token %}
+        </form>
         <div class="divProducts-container">
             {% for product in products %}
                 {% if not product.group_id %}

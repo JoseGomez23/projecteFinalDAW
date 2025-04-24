@@ -445,44 +445,51 @@ def history(request, group_id=None):
 def addFromHistory(request, product_id, ticket_id):
     if request.method == "POST":
         
-        historyTicket = History.objects.filter(user=request.user, ticket_id=ticket_id).first()
+        history_ticket = History.objects.filter(user=request.user, ticket_id=ticket_id).first()
+        if not history_ticket:
+            return JsonResponse({"error": "Historial no encontrado"}, status=404)
         
-        historyTicketProducts = historyTicket.products if historyTicket else []
-         
-        separated_products = []
-        for product in historyTicketProducts:
-            separated_products.append(product.get("product_id"))
-            
-        print(separated_products)
-        print(product_id)
+        history_products = history_ticket.products or []
+        product_data_from_history = next(
+            (product for product in history_products if str(product.get("product_id")) == str(product_id)),
+            None
+        )
+
+        if not product_data_from_history:
+            return JsonResponse({"error": "Producto no encontrado en el historial"}, status=404)
+    
+        quantity = product_data_from_history.get("quantity", 1)
         
-        product_id = str(product_id)
+        url = f"https://tienda.mercadona.es/api/products/{product_id}"
+        response = requests.get(url)
+        if response.status_code != 200:
+            return JsonResponse({"error": "No se pudo obtener el producto desde la API"}, status=404)
+
+        product_data_api = response.json()
+
         
-        separated_products_str = ", ".join(separated_products)
+        name = product_data_api.get("display_name", "")
+        price = product_data_api.get("price_instructions", {}).get("unit_price", 0)
+        old_price = product_data_api.get("price_instructions", {}).get("previous_unit_price", 0)
+        image = product_data_api.get("thumbnail", "")
+
         
-        if product_id in separated_products_str:
-            product_data = next((product for product in historyTicketProducts if product.get("product_id") == product_id), None)
-            if product_data:
-                ShoppingCartList.objects.get_or_create(
-                    user=request.user,
-                    product_id=product_id,
-                    defaults={
-                    "name": product_data.get("name", ""),
-                    "image": product_data.get("image", ""),
-                    "price": product_data.get("price", 0),
-                    "old_price": product_data.get("old_price", 0),
-                    "quantity": 1
-                    }
-                    )
-                
-                return JsonResponse({"message": "Product added to cart", "product": product_data})
-            else:
-                return JsonResponse({"error": "Product not found in history"}, status=404)
-        
-        else:
-            return JsonResponse({"error": "Product not found in history"}, status=404)
-            
-    return JsonResponse({"error": "Invalid request method"}, status=400)
+        ShoppingCartList.objects.get_or_create(
+            user=request.user,
+            product_id=product_id,
+            defaults={
+                "name": name,
+                "image": image,
+                "price": price,
+                "old_price": old_price,
+                "quantity": quantity  
+            }
+        )
+
+        return JsonResponse({"message": "Producto añadido al carrito desde el historial", "product": product_data_api})
+    
+    return JsonResponse({"error": "Método de solicitud no válido"}, status=400)
+
 
 
 
@@ -576,3 +583,30 @@ def productInfo(request, product_id, group_id=""):
 
 def showMap(request):
     return render(request, "map2.html")
+
+def refreshFavorites(request):
+    if request.method == "POST":
+        
+        url = "https://tienda.mercadona.es/api/products/"
+        
+        if request.user.is_authenticated:
+            favorites = FavoriteProducts.objects.filter(user=request.user).values_list("product_id", flat=True)
+            
+            
+            for product_id in favorites:
+                product_url = f"{url}{product_id}"
+                response = requests.get(product_url)
+                if response.status_code == 200:
+                    product_data = response.json()
+                    FavoriteProducts.objects.filter(product_id=product_id).update(
+                        name=product_data.get("display_name", ""),
+                        price=product_data.get("price_instructions", {}).get("unit_price", 0),
+                        old_price=product_data.get("price_instructions", {}).get("previous_unit_price", 0),
+                        image=product_data.get("thumbnail", "")
+                    )
+                    
+            return redirect("favorites")
+            
+        else:
+            return redirect("login")
+    
