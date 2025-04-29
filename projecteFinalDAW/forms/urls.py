@@ -9,5 +9,6 @@ urlpatterns = [
     path('addGroupMember/<int:group_id>/', views.groups, name="addGroupMember"),
     path('qrCodeReader/', views.qrReader, name="qrCodeReader"),
     path('createGroup/', views.createGroup, name="createGroup"),
+    path('addProductApi/', views.addProductApi, name="addProductApi"),
     path('logout/', views.logout, name="logout")
 ]

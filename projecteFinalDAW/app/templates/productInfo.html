@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Informació del producte</title>
 </head>
 <body>
     {% extends 'layouts/navbars.html' %}
     {% block content %}
     {% load static %}
-    
+    <link rel="stylesheet" href="{% static 'css/productInfo.css' %}">
     <div class="content">
         {% if product %}
             <h1>{{product.name}}</h1>
@@ -30,7 +31,15 @@
             {% else %}
             <p>Instruccions d'ús: No disponibles</p>
             {% endif %}
-            
+            {% if productDB %}
+                <button id="addToCart" class="addToCart" data-product-id="{{product.id}}">-</button>
+                <p>Al carret: {{productDB}}</p>
+                <button id="addToCart" class="addToCart" data-product-id="{{product.id}}">+</button>
+            {% else %}
+                <button id="addToCart" class="addToCart" disabled data-product-id="{{product.id}}">-</button>
+                <p>El producte no s'ha afegit</p>
+                <button id="addToCart" class="addToCart" data-product-id="{{product.id}}">+</button>
+            {% endif %}
         {% endif %}
     </div>  
     <script defer src="{% static 'js/ajax.js' %}"></script> 

@@ -555,6 +555,7 @@ def removeChecked(request, group_id=""):
 
 def productInfo(request, product_id, group_id=""):
     
+    
     url = f"https://tienda.mercadona.es/api/products/{product_id}"
     
     response = requests.get(url)
@@ -564,9 +565,7 @@ def productInfo(request, product_id, group_id=""):
     price_info = data.get("price_instructions", {})
     details = data.get("details", {})
         
-    photos = data.get("photos", [])
     
-
     product = {
         "name": data.get("display_name", ""),
         "price": price_info.get("unit_price", 0),
@@ -577,9 +576,15 @@ def productInfo(request, product_id, group_id=""):
         "usage_instructions": details.get("usage_instructions", "")
     }
     
-    producte = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
+    productDB = ShoppingCartList.objects.filter(user=request.user, product_id=product_id ,group_id=None)
     
-    return render(request, "productInfo.html", {"product": product, "producte": producte})
+    if productDB.exists():
+        productQty = productDB[0].quantity
+    else:
+        productQty = ""
+    
+    
+    return render(request, "productInfo.html", {"product": product, "productDB": productQty})
 
 def showMap(request):
     return render(request, "map2.html")

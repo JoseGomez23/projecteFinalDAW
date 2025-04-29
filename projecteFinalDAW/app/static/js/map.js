@@ -24,7 +24,7 @@ function mostrarMapaConUbicacion(center) {
         zoom: 14
     });
 
-    new mapboxgl.Marker({ color: 'blue' })
+    new mapboxgl.Marker({ color: 'red' })
         .setLngLat(center)
         .setPopup(new mapboxgl.Popup().setText("La teva ubicació"))
         .addTo(map);
@@ -39,8 +39,24 @@ async function buscarMercadonas(coord) {
     const response = await fetch(url);
     const data = await response.json();
 
+    mercadona1 = new mapboxgl.Marker({ color: 'yellow' })
+        .setLngLat([2.7767185 ,41.6775732])
+        .setPopup(new mapboxgl.Popup().setText("Mercadona"))
+        .addTo(map);
+    
+    mercadona2 = new mapboxgl.Marker({ color: 'yellow' })
+        .setLngLat([2.779908 ,41.667829])
+        .setPopup(new mapboxgl.Popup().setText("Mercadona"))
+        .addTo(map);
+    
+    lidl1 = new mapboxgl.Marker({ color: 'purple' })
+        .setLngLat([2.774523 ,41.677298])
+        .setPopup(new mapboxgl.Popup().setText("Lidl"))
+        .addTo(map);
+    
+        
     data.results.forEach((place) => {
-        const marker = new mapboxgl.Marker({ color: 'green' })
+        const marker = new mapboxgl.Marker({ color: 'blue' })
             .setLngLat([place.geometry.lng, place.geometry.lat])
             .setPopup(new mapboxgl.Popup().setHTML(`<strong>${place.formatted}</strong>`))
             .addTo(map);

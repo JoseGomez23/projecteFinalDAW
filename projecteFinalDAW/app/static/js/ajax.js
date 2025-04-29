@@ -513,11 +513,11 @@ function refreshGroupTickets(group_id) {
     .then(html => {
         let parser = new DOMParser();
         let doc = parser.parseFromString(html, "text/html");
-        let ticketsElement = doc.querySelector("#ticketsContainer"); // Selecciona el contenedor de tickets
+        let ticketsElement = doc.querySelector("#ticketsContainer"); 
         if (ticketsElement) {
             let ticketsContainer = document.getElementById("ticketsContainer");
             if (ticketsContainer) {
-                ticketsContainer.innerHTML = ticketsElement.innerHTML; // Actualiza el contenido del contenedor
+                ticketsContainer.innerHTML = ticketsElement.innerHTML; 
             } else {
                 console.error("Error: No se encontró el contenedor de tickets en el documento actual.");
             }
@@ -526,6 +526,10 @@ function refreshGroupTickets(group_id) {
         }
     })
     .catch(error => console.error("Error:", error));
+}
+
+function addFromInfo(productId){
+    
 }
 
 

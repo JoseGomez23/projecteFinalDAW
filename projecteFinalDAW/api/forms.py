@@ -2,6 +2,6 @@ from django import forms
 
 class addProductApi(forms.Form):
     name = forms.CharField(label="Nom del producte", max_length=100)
-    description = forms.CharField(label="Descripció del producte", max_length=1000)
+    old_price = forms.DecimalField(label="Preu antic (Nullable)", max_digits=10, decimal_places=2, required=False)
     price = forms.DecimalField(label="Preu del producte", max_digits=10, decimal_places=2)
-    image = forms.ImageField(label="Imatge del producte", required=False)
+    image_url = forms.CharField(label="URL de la imatge", max_length=1000)

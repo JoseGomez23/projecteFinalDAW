@@ -9,6 +9,8 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 import base64
+import api.forms as apiForms
+from api.models import ApiProducts
 import aspose.barcode as barcode
 from .utils import generate_qr_code
 from app.models import UsuarioGrupo, GrupFamiliar
@@ -186,29 +188,23 @@ def qrReader(request):
     if request.method == 'POST' and request.FILES.get('image'):
         qr_image = request.FILES['image']
         
-        # Guardar la imagen temporalmente
         with open('temp_qr_image.jpg', 'wb') as temp_file:
             for chunk in qr_image.chunks():
                 temp_file.write(chunk)
         
-        # Leer el código QR desde la imagen temporal
         reader = barcode.barcoderecognition.BarCodeReader('temp_qr_image.jpg')
         recognized_results = reader.read_bar_codes()
         
-        # Eliminar la imagen temporal después de procesarla
         os.remove('temp_qr_image.jpg')
         
         result = ""
-        # Mostrar resultados
-        # Remove unused variable
+        
         for result in recognized_results:
             raw_text = result.code_text
             
-            # Eliminar todo después de '/acceptInvite/9/'
             if '/acceptInvite/' in raw_text:
                 raw_text = re.sub(r'(/acceptInvite/\d+/).*', r'\1', raw_text)
 
-            # Buscar el ID con regex
             match = re.search(r'/acceptInvite/(\d+)', raw_text)
             if match:
                 invite_token = GrupFamiliar.objects.get(id=match.group(1)).invite_token
@@ -222,11 +218,11 @@ def qrReader(request):
             print(raw_text)
         
             if result.startswith('http://127.0.0.1:8000/acceptInvite/'):
-                print("bomba")
+                
                 return render(request, 'readQr.html', {'results': result, 'form': QrCode()})
             else:
-                print("nobomba")
-                return render(request, 'readQr.html', {'error': 'Aquest lector només accepta QR de la pròpia web.', 'form': QrCode()})
+                
+                return render(request, 'readQr.html', {'error': 'Aquest lector només accepta QR\'s de la pròpia web.', 'form': QrCode()})
         
         
     else:
@@ -260,6 +256,28 @@ def createGroup(request):
             'form': CreateGroup(),
             'error': 'Ja existeix un grup amb aquest nom'
             })
+            
+def addProductApi(request):
+        
+    if request.method == 'POST':
+        
+        name = request.POST['name']
+        old_price = request.POST['old_price']
+        price = request.POST['price']
+        image_url = request.POST['image_url']
+        
+        exists = ApiProducts.objects.filter(name=name, price=price)
+        
+        if exists:
+            return render(request, 'addProductApi.html', {'error': "Aquest producte ja existeix", 'form': apiForms.addProductApi()})
+        
+        if not old_price:
+            old_price = None
+        
+        ApiProducts.objects.create(name=name, old_price=old_price, price=price, image_url=image_url)
+        
+        return render(request, 'addProductApi.html', {'name': name})
+    return render(request, 'addProductApi.html', {'form': apiForms.addProductApi()})
             
 
 def logout(request):

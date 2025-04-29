@@ -31,14 +31,82 @@ def getProduct(request, name):
                 return JsonResponse({'error': 'Product not found'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+
+def getProductP(request, price):
+    
+    result = authHelper(request)
+    
+    if result != True:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    else:
+        try:
+            products = ApiProducts.objects.filter(price=price)
+            if products.exists():
+                return JsonResponse({'products': list(products.values())})
+            else:
+                return JsonResponse({'error': 'Product not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)        
+
+        
+def getProductHigher(request, price):
+        
+    result = authHelper(request)
+    
+    if result != True:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    else:
+        try:
+            products = ApiProducts.objects.filter(price__gt=price)
+            if products.exists():
+                return JsonResponse({'products': list(products.values())})
+            else:
+                return JsonResponse({'error': 'Product not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+            
+def getProductPLower(request, price):
+            
+    result = authHelper(request)
+    
+    if result != True:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    else:
+        try:
+            products = ApiProducts.objects.filter(price__lt=price)
+            if products.exists():
+                return JsonResponse({'products': list(products.values())})
+            else:
+                return JsonResponse({'error': 'Product not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+        
+def getProductWithDiscount(request, boolean):
+    
+    result = authHelper(request)
+    
+    if result != True:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+    else:
+        try:
+            
+            if boolean == True:
+                products = ApiProducts.objects.filter(old_price=None)
+            else:
+                products = ApiProducts.objects.filter(old_price__gt=0)
+            
+            if products.exists():
+                return JsonResponse({'products': list(products.values())})
+            else:
+                return JsonResponse({'error': 'Product not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     
 def authHelper(request):
     
-    auth_header = request.headers.get('Authorization')  # Django >= 2.2+
+    auth_header = request.headers.get('Authorization')  
     authorization_cookie = request.COOKIES.get('Authorization')
 
-    exists = ""
-    expDate = ""
     
     if auth_header:
         print("Authorization header:", auth_header)
@@ -73,26 +141,5 @@ def authHelper(request):
                 'now': timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
                 'expires_at': token_obj.exp_date.strftime("%Y-%m-%d %H:%M:%S")
             }, status=401)
-    
-
 
         return True    
-
-
-def addProduct(request):
-    
-    if request.method == 'POST':
-        form = addProductApi(request.POST, request.FILES)
-        if form.is_valid():
-            # Process the form data and save the product
-            name = form.cleaned_data['name']
-            description = form.cleaned_data['description']
-            price = form.cleaned_data['price']
-            image = form.cleaned_data['image']
-            
-            # Here you would typically save the product to the database
-            # For example:
-            # Product.objects.create(name=name, description=description, price=price, image=image)
-            
-            return render(request, 'success.html', {'name': name})
-    return render(request, 'add_product.html', {'form': addProductApi()})
