@@ -45,6 +45,10 @@ INSTALLED_APPS = [
     
 ]
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),  # Asegúrate de tener esta carpeta en tu proyecto
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
