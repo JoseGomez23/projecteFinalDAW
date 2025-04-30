@@ -90,11 +90,13 @@ def getProductWithDiscount(request, boolean):
     else:
         try:
             
-            if boolean == True:
-                products = ApiProducts.objects.filter(old_price=None)
-            else:
-                products = ApiProducts.objects.filter(old_price__gt=0)
+            boolean = str(boolean).capitalize()
             
+            if boolean != "True":
+                products = ApiProducts.objects.filter(old_price__gt=0)
+            else:
+                products = ApiProducts.objects.filter(old_price=None)
+                
             if products.exists():
                 return JsonResponse({'products': list(products.values())})
             else:

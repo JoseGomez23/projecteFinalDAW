@@ -26,12 +26,30 @@
                     </div>
                     
                     <div class="userDropdown">
-                            <img alt="Imatge de l'usuari" src="{% static 'user.png' %}" class="userImage" id="userImage">
-                        <div class="dropdown-menu" >
-                            <a href="{% url 'configuration' %}">Editar perfil</a>
-                            <a href="{% url 'logout' %}">Tancar sessió</a>
+                        <img alt="Imatge de l'usuari" src="{% static 'user.png' %}" class="userImage" id="userImage" tabindex="0" aria-haspopup="true" aria-expanded="false" onfocus="toggleDropdown()" onblur="delayedCloseDropdown()">
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a tabindex="0" href="{% url 'configuration' %}">Editar perfil</a>
+                            <a tabindex="0" href="{% url 'logout' %}">Tancar sessió</a>
                         </div>
                     </div>
+                    
+                    <script>
+                        function toggleDropdown() {
+                            const dropdownMenu = document.getElementById('dropdownMenu');
+                            dropdownMenu.style.display = 'block';
+                        }
+                    
+                        function delayedCloseDropdown() {
+                            setTimeout(() => {
+                                const active = document.activeElement;
+                                const dropdownMenu = document.getElementById('dropdownMenu');
+                                if (!dropdownMenu.contains(active)) {
+                                    dropdownMenu.style.display = 'none';
+                                }
+                            }, 100);
+                        }
+                    </script>
+                    
                 </div>
             {% else %}
                 <li>

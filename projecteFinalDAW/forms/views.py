@@ -2,7 +2,7 @@ import uuid
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from projecteFinalDAW import settings
-from .forms import Login, Register, AddUserToGroup, CreateGroup, QrCode
+from .forms import Login, Register, AddUserToGroup, CreateGroup, QrCode, ResetEmailPwd, ResetPassword, ResetManualPassword
 from django.contrib.auth import authenticate, login as _login, logout as _logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
@@ -14,7 +14,7 @@ from api.models import ApiProducts
 import aspose.barcode as barcode
 from .utils import generate_qr_code
 from app.models import UsuarioGrupo, GrupFamiliar
-from user.models import ApiToken
+from user.models import ApiToken, PasswordToken
 import os
 from app.models import GrupFamiliar
 import re
@@ -278,7 +278,160 @@ def addProductApi(request):
         
         return render(request, 'addProductApi.html', {'name': name})
     return render(request, 'addProductApi.html', {'form': apiForms.addProductApi()})
+
+
+def sendEmail(request):
+
+    if request.method == 'POST':
+        
+        email = request.POST['email']
+        
+        if email == "":
+            return render(request, 'resetEmailPwd.html', {
+                'form': ResetEmailPwd(),
+                'error': 'Afegeix un correu electrònic'
+            })
+        
+        try:
+            user = User.objects.get(email=email)
+            token = str(uuid.uuid4())
+            exp_date = datetime.now() + timedelta(hours=1)
             
+            if PasswordToken.objects.filter(user=user).exists():
+                password_token = PasswordToken.objects.get(user=user)
+                password_token.token = token
+                password_token.exp_date = exp_date
+                password_token.save()
+            
+            PasswordToken.objects.create(user=user, token=token, exp_date=exp_date)
+            
+            reset_url = "http://127.0.1:8000/forms/resetPassword/" + token
+            
+            send_mail(
+                'Restabliment de contrasenya',
+                f'Fes clic aquí per restablir la teva contrasenya (1h per fer el canvi a partir d\'aquest correu): <a href="{reset_url}">Fes clic aquí</a>',
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+                html_message=f'Fes clic aquí per restablir la teva contrasenya (1h per fer el canvi a partir d\'aquest correu): <a href="{reset_url}">Fes clic aquí</a>',
+            )
+            
+            return render(request, 'resetEmailPwd.html', {
+                'form': ResetEmailPwd(),
+                'message': 'S\'ha enviat un correu electrònic amb les instruccions per restablir la contrasenya'
+            })
+        
+        except User.DoesNotExist:
+            return render(request, 'resetEmailPwd.html', {
+                'form': ResetEmailPwd(),
+                'error': 'No existeix cap usuari amb aquest correu electrònic'
+            })
+    
+    else:
+        return render(request, 'resetEmailPwd.html', {'form': ResetEmailPwd()})
+            
+def resetPassword(request, token):
+    
+    if request.method == 'GET':
+        
+        try:
+            password_token = PasswordToken.objects.get(token=token)
+            
+            print(password_token.exp_date)
+            print(datetime.now())
+            
+            
+            if password_token.exp_date < datetime.now(password_token.exp_date.tzinfo):
+                return render(request, 'resetPassword.html', {
+                    'form': ResetPassword(),
+                    'error': 'El token ha caducat'
+                })
+            
+            return render(request, 'resetPassword.html', {'form': ResetPassword()})
+        
+        except PasswordToken.DoesNotExist:
+            return render(request, 'resetPassword.html', {
+                'form': ResetPassword(),
+                'error': 'El token no existeix'
+            })
+    
+    else:
+        
+        if request.POST['password'] == request.POST['password2']:
+            
+            try:
+                password_token = PasswordToken.objects.get(token=token)
+                
+                user = password_token.user
+                
+                user.set_password(request.POST['password'])
+                user.save()
+                
+                password_token.delete()
+                
+                return redirect('login')
+            
+            except PasswordToken.DoesNotExist:
+                return render(request, 'resetPassword.html', {
+                    'form': ResetPassword(),
+                    'error': 'El token no existeix'
+                })
+        else:
+            return render(request, 'resetPassword.html', {
+                'form': ResetPassword(),
+                'error': 'Les contrasenyes no coincideixen'
+            })
+
+@login_required          
+def manualResetPwd(request):
+    
+    if request.method == 'GET':
+        
+        return render(request, 'manualResetPwd.html', {'form': ResetManualPassword()})
+    
+    else:
+        
+        user = request.user
+        
+        if request.POST['oldPassword'] == '' or request.POST['password'] == '' or request.POST['password2'] == '':
+            return render(request, 'manualResetPwd.html', {
+                'form': ResetManualPassword(),
+                'error': 'Has d\'omplir tots els camps'
+            })
+        
+        if request.POST['password'] == request.POST['password2']:
+            
+            if user.check_password(request.POST['oldPassword']):
+                
+                password_regex = re.compile(
+                    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+                )
+
+                if not password_regex.match(request.POST['password']):
+                    return render(request, 'manualResetPwd.html', {
+                        'form': ResetManualPassword(),
+                        'error': 'La contrasenya no compleix els requisits de seguretat (mínim 8 caràcters, una majúscula, una minúscula, un número i un símbol especial)'
+                    })
+
+                user.set_password(request.POST['password'])
+                user.save()
+                
+                _login(request, user)
+                
+                return redirect('indexLogat')
+            
+            else:
+                
+                return render(request, 'manualResetPwd.html', {
+                    'form': ResetManualPassword(),
+                    'error': 'La contrasenya actual no és correcta'
+                })
+        else:
+            
+            return render(request, 'manualResetPwd.html', {
+                'form': ResetManualPassword(),
+                'error': 'Les contrasenyes no coincideixen'
+            })
 
 def logout(request):
         

@@ -529,7 +529,95 @@ function refreshGroupTickets(group_id) {
 }
 
 function addFromInfo(productId){
-    
+
+    let url = `/addOneProduct/${productId}/`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if (data.quantity !== undefined) {
+            let quantityElement = document.getElementById('totalProduct');
+        if (quantityElement) {
+            quantityElement.innerText = `Al carret: ${data.quantity}`;
+        }
+        }
+
+    })
+
+}
+
+function addFirstFromInfo(productId){
+
+    let url = `/addProductToList/${productId}/`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        let actionsContainer = document.getElementById('actionsContainer');
+        if (actionsContainer) {
+            actionsContainer.innerHTML = `
+            <div class="divHelper">
+                <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('${productId}')">-</button>
+                <p id="totalProduct">Al carret: ${data.quantity !== undefined ? data.quantity : 0}</p>
+                <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('${productId}')">+</button>
+            </div>
+            `;
+        }
+    })
+}
+
+function removeFromInfo(productId){
+
+    let group_id = 1;
+
+    let url = `/removeOneProduct/${productId}/${group_id}/`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+
+
+        let actionsContainer = document.getElementById('actionsContainer');
+        if(data.quantity !== undefined) {
+            let quantityElement = document.getElementById('totalProduct');
+            if (quantityElement) {
+                quantityElement.innerText = `Al carret: ${data.quantity}`;
+            }
+        }else {
+            if (actionsContainer) {
+                actionsContainer.innerHTML = `
+                    <button class="buttonsContainer" id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('${productId}')">Afegir producte</button>
+                `;
+            }
+        }
+
+        
+
+        
+
+    })
 }
 
 

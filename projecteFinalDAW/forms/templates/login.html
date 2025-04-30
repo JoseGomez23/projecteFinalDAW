@@ -44,7 +44,7 @@
             {% csrf_token %}
             {{form.as_p}}
             <p>Si no tens un compte, <a href="{% url 'register' %}">Registra't</a></p>
-            <p>Has oblidat la contrasenya? <a href="{% url 'register' %}">Restableix-la</a></p>
+            <p>Has oblidat la contrasenya? <a href="{% url 'sendEmail' %}">Restableix-la</a></p>
             <button type="submit">Login</button>
         </form>
     </div>

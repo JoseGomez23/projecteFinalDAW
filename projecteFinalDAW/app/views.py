@@ -356,8 +356,9 @@ def removeOneProduct(request, product_id, group_id=""):
             
             shopping_cart_item = ""
             
-            if not group_id:
+            if not group_id or group_id == 1:
                 shopping_cart_item = ShoppingCartList.objects.get(user=request.user, product_id=product_id, group_id=None)
+                print("xdddd")
             else:
                 
                 if not GrupFamiliar.objects.filter(id=group_id).exists():
@@ -367,10 +368,17 @@ def removeOneProduct(request, product_id, group_id=""):
                 
                 shopping_cart_item = ShoppingCartList.objects.get(group_id=group_id, product_id=product_id)
             
-            if shopping_cart_item.quantity > 1: 
+            if shopping_cart_item.quantity > 1 and group_id != 1: 
                 shopping_cart_item.quantity -= 1
                 shopping_cart_item.save()
                 return JsonResponse({"quantity": shopping_cart_item.quantity})
+            elif shopping_cart_item.quantity > 1 and group_id == 1:
+                shopping_cart_item.quantity -= 1
+                shopping_cart_item.save()
+                return JsonResponse({"quantity": shopping_cart_item.quantity})
+            elif shopping_cart_item.quantity == 1 and group_id == 1:
+                shopping_cart_item.delete()
+                return JsonResponse({"message": "Product removed from cart"})
             else:
                 return JsonResponse({"message": "Product removed from cart"})
         else:
@@ -561,12 +569,15 @@ def productInfo(request, product_id, group_id=""):
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
+    else:
+        return render(request, "productInfo.html", {"error": "Producte no trobat"})
         
     price_info = data.get("price_instructions", {})
     details = data.get("details", {})
         
     
     product = {
+        "id": product_id,
         "name": data.get("display_name", ""),
         "price": price_info.get("unit_price", 0),
         "old_price": price_info.get("previous_unit_price", 0),

@@ -11,3 +11,13 @@ class ApiToken(models.Model):
     
     def __str__(self):
         return self.user.username + ' - ' + self.token
+    
+class PasswordToken(models.Model):
+    token = models.CharField(max_length=100, verbose_name="Token de contrasenya")
+    exp_date = models.DateTimeField(verbose_name="Data d'expiració")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  
+
+    unique_together = ('token', 'user')
+    
+    def __str__(self):
+        return self.user.username + ' - ' + self.token

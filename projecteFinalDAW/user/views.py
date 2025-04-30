@@ -50,9 +50,10 @@ def deleteAccount(request):
         group_name = None
 
         if usuario_grupo:
-            group = GrupFamiliar.objects.filter(id=usuario_grupo.group_id).first()
-            if group:
-                group_name = group.name
+            groups = GrupFamiliar.objects.filter(id__in=UsuarioGrupo.objects.filter(user=request.user).values_list('group_id', flat=True))
+            group_name = [group.name for group in groups]
+            
+            print(group_name)
 
         qtFavProducts = FavoriteProducts.objects.filter(user=request.user).count()
         
