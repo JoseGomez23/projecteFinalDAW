@@ -74,6 +74,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'projecteFinalDAW.wsgi.application'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Database
