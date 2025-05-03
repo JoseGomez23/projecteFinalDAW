@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registre</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'forms/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
@@ -13,11 +13,11 @@
 
         {% if user.is_authenticated %}
             <a class="" href="{% url 'indexLogat' %}">
-                <img src="{% static 'forms/logo.png' %}" alt="Logo de la web" class="logo">
+                <img src="{% static ' logo.png' %}" alt="Logo de la web" class="logo">
             </a>
         {% else %}
             <a class="" href="{% url 'index' %}">
-                <img src="{% static 'forms/logo.png' %}" alt="Logo de la web" class="logo">
+                <img src="{% static ' logo.png' %}" alt="Logo de la web" class="logo">
             </a>
         {% endif %}
     </div>
@@ -28,8 +28,8 @@
 
         <div class="divLogos">
 
-            <img src="{% static 'forms/lidl.png' %}" alt="Logo de lidl">
-            <img src="{% static 'forms/mercadona.png' %}" alt="Logo de mercadona">
+            <img src="{% static ' lidl.png' %}" alt="Logo de lidl">
+            <img src="{% static ' mercadona.png' %}" alt="Logo de mercadona">
         </div>  
         
     </div>

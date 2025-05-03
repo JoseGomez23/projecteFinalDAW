@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-*+3+w_!+g+p3t-g-%wl_kiy4zn#8t*l3xh8q%f*q+k9q68b*hh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['projectefinaldaw.onrender.com', 'localhost']
+ALLOWED_HOSTS = ['projectefinaldaw.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -46,9 +46,7 @@ INSTALLED_APPS = [
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "app" ,"static"),
-    os.path.join(BASE_DIR, "forms" ,"static"),
-
+    os.path.join(BASE_DIR, "static"),
 ]
 
 MIDDLEWARE = [
@@ -130,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = "/forms/login"
+LOGIN_URL = "/ login"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

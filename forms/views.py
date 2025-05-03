@@ -305,7 +305,7 @@ def sendEmail(request):
             
             PasswordToken.objects.create(user=user, token=token, exp_date=exp_date)
             
-            reset_url = "http://127.0.1:8000/forms/resetPassword/" + token
+            reset_url = "http://127.0.1:8000/ resetPassword/" + token
             
             send_mail(
                 'Restabliment de contrasenya',
