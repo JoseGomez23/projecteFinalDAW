@@ -23,14 +23,29 @@
                 {% csrf_token %}
                 {% for product in shoppingCart %}
                     <div id="product{{product.product_id}}" class="divCartProducts">
+
                         <input onclick="checkProduct('{{ product.product_id }}')" type="checkbox" id="checkbox{{ product.product_id }}" name="checkbox" value="{{ product.product_id }}">
+
                         <h2 id="name{{ product.product_id}}" class="productField">{{ product.name }}</h2>
+
                         <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image" style="height: 50px; width: 50px;">
+
                         <p id="price{{product.product_id}}" class="productField">{{ product.price }}€</p>
-                        <button id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}', '{{ group_id }}')"> - </button>
-                        <p id="quantity{{ product.product_id }}">{{ product.quantity }}</p>
-                        <button id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}', '{{ group_id }}')"> + </button>
+
                         
+
+                        <button id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}', '{{ group_id }}')"> - </button>
+
+                        <p id="quantity{{ product.product_id }}">{{ product.quantity }}</p>
+
+                        <button id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}', '{{ group_id }}')"> + </button>
+
+                        {% if product.supermarket == 1 %}
+                            <img id="supermarket{{ product.product_id }}" src="{% static 'lidl.png' %}" alt="Lidl" style="height: 50px; width: 50px; margin: 0 3rem 0 3rem;">
+                        {% else %}
+                            <img id="supermarket{{ product.product_id }}" src="{% static 'mercadona.png' %}" alt="Mercadona" style="height: 50px; width: 50px; margin: 0 3rem 0 3rem;">
+                        {% endif %}
+
                         <button class="listButtons" id="removeButton{{ product.product_id }}" type="button" onclick="removeProduct('{{ product.product_id }}', '{{ group_id }}')">
                             <img class="buttonImg" src="{% static 'x.webp' %}" alt="Eliminar producte">
                         </button>
@@ -48,6 +63,7 @@
         {% endif %}
     </div>
         <script defer src="{% static 'js/ajax.js' %}"></script> 
+    {% include 'layouts/footer.html' %}
     {% endblock %}
 </body>
-</html>
+</html> 

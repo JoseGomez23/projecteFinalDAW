@@ -44,6 +44,42 @@ def subcategories(request, categoria_id):
 
     return render(request, "categories.html", {"categories": subcategorias, "title": title})
 
+#def subcategoriesLidl(request):
+#   getUrl = request.GET.get("value", "")  # Recoge el valor del parámetro 'value' de la URL
+#
+#    url = f"https://lidl.p.rapidapi.com/getProductByURL?url={getUrl}"
+#
+#   headers = {
+#       "X-RapidAPI-Key": "1a19d39feemshb2b10cd076a4975p1530fbjsnc80df8b13690",
+#       "X-RapidAPI-Host": "lidl.p.rapidapi.com"
+#   }
+#
+#   response = requests.get(url, headers=headers)
+#   title = "Products"
+#
+#   products = []
+#   if response.status_code == 200:
+#       raw_products = response.json()  # ← Si es una lista, no uses .get()
+#       for product in raw_products:
+#           products.append({
+#               "title": product.get("gridbox", {}).get("conutry").get("fullTitle"),
+#               "image": product.get("image"),
+#               "price": product.get("price", {}).get("price"),
+#               "currency": product.get("price", {}).get("currencySymbol", "€"),
+#               "brand": product.get("brand", {}).get("name", ""),
+#               "rating": product.get("ratings", {}).get("average", "N/A"),
+#               "rating_count": product.get("ratings", {}).get("count", 0),
+#               "url": "https://www.lidl.fr" + product.get("canonicalPath", "#")
+#           })
+#           print(product)
+#       
+#
+#   else:
+#       print("Error al obtener productos:", response.status_code)
+#        
+#        
+#   return render(request, "productsLidl.html", {"products": products, "title": title})
+
 def products(request, categoria_id, group_id=""):
     
     if not group_id:
@@ -307,11 +343,13 @@ def addProductToList(request, product_id, group_id=None):
         if group_id:
             group = GrupFamiliar.objects.get(id=int(group_id))
 
+        print("siu")
+        #cambiar el supermarket a 1 cuando acabe el coso de lidl :D
         list_item, created = ShoppingCartList.objects.get_or_create(
             user=request.user,
             group_id=group,
             product_id=product_id,
-            defaults={"name": name, "image": image, "price": price, "old_price": old_price, "quantity": 1}
+            defaults={"name": name, "image": image, "price": price, "old_price": old_price, "quantity": 1, "supermarket": 0}
         )
         
         if not created:
@@ -516,21 +554,27 @@ def removeChecked(request, group_id=""):
         selected_ids = request.POST.getlist("checkbox")
         
         #print(group_id_def)
-        #print(selected_ids)
+        print(selected_ids)
         #print(group_id)
     
         redirect_url = None
+        
+        if group is None:
+            redirect_url = "/shoppingCartList/"
+        else:
+            redirect_url = "/shoppingCartList/" + str(group_id_def) + "/"
 
         if selected_ids:
             if group is None:
-                selected_items = ShoppingCartList.objects.filter(user=request.user, product_id__in=selected_ids, group_id=None)
-                redirect_url = "/shoppingCartList/"
                 
+                selected_items = ShoppingCartList.objects.filter(user=request.user, product_id__in=selected_ids, group_id=None)
             else:
+                
                 selected_items = ShoppingCartList.objects.filter(product_id__in=selected_ids, group_id=group)
-                redirect_url = "/shoppingCartList/" + str(group_id_def) + "/"
+                
                 
             if selected_items.exists():
+                
                 new_ticket_id = f"TICKET-{uuid.uuid4().hex[:8]}"
 
                 products_list = [
@@ -553,12 +597,14 @@ def removeChecked(request, group_id=""):
                 )
 
                 selected_items.delete()
+            else:
+                redirect(redirect_url)
                 
                 
 
         return redirect(redirect_url) 
 
-    return redirect("redirect_url")  
+    #return redirect(redirect_url)  
 
 
 def productInfo(request, product_id, group_id=""):

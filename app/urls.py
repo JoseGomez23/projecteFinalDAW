@@ -8,6 +8,7 @@ urlpatterns = [
     path('leaveGroup/<int:group_id>/', views.leaveGroup, name="leaveGroup"),
     path('acceptInvite/<int:group_id>/<str:invite_token>/', views.acceptInvite, name="acceptInvite"),
     path('subcategories/<int:categoria_id>/', views.subcategories, name="subcategories"),
+    #path('subcategoriesLidl/', views.subcategoriesLidl, name="subcategoriesLidl"),
     path('products/<int:categoria_id>/', views.products, name="products"),
     path('products/<int:categoria_id>/<int:group_id>/', views.products, name="products"),
     path("addFavorite/<int:product_id>/", views.addFavorite , name="addFavorite"),
