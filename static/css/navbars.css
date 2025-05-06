@@ -1,4 +1,4 @@
-/* Estilos generales */
+
 .skipToContent {
     position: absolute;
     top: -40px; 
@@ -38,7 +38,8 @@
     left: 0;
     top: 0;
     background-color: #f0f8ff;
-    padding: 1rem 5rem;
+    padding: 1rem 0 0;
+    padding-right: 5%;
     position: fixed;
     width: 100%;
     height: 7%;
@@ -313,5 +314,116 @@ hr {
 
     .logos {
         width: 70%;
+    }
+}
+
+
+.sidebarToggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: black;
+    z-index: 1001;
+    cursor: pointer;
+}
+
+
+.sidebarOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 1000;
+}
+
+.sidebarOverlay.visible {
+    display: block;
+}
+
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        width: 70%;
+        max-width: 250px;
+        z-index: 1001;
+    }
+
+    .sidebarOpen {
+        transform: translateX(0);
+    }
+
+    .sidebarToggle {
+        display: block;
+    }
+
+    .content {
+        margin-left: 0 !important;
+    }
+}
+
+
+.menuToggle {
+    display: none;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: black;
+    margin-left: auto;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+
+
+.navContent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+@media (max-width: 768px) {
+    .topbarItems {
+        flex-wrap: wrap;
+    }
+
+    .menuToggle {
+        display: block;
+    }
+
+    .navContent {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #f0f8ff;
+        padding: 1rem;
+    }
+
+    .navContent.show {
+        display: flex;
+    }
+
+    .topbarUsername {
+        margin-left: 0;
+        font-size: 1.5rem;
+    }
+
+    .userThings {
+        position: static;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .homeButton, .shoppingCart, .userImage {
+        margin-left: 0;
+        margin-top: 0.5rem;
     }
 }
