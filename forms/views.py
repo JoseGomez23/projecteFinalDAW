@@ -217,7 +217,7 @@ def qrReader(request):
         
             print(raw_text)
         
-            if result.startswith('https://projectefinaldaw-2.onrender.com/acceptInvite/'):
+            if result.startswith('https://projectefinaldaw-2.onrender.com/'):
                 
                 return render(request, 'readQr.html', {'results': result, 'form': QrCode()})
             else:
