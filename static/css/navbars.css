@@ -343,7 +343,7 @@ body {
 }
 
 .category-button:focus {
-    outline: 5px solid #c21e1e;
+    outline: 5px solid lightblue;
     box-shadow: 0 0 5px #000;
 }
 
