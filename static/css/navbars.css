@@ -1,13 +1,4 @@
-body {
-
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    margin-top: 3%;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
+/* Estilos generales */
 .skipToContent {
     position: absolute;
     top: -40px; 
@@ -24,54 +15,49 @@ body {
     transition: top 0.3s ease; 
 }
 
-.messages{
-
+.messages {
     background-color: #37e7e7;
     font-family: Arial, sans-serif;
     margin-top: 3%;
-    padding: 1rem 1rem 1rem 1rem;
+    padding: 1rem;
     border: none;
     border-radius: 10px;
 }
 
-.errors{
-
+.errors {
     width: auto;
     background-color: #ff0000;
     font-family: Arial, sans-serif;
     margin-top: 1rem;
-    padding: 1rem 1rem 1rem 1rem;
+    padding: 1rem;
     border: none;
     border-radius: 10px;
 }
 
-.topbar{
-
-    left: -50px;
-    top: 0.1%;
+.topbar {
+    left: 0;
+    top: 0;
     background-color: #f0f8ff;
     padding: 1rem 5rem;
     position: fixed;
-    top: 0;
     width: 100%;
     height: 7%;
     z-index: 1000;
 }
 
-.topbarItems{
+.topbarItems {
     display: flex;
-    
     align-items: center;
     height: 100%;
 }
 
-.logoweb{
+.logoweb {
     margin-left: 1%;
     width: auto;
     height: 100%;
 }
 
-.topbarUsername{
+.topbarUsername {
     margin-left: 3.5%; 
     font-size: 1.2rem;
     color: black;
@@ -120,14 +106,12 @@ body {
     background-color: #f1f1f1;
 }
 
-/* MOSTRAR el menú cuando se hace hover en el contenedor */
 .userDropdown:hover .dropdown-menu {
     display: block;
     z-index: 1001;
     transform: translateX(-5px);
 }
 
-/* Estilo opcional para la imagen del usuario */
 .userImage {
     width: 40px;
     height: 40px;
@@ -135,18 +119,18 @@ body {
     cursor: pointer;
 }
 
-.shoppingCart{
+.shoppingCart {
     width: 40px;
     height: 40px;
     cursor: pointer;
-    transition: transform 0.3s ease; /* Añadido para la animación */
+    transition: transform 0.3s ease;
 }
 
-.shoppingCart:hover{
+.shoppingCart:hover {
     transform: rotate(-15deg);
 }
 
-.homeButton{
+.homeButton {
     width: 40px;
     height: 40px;
     cursor: pointer;
@@ -155,33 +139,28 @@ body {
     background-color: transparent;
 }
 
-.homeButton:hover{
+.homeButton:hover {
     transform: rotate(-10deg);
 }
 
-
-.groupsDropdown{
+.groupsDropdown {
     margin-top: 1rem;
     border-radius: 10px;
     background-color: white;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    padding: 0.5rem;
     border: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.groupsDropdown option{
-
+.groupsDropdown option {
     text-decoration: none;
     color: black;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    padding: 0.5rem;
     border-radius: 10px;
     background-color: white;
     border: none;
     transition: background-color 0.3s ease;
 }
-
-
-
 
 .sidebar {
     display: flex;
@@ -217,9 +196,8 @@ body {
     text-align: center;
 }
 
-.sidebarUrls{
+.sidebarUrls {
     display: flex;
-    
     align-items: center;
     justify-content: center; 
     width: auto;
@@ -229,201 +207,25 @@ body {
 .logos {
     width: 50%;
     height: auto;
-
     margin-bottom: 10%;
 }
 
 .sidebar a {
-
     display: block;
     color: black;
     padding: 1rem 1.5rem;
     text-decoration: none;
     transition: background-color 0.3s ease;
 }
+
 .sidebar a:hover {
     background-color: lightgray;
 }
+
 .content {
     margin-left: 10%;
     padding: 5%;
-}
-
-.content{
     background-color: #f0f0f0;
-}
-
-.divProducts-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-    background-color: f0f0f0;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-.divProducts {
-    background-color: white;
-    width: 200px;
-    border-radius: 10px;
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    
-    
-    display: flex;
-    flex-direction: column;
-}
-
-.divProducts img {
-    width: 100%;
-    height: 120px;
-    object-fit: contain;
-    border-radius: 5px;
-}
-
-.divProducts strong {
-    display: block;
-    margin: 10px 0;
-    font-size: 1rem;
-}
-
-.divProducts a {
-    display: block;
-    margin-top: auto; 
-    padding: 5px;
-    background-color: white;
-    border: 1px solid black;
-    text-decoration: none;
-    color: black;
-    border-radius: 5px;
-    font-size: 0.9rem;
-}
-
-.divProducts a:hover, .tornarButton:hover {
-    background-color: lightgray; 
-}
-
-.tornarButton{
-    display: block;
-    width: 3.2%;
-    padding: 5px;
-    background-color: white;
-    border: 1px solid black;
-    text-decoration: none;
-    color: black;
-    border-radius: 5px;
-    font-size: 0.9rem;
-}
-
-.categories-container {
-    display: flex;
-    flex-wrap: wrap;  
-    justify-content: center;
-    gap: 10px; 
-    padding: 20px;
-}
-
-.category-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: white;
-    color: black;
-    text-decoration: none;
-    border: 2px solid #000;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.category-button:hover {
-    background-color: lightblue;
-    color: black;
-}
-
-.category-button:focus {
-    outline: 5px solid lightblue;
-    box-shadow: 0 0 5px #000;
-}
-
-.price{
-
-    gap: 1rem;
-    align-items: center;
-    text-align: center;
-
-}
-
-.oldPrice{
-    text-decoration: line-through;
-    color: red;
-}
-
-.profileUtils {
-
-    display: flex;
-    justify-content: flex-end; 
-    align-items: center;
-    gap: 1rem;
-    margin-right: 1rem; 
-}
-
-.name{
-    text-align: left;
-}
-
-
-.configForm {
-
-    align-items: center;
-    width: 100%;
-    padding: 1rem 1rem 1rem 1rem;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    margin: 2rem 0 2rem -1rem;
-    left: 25%;
-    background-color: wheat;
-    border: none;
-    height: 50%;
-    width: 50%;
-    border-radius: 10px;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
-}
-
-.saveButton{
-    
-    background-color: #007bff;
-    color: white;
-    border: none;
-    text-decoration: none;
-    border-radius: 10px;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-    width: 100%;
-}
-
-.configInputs{
-
-    border: none;
-    border-radius: 10px;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-    width: 100%;        
-}
-
-.dngButton{
-    
-    background-color: #ff0000;
-    color: white;
-    border: none;
-    text-decoration: none;
-    border-radius: 10px;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-    width: 100%;
-}
-
-.dngButton:hover{
-    background-color: #7f0202;
 }
 
 hr {
@@ -434,176 +236,9 @@ hr {
     border-radius: 10px; 
 }
 
-.divTotal{
-    position: fixed;
-    top: 20%;
-    right: 5%;
-    background-color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 30px 30px 30px 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    max-width: 200px;
+.content {
+    animation: fadeIn 0.5s ease-in-out;
 }
-
-
-.divCartProducts {
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: none;
-    border-radius: 10px;
-    background-color: white;
-    width: 70%;
-    padding: 1rem;
-    gap: 1rem;
-    justify-content: space-between;
-    margin-top: 1%;
-}
-
-.divCartProducts .productField {
-
-    flex: 1; 
-    white-space: normal; 
-    word-wrap: break-word; 
-}
-
-.listButtons, .tickButton {
-    border: none;
-    border-radius: 50%;
-    background-color: transparent; 
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 1s ease, background-color 0.3s ease;
-    
-}
-
-.buttonImg {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%; 
-    
-}
-
-.listButtons:hover {
-    transform: rotate(180deg);
-    background-color: lightgray;
-}
-
-.div-groupButtons {
-    display: flex;
-    align-items: center;
-    gap: 1rem; /* Espacio entre los botones */
-}
-
-.groupButtons{
-
-    text-decoration: none;
-    color: black;
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-.groupButtons:hover{
-    
-    background-color: lightgray;
-}
-
-.divApiForms {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-    width: 33%;
-    margin-left: 30%;
-    margin-top: 4%;
-    padding: 2rem 2rem 2rem 2rem;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.divApiForms input{
-
-    width: 90%;
-    color: white;
-    margin: 0.5rem;
-    padding: 0.5rem;
-    border: none;
-    justify-content: center;
-    border-radius: 10px;
-    background-color: #767676;
-}
-
-.divApiForms button{
-
-    width: 30%;
-    background-color: #007bff   ;
-    color: white;
-    border: none;
-    text-decoration: none;
-    border-radius: 10px;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-}
-
-
-.divApiForms p {
-    width: 50%; 
-    word-wrap: break-word; 
-    margin-left: 22%;
-}
-
-.group-box {
-    position: relative;
-    padding: 1rem;
-    border-radius: 10px;
-    background: white;
-    z-index: 1;
-    overflow: hidden; 
-  }
-  
-  .group-box::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 4px; 
-    border-radius: 10px;
-    background: linear-gradient(270deg, gray, white, gray, white);
-    background-size: 300% 300%;
-    animation: none;
-    -webkit-mask: 
-      linear-gradient(#fff 0 0) content-box, 
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    z-index: -1;
-    transition: background-position 0.5s ease, animation 0.5s ease;
-  }
-  
-  
-  .group-box:hover::before {
-    animation: moveGradient 3s linear infinite;
-  }
-
-
-  
-  
-  @keyframes moveGradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    100% {
-      background-position: 100% 0%;
-    }
-  }
 
 @keyframes fadeIn {
     from {
@@ -616,6 +251,67 @@ hr {
     }
 }
 
-.content {
-    animation: fadeIn 0.5s ease-in-out;
+/* Media Queries para pantallas más pequeñas */
+@media (max-width: 1024px) {
+    .topbar {
+        padding: 1rem 2rem;
+    }
+
+    .userThings {
+        right: 5rem;
+    }
+
+    .sidebar {
+        width: 15%;
+    }
+
+    .content {
+        margin-left: 15%;
+    }
+}
+
+@media (max-width: 768px) {
+    .topbarUsername {
+        font-size: 1.5rem;
+    }
+
+    .userThings {
+        flex-direction: column;
+        right: 2rem;
+    }
+
+    .sidebar {
+        width: 20%;
+    }
+
+    .content {
+        margin-left: 20%;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar {
+        padding: 1rem;
+    }
+
+    .topbarUsername {
+        font-size: 1rem;
+    }
+
+    .userThings {
+        right: 1rem;
+    }
+
+    .sidebar {
+        width: 30%;
+    }
+
+    .content {
+        margin-left: 30%;
+        padding: 2rem;
+    }
+
+    .logos {
+        width: 70%;
+    }
 }

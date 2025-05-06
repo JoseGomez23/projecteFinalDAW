@@ -1,0 +1,86 @@
+body {
+
+    background-color: #f0f0f0;
+    font-family: monospace, sans-serif;
+    margin-top: 3%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.listButtons, .tickButton {
+    border: none;
+    border-radius: 50%;
+    background-color: transparent; 
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 1s ease, background-color 0.3s ease;
+    
+}
+
+.listButtons:hover {
+    transform: rotate(180deg);
+    background-color: lightgray;
+}
+
+.buttonImg {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; 
+    
+}
+
+.divCartProducts {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    width: 70%;
+    padding: 1rem;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 1%;
+}
+
+.divCartProducts .productField {
+
+    flex: 1; 
+    white-space: normal; 
+    word-wrap: break-word; 
+}
+
+.price{
+
+    gap: 1rem;
+    align-items: center;
+    text-align: center;
+
+}
+
+.oldPrice{
+    text-decoration: line-through;
+    color: red;
+}
+
+.tornarButton {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: white;
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    text-align: center; /* Ensures text is centered */
+    width: auto; /* Ensures button size adjusts to content */
+}
+
+.tornarButton:hover {
+    background-color: lightgray; 
+}
+

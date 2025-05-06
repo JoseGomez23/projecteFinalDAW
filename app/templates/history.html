@@ -9,6 +9,7 @@
     {% extends 'layouts/navbars.html' %}
     {% block content %}
     {% load static %}
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <div class="content">
         <form method="post">
             {% if history %}
@@ -32,7 +33,7 @@
                                 <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="Product Image" style="height: 50px; width: 50px;">
                                 <p id="price{{ product.product_id }}" class="productField">{{ product.price }}€</p>
                                 {% if product.old_price %}
-                                    <p id="oldPrice{{ product.product_id }}" class="productField old-price">{{ product.old_price }}€</p>
+                                    <p id="oldPrice{{ product.product_id }}" class="productField oldPrice">{{ product.old_price }}€</p>
                                 {% endif %}
                                 <p id="quantity{{ product.product_id }}">Quantitat: {{ product.quantity }}</p>
                                 {% if product.product_id in cartItems %}

@@ -16,12 +16,11 @@
     {% extends 'layouts/navbars.html' %}
     {% block content %}
     {% load static %}
+        <link rel="stylesheet" href="{% static 'css/global.css' %}">
     
-       
-
         <div id="map"></div>
-    </div>
-    <script defer src="{% static 'js/map.js' %}"></script>
+    
+        <script defer src="{% static 'js/map.js' %}"></script>
     {% endblock  %}
 
 

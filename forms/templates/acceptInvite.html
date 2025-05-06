@@ -8,6 +8,8 @@
 
     {% extends 'layouts/navbars.html' %}
     {% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <div class="content">
         {% if message %}
             <div class="messages">
