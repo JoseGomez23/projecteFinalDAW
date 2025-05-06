@@ -58,8 +58,15 @@
 
 <!-- Capa oscura para cerrar el menú -->
 <div class="sidebarOverlay" onclick="toggleSidebar()" id="sidebarOverlay"></div>
-<button class="hamburger" onclick="toggleSidebarLandscape()">☰</button>
-<!-- Sidebar principal -->
+<button class="hamburger" onclick="toggleTopbarMenu()">☰</button>
+
+<div class="horizontalMenu" id="horizontalMenu">
+    <a href="{% url 'history' %}"><img src="{% static 'historial.png' %}" alt="Historial"><span>Historial</span></a>
+    <a href="{% url 'groups' %}"><img src="{% static 'grupo.png' %}" alt="Grups"><span>Grups</span></a>
+    <a href="{% url 'favorites' %}"><img src="{% static 'corazon.png' %}" alt="Favorits"><span>Favorits</span></a>
+</div>
+
+
 <nav>
     <div class="sidebar" id="sidebar">  
         <h2>Menú</h2>
@@ -88,11 +95,6 @@
                 document.getElementById('sidebarOverlay').classList.toggle('visible');
             }
 
-            function toggleSidebarLandscape() {
-                const sidebar = document.querySelector('.sidebar');
-                sidebar.classList.toggle('active');
-            }
-
             function toggleDropdown() {
                 const dropdownMenu = document.getElementById('dropdownMenu');
                 dropdownMenu.style.display = 'block';
@@ -112,6 +114,38 @@
                 const menu = document.getElementById('navContent');
                 menu.classList.toggle('show');
             }
+
+            function toggleTopbarMenu() {
+                const menu = document.getElementById("horizontalMenu");
+                menu.classList.toggle("show");
+                if (menu.classList.contains("show")) {
+                    menu.style.display = 'flex';
+                } else {
+                    menu.style.display = 'none';
+                }
+            }
+
+            function checkOrientationAndToggleMenu() {
+                const hamburger = document.querySelector(".hamburger");
+                const sidebar = document.querySelector(".sidebar");
+                const menu = document.getElementById("horizontalMenu");
+
+                if (window.innerHeight < window.innerWidth && window.innerHeight < 500) {
+                    
+                    hamburger.style.display = "block";
+                    if (sidebar) sidebar.style.display = "none";
+                } else {
+                    
+                    hamburger.style.display = "none";
+                    if (sidebar) sidebar.style.display = "flex";
+                    if (menu) menu.style.display = "none";
+                    if (menu) menu.classList.remove("show");
+                }
+            }
+
+            
+            window.addEventListener("load", checkOrientationAndToggleMenu);
+            window.addEventListener("resize", checkOrientationAndToggleMenu);
         </script>
 
     {% block content %}

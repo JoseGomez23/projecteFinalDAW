@@ -331,6 +331,41 @@ hr {
 }
 
 
+.horizontalMenu {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: aliceblue;
+    z-index: 1500;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.horizontalMenu a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+
+.horizontalMenu img {
+    width: 30px;
+    height: 30px;
+}
+
+.horizontalMenu span {
+    font-size: 0.9rem;
+}
+
+
+
 .sidebarToggle {
     display: none;
     position: fixed;
@@ -385,24 +420,18 @@ hr {
     }
 }
 
+
 @media (max-height: 500px) and (max-width: 1024px) {
     .sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        transform: translateX(-100%);
-        width: 10%; /* Puedes ajustar esto */
-        height: 100%;
-        z-index: 1500;
-        background-color: aliceblue;
-    }
-
-    .sidebar.active {
-        transform: translateX(0);
+        display: none;
     }
 
     .hamburger {
         display: block;
+    }
+
+    .horizontalMenu.show {
+        display: flex;
     }
 
     .content {
