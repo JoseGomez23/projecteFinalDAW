@@ -43,7 +43,7 @@
     position: fixed;
     width: 100%;
     height: 7%;
-    z-index: 1000;
+    z-index: 1003;
 }
 
 .topbarItems {
@@ -176,6 +176,7 @@
     background-color: aliceblue;
     color: black;
     padding-top: 20px;
+    z-index: 1001;
 }
 
 .divLogos {
@@ -329,6 +330,7 @@ hr {
     color: black;
     z-index: 1001;
     cursor: pointer;
+    z-index: 1006; 
 }
 
 
@@ -352,7 +354,8 @@ hr {
     .sidebar {
         transform: translateX(-100%);
         transition: transform 0.3s ease-in-out;
-        width: 70%;
+        width: 50%;
+        height: auto;
         max-width: 250px;
         z-index: 1001;
     }
@@ -395,6 +398,11 @@ hr {
         flex-wrap: wrap;
     }
 
+    .logos {
+        width: 15%;
+        height: auto;
+    }
+
     .menuToggle {
         display: block;
     }
@@ -402,7 +410,7 @@ hr {
     .navContent {
         display: none;
         flex-direction: column;
-        width: 100%;
+        width: 80%;
         background-color: #f0f8ff;
         padding: 1rem;
     }
