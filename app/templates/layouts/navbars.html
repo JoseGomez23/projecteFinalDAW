@@ -58,10 +58,10 @@
 
 <!-- Capa oscura para cerrar el menú -->
 <div class="sidebarOverlay" onclick="toggleSidebar()" id="sidebarOverlay"></div>
-
+<button class="hamburger" onclick="toggleSidebarLandscape()">☰</button>
 <!-- Sidebar principal -->
 <nav>
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar" id="sidebar">  
         <h2>Menú</h2>
         <a class="sidebarUrls" href="{% url 'history' %}">
             <img class="logos" src="{% static 'historial.png' %}" alt="historial de compra">
@@ -87,6 +87,12 @@
                 document.getElementById('sidebar').classList.toggle('sidebarOpen');
                 document.getElementById('sidebarOverlay').classList.toggle('visible');
             }
+
+            function toggleSidebarLandscape() {
+                const sidebar = document.querySelector('.sidebar');
+                sidebar.classList.toggle('active');
+            }
+
             function toggleDropdown() {
                 const dropdownMenu = document.getElementById('dropdownMenu');
                 dropdownMenu.style.display = 'block';

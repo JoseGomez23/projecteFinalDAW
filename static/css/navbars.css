@@ -318,6 +318,18 @@ hr {
     }
 }
 
+.hamburger {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2000;
+    background-color: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
 
 .sidebarToggle {
     display: none;
@@ -365,6 +377,31 @@ hr {
     }
 
     .sidebarToggle {
+        display: block;
+    }
+
+    .content {
+        margin-left: 0 !important;
+    }
+}
+
+@media (max-height: 500px) and (max-width: 1024px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        width: 10%; /* Puedes ajustar esto */
+        height: 100%;
+        z-index: 1500;
+        background-color: aliceblue;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .hamburger {
         display: block;
     }
 
