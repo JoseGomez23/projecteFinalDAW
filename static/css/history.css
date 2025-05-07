@@ -28,10 +28,34 @@ details[open] {
     border: none;
     border-radius: 10px;
     background-color: white;
-    width: 95%;
+    width: 68rem;
     padding: 1rem;
     gap: 1rem;
     justify-content: space-between;
     margin-top: 1%;
     border: 1px solid #ccc;
+}
+
+@media (max-width: 768px) {
+    .ticketSummary {
+        font-size: 0.7em;
+        padding: 0.5rem;
+        border-radius: 5px;
+    }
+
+    details {
+        max-height: 1.5rem;
+    }
+
+    details[open] {
+        max-height: 300px;
+    }
+
+    .divCartProducts {
+        flex-direction: column;
+        width: 90%;
+        padding: 0.5rem;
+        gap: 0.5rem;
+        margin-top: 2%;
+    }
 }
