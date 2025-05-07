@@ -110,3 +110,27 @@ body {
     border: none;
     border-radius: 10px;
 }
+
+
+@media (max-width: 768px) {
+    .divCartProducts {
+        flex-direction: column;
+        width: 30rem;
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .divCartProducts .productField {
+        text-align: center;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+    .page-wrapper {
+        margin-left: 0; /* Elimina el margen izquierdo en pantallas pequeñas */
+    }
+    .divCartProducts {
+        width: 100%; /* Asegura que ocupe todo el ancho disponible */
+    }
+    
+}

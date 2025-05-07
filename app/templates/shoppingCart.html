@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/shoppingCart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
     
     <div class="content">
         {{ message }}
@@ -36,12 +37,13 @@
                         <p id="price{{product.product_id}}" class="productField">{{ product.price }}€</p>
 
                         
+                        <div class="divUtils">
+                            <button class="buttons" id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}', '{{ group_id }}')"> - </button>
 
-                        <button id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}', '{{ group_id }}')"> - </button>
+                            <p id="quantity{{ product.product_id }}">{{ product.quantity }}</p>
 
-                        <p id="quantity{{ product.product_id }}">{{ product.quantity }}</p>
-
-                        <button id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}', '{{ group_id }}')"> + </button>
+                            <button class="buttons" id="+{{ product.product_id}}" type="button" onclick="addOne('{{ product.product_id }}', '{{ group_id }}')"> + </button>
+                        </div>
 
                         {% if product.supermarket == 1 %}
                             <img id="supermarket{{ product.product_id }}" src="{% static 'lidl.png' %}" alt="Lidl" style="height: 50px; width: 50px; margin: 0 3rem 0 3rem;">
