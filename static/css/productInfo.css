@@ -23,10 +23,9 @@
 .productActions{
     display: flex;
     justify-content: flex-end;
-    margin-top: -15.5%; 
     position: relative;
-    margin-right: 300px;
-    right: 0;
+   
+    
 }
 
 .productSpecifications{
@@ -64,7 +63,7 @@
 }
 
 .buttonsContainer{
-    margin: 0 0.5rem 0 0.5rem;
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
     display: flex;
     padding: 10px 20px;
     background-color: #007bff;
@@ -72,4 +71,40 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .productInfoContainer {
+        margin-top: 7rem;
+        font-size: x-small;
+        width: 90%;
+    }
+
+    .productImage{
+        width: 50%;
+    }
+
+    .divHelper{
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .productInfoContainer {
+        margin-top: 7rem;
+        font-size: medium;
+        width: 80%;
+    }
+
+    .productImage{
+        width: 30%;
+    }
+
+    .divHelper{
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
 }

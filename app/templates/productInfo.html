@@ -18,7 +18,24 @@
             <div class="productInfoContainer">
                 <h1>{{product.name}}</h1>
                 <img class="productImage" src="{{product.image}}" alt="Imatge de {{product.name}}">
-                
+
+
+                <div class="productActions">
+                    {% if productDB %}
+                        <div id="actionsContainer">
+                            <div class="divHelper">
+                                <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('{{product.id}}')">-</button>
+                                <p id="totalProduct">Al carret: {{productDB}}</p>
+                                <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('{{product.id}}')">+</button>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div id="actionsContainer">
+                            <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Afegir producte</button>
+                        </div>
+                    {% endif %}
+                </div>
+
                 <p>Preu: {{product.price}}€</p>
                 <div class="productSpecifications">
                     {% if product.origin %}
@@ -38,21 +55,6 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="productActions">
-                {% if productDB %}
-                    <div id="actionsContainer">
-                        <div class="divHelper">
-                            <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('{{product.id}}')">-</button>
-                            <p id="totalProduct">Al carret: {{productDB}}</p>
-                            <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('{{product.id}}')">+</button>
-                        </div>
-                    </div>
-                {% else %}
-                    <div id="actionsContainer">
-                        <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Afegir producte</button>
-                    </div>
-                {% endif %}
-            </div>
         {% else %}
             {% if error %}
                 <h1>{{error}}</h1>
@@ -62,13 +64,7 @@
         {% endif %}
     </div>  
     <script defer src="{% static 'js/ajax.js' %}"></script> 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    
     {% include 'layouts/footer.html' %}
     {% endblock %}
 

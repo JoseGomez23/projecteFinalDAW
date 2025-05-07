@@ -225,14 +225,9 @@ body {
 .sidebar a:hover {
     background-color: lightgray;
 }
-.content {
-    margin-left: 10%;
-    padding: 5%;
-}
 
-.content{
-    background-color: #f0f0f0;
-}
+
+
 
 .divProducts-container {
     display: flex;
@@ -592,6 +587,4 @@ hr {
     }
 }
 
-.content {
-    animation: fadeIn 0.5s ease-in-out;
-}
+

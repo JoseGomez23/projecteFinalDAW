@@ -113,6 +113,15 @@ body {
 
 
 @media (max-width: 768px) {
+
+    .content {
+        margin-left: 10%;
+        padding: 5rem;
+        background-color: #f0f0f0;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+
     .divCartProducts {
         font-size: x-small;
         flex-direction: column;
@@ -127,6 +136,14 @@ body {
 }
 
 @media (max-width: 1024px) and (min-width: 768px) {
+
+    .content {
+        margin-left: 10%;
+        padding: 5rem;
+        background-color: #f0f0f0;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
     .page-wrapper {
         
         margin-left: 0; /* Elimina el margen izquierdo en pantallas pequeñas */
