@@ -20,11 +20,14 @@
     margin-top: 1rem;
 }
 
+
+
 @media (max-width: 768px) {
     .divTotal {
         border: 1px solid #ccc;
         width: 90%;
-        margin: 0 auto;
+        margin-top: 1rem;
+        margin-left: 11.5%;
         justify-content: center;
         position: relative;
     }
