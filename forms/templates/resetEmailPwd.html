@@ -6,17 +6,36 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST">
-        {% csrf_token %}
-        {{form}}
-        <input type="submit" value="Enviar correu">
-    </form>
-    
-    {% if error %}
-        <p>{{error}}</p>
-    {% endif %}
-    {% if success %}
-        <p>{{success}}</p>
-    {% endif %}
+
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+        <link rel="stylesheet" href="{% static 'css/global.css' %}">
+        <link rel="stylesheet" href="{% static 'css/userForms.css' %}">
+        <div class="content">
+            <div class="resetPwdForm">
+                <h1>Restablir contrasenya</h1>
+                <p>Si us plau, introdueix el teu correu electrònic per restablir la contrasenya.</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button type="submit">Enviar correu</button>
+                </form>
+            </div>
+            
+            {% if error %}
+                <div class="errors">
+                    <p>{{error}}</p>
+                </div>
+            {% endif %}
+            {% if success %}
+                <div class="messages">
+                    <p>{{success}}</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% include 'layouts/footer.html' %}
+    {% endblock %}
 </body>
 </html>

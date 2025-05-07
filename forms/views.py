@@ -302,10 +302,11 @@ def sendEmail(request):
                 password_token.token = token
                 password_token.exp_date = exp_date
                 password_token.save()
+            else:
             
-            PasswordToken.objects.create(user=user, token=token, exp_date=exp_date)
+                PasswordToken.objects.create(user=user, token=token, exp_date=exp_date)
             
-            reset_url = "http://127.0.1:8000/ resetPassword/" + token
+            reset_url = "http://127.0.1:8000/forms/resetPassword/" + token
             
             send_mail(
                 'Restabliment de contrasenya',
@@ -318,7 +319,7 @@ def sendEmail(request):
             
             return render(request, 'resetEmailPwd.html', {
                 'form': ResetEmailPwd(),
-                'message': 'S\'ha enviat un correu electrònic amb les instruccions per restablir la contrasenya'
+                'success': 'S\'ha enviat un correu electrònic amb les instruccions per restablir la contrasenya'
             })
         
         except User.DoesNotExist:

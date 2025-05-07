@@ -6,16 +6,29 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="post">
-        {% csrf_token %}
-        {{form}}
-        <button type="submit">Submit</button>
-    </form>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    {% if success %}
-        <p style="color: green;">{{ success }}</p>
-    {% endif %}
+
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/userForms.css' %}">
+    <div class="content">
+        <div class="resetPwdForm">
+            <h1>Restablir contrasenya</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+        {% if success %}
+            <p style="color: green;">{{ success }}</p>
+        {% endif %}
+    </div>
+    
+    {% endblock %}
 </body>
 </html>
