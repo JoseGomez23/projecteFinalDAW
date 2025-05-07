@@ -15,6 +15,10 @@
     <div class="content">
         {% if groups_with_members %}
             <h2>Els teus grups:</h2>
+            <div class="create-group">
+                <p>Pots crear un nou grup <a href="{% url 'createGroup' %}" class="btn-create">Aquí</a></p>
+                <p>O pots escanejar un QR i unirte a un grup existent <a href="{% url 'qrCodeReader' %}">Aqui</a></p>
+            </div>
             {% for group_data in groups_with_members %}
             
                 <div class="group-box">
@@ -43,10 +47,6 @@
         {% else %}
             <h2>No formes part de cap grup.</h2>
         {% endif %}
-        <div class="create-group">
-            <p>Pots crear un nou grup <a href="{% url 'createGroup' %}" class="btn-create">Aquí</a></p>
-            <p>O pots escanejar un QR i unirte a un grup existent <a href="{% url 'qrCodeReader' %}">Aqui</a></p>
-        </div>
     </div>
 
     {% include 'layouts/footer.html' %}

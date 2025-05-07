@@ -62,4 +62,10 @@
     font-size: 0.9rem;
     text-align: center; 
     width: auto; 
+    transition: background-color 0.3s ease;
+}
+
+.buyButton:hover {
+    background-color: lightgray; 
+    cursor: pointer;
 }

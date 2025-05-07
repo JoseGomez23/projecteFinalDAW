@@ -44,20 +44,20 @@
                         {% if product.id|stringformat:"s" in shopingList %}
                             {% for product_id, quantity in qnty %}
                                 {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
-                                    <button id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carret: {{ quantity }}</button>
+                                    <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carret: {{ quantity }}</button>
                                 {% endif %}
                             {% endfor %}
                         {% else %}
 
-                            <button id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">No esta al carret</button>
+                            <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">No esta al carret</button>
                         {% endif %}
                     
                         {% if product.id|stringformat:"s" in products %}
-                        <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false, getSelectedGroupId())">
+                        <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false, getSelectedGroupId())">
                             <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
                         </button>
                         {% else %}
-                            <button id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true, getSelectedGroupId())">
+                            <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true, getSelectedGroupId())">
                                 <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
                             </button>
                         {% endif %}
