@@ -45,8 +45,10 @@
                     </div>
                 {% else %}
                     <a href="{% url 'index' %}"><img class="homeButton" src="{% static 'casa.png' %}"></a>
-                    <a href="{% url 'login' %}">Logar-se</a>
-                    <a href="{% url 'register' %}">Registrar-se</a>
+                    <div class="divAuth">
+                        <a class="loginBtn" href="{% url 'login' %}">Logar-se</a>
+                        <a class="registerBtn" href="{% url 'register' %}">Registrar-se</a>
+                    </div>
                 {% endif %}
             </div>
         </div>

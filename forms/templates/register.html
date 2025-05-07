@@ -6,6 +6,7 @@
     <title>Registre</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
 </head>
 <body>
 
@@ -17,7 +18,7 @@
             </a>
         {% else %}
             <a class="" href="{% url 'index' %}">
-                <img src="{% static ' logo.png' %}" alt="Logo de la web" class="logo">
+                <img src="{% static 'logo.png' %}" alt="Logo de la web" class="logo">
             </a>
         {% endif %}
     </div>
@@ -28,8 +29,8 @@
 
         <div class="divLogos">
 
-            <img src="{% static ' lidl.png' %}" alt="Logo de lidl">
-            <img src="{% static ' mercadona.png' %}" alt="Logo de mercadona">
+            <img class="logos" src="{% static 'lidl.png' %}" alt="Logo de lidl">
+            <img class="logos" src="{% static 'mercadona.png' %}" alt="Logo de mercadona">
         </div>  
         
     </div>

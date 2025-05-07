@@ -9,6 +9,37 @@
     z-index: 1000; 
 }
 
+.loginBtn, .registerBtn {
+    display: inline-block;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    background-color: white;
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    height: 31.6px;
+    width: auto;
+    border-radius: 5px;
+    font-family: monospace,sans-serif;
+    font-size: 0.9rem;
+    text-align: center; 
+    width: 100%; 
+    transition: background-color 0.3s ease;
+}
+
+.loginBtn:hover, .registerBtn:hover {
+    background-color: lightgray; 
+}
+
+.divAuth {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; 
+    width: 100%;
+    margin-left: 100%;
+    text-align: center;
+}
+
 .skipToContent:focus {
     z-index: 1001;
     top: 0; 
@@ -30,9 +61,21 @@
 
 .topbarItems {
     display: flex;
+    flex-direction: row;
     align-items: center;
     height: 100%;
+    width: 100%;
 }
+
+.topbarItems a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    font-size: 1.2rem;
+    margin-left: 2rem; 
+}
+
 
 .logoweb {
     margin-left: 1%;
@@ -263,6 +306,17 @@ hr {
         flex-direction: column;
         right: 2rem;
     }
+
+    .divAuth{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        justify-content: center;
+        margin: auto;
+        width: 70%;
+    }
+
+
 
     .sidebar {
         width: 20%;

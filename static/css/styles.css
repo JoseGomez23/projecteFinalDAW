@@ -1,7 +1,7 @@
 body {
 
     background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+    font-family: monospace, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
@@ -111,6 +111,79 @@ button{
     cursor: pointer;
 }
 
+@media (max-width: 768px) {
+    body {
+        font-size: x-small;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0;
+    }
+
+    .divSupers{
+        width: 50%;
+    }
+
+    .divLogo {
+        
+        width: 5rem;
+        height: 5rem;
+        position: relative;
+        margin: 1rem auto; /* Centra el logo en la parte superior */
+    }
+
+    .logos {
+        width: 3rem;
+        height: 3rem;
+    }
+    .divContent {
+        width: 70%;
+        margin: 1rem auto; /* Centra el divContent */
+    }
+
+    .divSupers {
+        width: 90%;
+        margin: 1rem auto; /* Centra el divSupers */
+    }
+    
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+    body {
+        font-size: small;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0;
+    }
+
+    .divSupers{
+        width: 50%;
+    }
+
+    .divLogo {
+        
+        width: 5rem;
+        height: 5rem;
+        position: relative;
+        margin: 1rem auto; /* Centra el logo en la parte superior */
+    }
+
+    .logos {
+        width: 3rem;
+        height: 3rem;
+    }
+    .divContent {
+        width: 70%;
+        margin: 1rem auto; /* Centra el divContent */
+    }
+
+    .divSupers {
+        width: 90%;
+        margin: 1rem auto; /* Centra el divSupers */
+    }
+    
+}
 
 /* Animación de fade-in */
 @keyframes fadeIn {

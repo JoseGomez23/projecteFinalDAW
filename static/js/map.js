@@ -56,7 +56,7 @@ async function buscarMercadonas(coord) {
     
         
     data.results.forEach((place) => {
-        const marker = new mapboxgl.Marker({ color: 'blue' })
+        const marker = new mapboxgl.Marker({ color: '#0054A6' })
             .setLngLat([place.geometry.lng, place.geometry.lat])
             .setPopup(new mapboxgl.Popup().setHTML(`<strong>${place.formatted}</strong>`))
             .addTo(map);
