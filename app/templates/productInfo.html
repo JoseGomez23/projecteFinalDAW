@@ -19,22 +19,23 @@
                 <h1>{{product.name}}</h1>
                 <img class="productImage" src="{{product.image}}" alt="Imatge de {{product.name}}">
 
-
-                <div class="productActions">
-                    {% if productDB %}
-                        <div id="actionsContainer">
-                            <div class="divHelper">
-                                <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('{{product.id}}')">-</button>
-                                <p id="totalProduct">Al carret: {{productDB}}</p>
-                                <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('{{product.id}}')">+</button>
+                {% if user.is_authenticated %}
+                    <div class="productActions">
+                        {% if productDB %}
+                            <div id="actionsContainer">
+                                <div class="divHelper">
+                                    <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('{{product.id}}')">-</button>
+                                    <p id="totalProduct">Al carret: {{productDB}}</p>
+                                    <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('{{product.id}}')">+</button>
+                                </div>
                             </div>
-                        </div>
-                    {% else %}
-                        <div id="actionsContainer">
-                            <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Afegir producte</button>
-                        </div>
-                    {% endif %}
-                </div>
+                        {% else %}
+                            <div id="actionsContainer">
+                                <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Afegir producte</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
 
                 <p>Preu: {{product.price}}€</p>
                 <div class="productSpecifications">

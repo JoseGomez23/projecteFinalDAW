@@ -633,12 +633,18 @@ def productInfo(request, product_id, group_id=""):
         "usage_instructions": details.get("usage_instructions", "")
     }
     
-    productDB = ShoppingCartList.objects.filter(user=request.user, product_id=product_id ,group_id=None)
     
-    if productDB.exists():
-        productQty = productDB[0].quantity
+    if request.user.is_authenticated:
+        productDB = ShoppingCartList.objects.filter(user=request.user, product_id=product_id ,group_id=None)
+        
+        if productDB.exists():
+            productQty = productDB[0].quantity
+        else:
+            productQty = ""
     else:
         productQty = ""
+    
+    
     
     
     return render(request, "productInfo.html", {"product": product, "productDB": productQty})
