@@ -32,7 +32,7 @@
     font-size: 1rem;
 }
 
-.divProducts a {
+/*.divProducts a {
     display: block;
     margin-top: auto; 
     padding: 5px;
@@ -47,9 +47,27 @@
 
 .divProducts a:hover {
     background-color: lightgray; 
+}*/
+
+.moreInfo {
+    display: block;
+    margin-top: auto; 
+    padding: 5px;
+    height: 20px;
+    background-color: white;
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    border-radius: 5px;
+    font-size: 0.9rem;
 }
 
-.buyButton, .buttons {
+.moreInfo:hover {
+    cursor: pointer;
+    background-color: lightgray; 
+}
+
+.buyButton, .buttons{
     display: inline-block;
     padding: 5px 10px;
     background-color: white;
@@ -67,5 +85,13 @@
 
 .buyButton:hover, .buttons:hover {
     background-color: lightgray; 
+    cursor: pointer;
+}
+
+.afix{
+    all: unset;
+}
+
+.afix:hover{
     cursor: pointer;
 }

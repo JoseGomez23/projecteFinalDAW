@@ -156,7 +156,7 @@ button{
         align-items: center;
         justify-content: center;
         margin-right: 0;
-        min-height: 100vh; /* Asegura que el body ocupe toda la altura de la pantalla */
+        
     }
 
     .divSupers{
@@ -178,7 +178,7 @@ button{
 
     .divContent {
         width: 70%;
-        height: 50rem;
+        height: 100%;
         margin: 1rem auto; /* Centra el divContent */
         overflow: auto;
     }

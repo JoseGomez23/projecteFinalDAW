@@ -26,7 +26,9 @@
         <div id="productsContainer" class="divProducts-container">
             {% for product in products %}
                 <div class="divProducts">
-                    <img src="{{ product.thumbnail }}" alt="{{ product.display_name }}">
+                    <a class="afix" href="{% url 'productInfo' product.id %}">
+                        <img src="{{ product.thumbnail }}" alt="{{ product.display_name }}">
+                    </a>
                     <strong>{{ product.display_name }}</strong>
 
                     <div class="price">
@@ -49,7 +51,7 @@
                             {% endfor %}
                         {% else %}
 
-                            <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">No esta al carret</button>
+                            <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">Afegir al carret</button>
                         {% endif %}
 
                         {% if product.id|stringformat:"s" in favorites %}
