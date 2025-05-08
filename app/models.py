@@ -81,4 +81,13 @@ class history(models.Model):
     def __str__(self):
         return f"Historial de {self.user.username} - Ticket {self.ticket_id}"
     
+class MercadoLivreCategory(models.Model):
+    id = models.CharField(max_length=255, primary_key=True)
+    title = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    category_id = models.CharField(max_length=255)
+    next_update = models.DateTimeField(null=True, blank=True)
     
+    
+    def __str__(self):
+        return self.id + " - " + self.title

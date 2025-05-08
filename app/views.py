@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import UsuarioGrupo, GrupFamiliar, FavoriteProducts, ShoppingCartList, history as History
+from .models import UsuarioGrupo, GrupFamiliar, FavoriteProducts, ShoppingCartList, history as History, MercadoLivreCategory
 from django.shortcuts import get_object_or_404
 import requests
 from django.http import JsonResponse
 import uuid
+from django.utils import timezone
 import json
 from datetime import datetime, timedelta
 # Create your views here.
@@ -80,6 +81,128 @@ def subcategories(request, categoria_id):
 #        
 #   return render(request, "productsLidl.html", {"products": products, "title": title})
 
+def categoriesMercadoLivre(request, group_id=""):
+    
+    category_id = request.GET.get("value", "")  # Recoge el valor del parámetro 'value' de la URL
+    
+    print(category_id)
+    
+    upd = timezone.now() - timedelta(days=1)
+    
+    mercado_livre_category = MercadoLivreCategory.objects.filter(category_id=category_id).first()
+    if mercado_livre_category:
+        upd = mercado_livre_category.next_update
+    
+    qnty = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
+    favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
+    shopingList = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
+    
+    if upd < timezone.now():
+    
+        url = f"https://mercado-libre7.p.rapidapi.com/listings_for_category?category_url=https://lista.mercadolivre.com.br{category_id}&sort_by=relevance&page_num=1"
+
+        headers = {
+            "x-rapidapi-key": "1a19d39feemshb2b10cd076a4975p1530fbjsnc80df8b13690",
+            "x-rapidapi-host": "mercado-libre7.p.rapidapi.com"
+        }
+        
+        response = requests.get(url , headers=headers)
+        
+        print(response.json())
+        
+        products = []
+        if response.status_code == 200:
+            raw_products = response.json()
+            for item in raw_products['data']:
+                price = float(item.get('price', 0))
+                realPrice = price * 0.16
+
+                product, created = MercadoLivreCategory.objects.get_or_create(
+                    id=item.get('id'),
+                    defaults={
+                        'title': item.get('title'),
+                        'price': round(realPrice, 2),
+                        'category_id': category_id,
+                        'next_update': datetime.now() + timedelta(days=1)
+                    }
+                )
+
+                if not created:
+                    product.price = round(realPrice, 2)
+                    product.rating = item.get('rating')
+                    product.votes = item.get('votes')
+                    product.next_update = datetime.now() + timedelta(days=1)
+                    product.save()
+            
+            products = MercadoLivreCategory.objects.filter(category_id=category_id)
+                    
+            return render(request, "productsLidl.html", {"products": products, "title": "Products", "qnty": qnty, "favorites": favorites, "shopingList": shopingList})
+
+        else:
+            return render(request, "productsLidl.html", {"error": "Error al obtenir productes de Mercado Livre"})
+        
+    else:
+        
+        products = MercadoLivreCategory.objects.filter(category_id=category_id)
+        
+        if not products.exists():
+            return render(request, "productsLidl.html", {"error": "No hi ha productes disponibles"})
+    
+   
+    return render(request, "productsLidl.html", {"products": products, "title": "Products", "qnty": qnty, "favorites": favorites, "shopingList": shopingList})
+
+
+def addProductToListMercadoLivre(request, product_id):
+
+    if request.method == "POST":
+        product = MercadoLivreCategory.objects.get(id=product_id)
+        
+        list_item, created = ShoppingCartList.objects.get_or_create(
+            user=request.user,
+            group_id=None,
+            product_id=product.id,
+            defaults={"name": product.title, "image": None, "price": product.price, "old_price": None, "quantity": 1, "supermarket": 1}
+        )
+        
+        if not created:
+            if list_item.quantity < 99:
+                list_item.quantity += 1
+                list_item.save()
+            else:
+                return JsonResponse({"message": "Maximum quantity reached"})
+            
+        return JsonResponse({"message": "Añadido al carrito" if created else "Cantidad incrementada en el carrito", "quantity": list_item.quantity})
+
+        
+def addFavoriteMercadoLivre(request, product_id):
+    
+    if request.method == "POST":
+        product = MercadoLivreCategory.objects.get(id=product_id)
+        
+        favorite, created = FavoriteProducts.objects.get_or_create(
+            user=request.user,
+            group_id=None,
+            product_id=product.id,
+            defaults={"name": product.title, "image": None, "price": product.price, "old_price": None}
+        )
+        
+        return JsonResponse({"message": "Afegit a favorits" if created else "Ja estaba a favorits"})
+    else:
+        return JsonResponse({"error": "Metode no permés"}, status=405)
+    
+    
+def removeFavoriteMercadoLivre(request, product_id):
+    
+    if request.method == "POST":
+        try:
+            favorite = FavoriteProducts.objects.get(user=request.user, product_id=product_id, group_id=None)
+            favorite.delete()
+            return JsonResponse({"message": "Eliminat de favorits"})
+        except FavoriteProducts.DoesNotExist:
+            return JsonResponse({"error": "El producte no estava a favorits"}, status=404)
+    return JsonResponse({"error": "Métode no permés"}, status=405)
+            
+
 def products(request, categoria_id, group_id=""):
     
     if not group_id:
@@ -92,6 +215,9 @@ def products(request, categoria_id, group_id=""):
         
             for subcategoria in data.get("categories", []):
                 for product in subcategoria.get("products", []): 
+                    
+                    category = product.get("category", [{}]).get("id", None)
+                    
                     if product.get("published", False): 
                         products.append(product)  
         else:
@@ -105,12 +231,15 @@ def products(request, categoria_id, group_id=""):
             group = [userGroup.group for userGroup in userGroups]
         
         #print(group)
+        subcategoriaId = 5
         
         
         if request.user.is_authenticated:    
             favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             shopingList = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             qnty = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
+            
+            print(products)
 
             return render(request, "products.html", {
                 "products": products,
@@ -118,13 +247,15 @@ def products(request, categoria_id, group_id=""):
                 "shopingList": shopingList,
                 "qnty": qnty,
                 "groups": group,
-                "categoria_id": categoria_id
+                "categoria_id": categoria_id,
+                "subcategoriaId": subcategoriaId
             })
         
         else:
             return render(request, "products.html", {
                 "products": products,
-                "categoria_id": categoria_id
+                "categoria_id": categoria_id,
+                "subcategoriaId": subcategoriaId
             })
     
     else:
@@ -343,7 +474,6 @@ def addProductToList(request, product_id, group_id=None):
         if group_id:
             group = GrupFamiliar.objects.get(id=int(group_id))
 
-        print("siu")
         #cambiar el supermarket a 1 cuando acabe el coso de lidl :D
         list_item, created = ShoppingCartList.objects.get_or_create(
             user=request.user,
@@ -362,6 +492,10 @@ def addProductToList(request, product_id, group_id=None):
         return JsonResponse({"message": "Añadido al carrito" if created else "Cantidad incrementada en el carrito", "quantity": list_item.quantity})
     else:
         return JsonResponse({"error": "Método no permitido"}, status=405)
+    
+#def addProductToList(request, product_id, group_id=None):
+    
+    
     
 @login_required
 def addOneProduct(request, product_id, group_id=""):
@@ -648,6 +782,22 @@ def productInfo(request, product_id, group_id=""):
     
     
     return render(request, "productInfo.html", {"product": product, "productDB": productQty})
+
+def productInfoMercadoLivre(request, product_id):
+    
+    product = MercadoLivreCategory.objects.get(id=product_id)
+    
+    if request.user.is_authenticated:
+        productDB = ShoppingCartList.objects.filter(user=request.user, product_id=product_id ,group_id=None)
+        
+        if productDB.exists():
+            productQty = productDB[0].quantity
+        else:
+            productQty = ""
+    else:
+        productQty = ""
+    
+    return render(request, "productInfoMercadoLivre.html", {"product": product, "productDB": productQty})
 
 def showMap(request):
     return render(request, "map2.html")

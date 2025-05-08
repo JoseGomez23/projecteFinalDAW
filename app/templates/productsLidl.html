@@ -1,66 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
+    <title>Productes</title>
 </head>
 <body>
     {% extends 'layouts/navbars.html' %}
     {% block content %}
     {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
 
     <div class="content">
-        <h1>{{ title }}</h1>
-        <ul class="products-list">
+        <h1>Productes</h1>
+        <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+        {% if user.is_authenticated %}
+            <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
+                <option value="user">El meu perfil</option>
+                {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+        <div id="productsContainer" class="divProducts-container">
             {% for product in products %}
-                <li class="product-item">
-                    <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
-                    <div class="product-details">
-                        <h2 class="product-name">{{ product.name }}</h2>
-                        <p class="product-price">Price: {{ product.price }}</p>
+                <div class="divProducts">
+                    <a class="afix" href="{% url 'productInfo2' product.id %}">
+                        
+                        <img src="{% static 'na.png' %}" alt="{{ product.title }}">
+                    </a>
+                    
+                    <strong>{{ product.title }}</strong>
+
+                    <div class="price">
+                    
+                        <span>{{ product.price }}€</span>
                     </div>
-                </li>
+                    
+                    <hr>
+                    <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Més informació</a>
+                    
+                    {% if user.is_authenticated %}
+
+                        {% if product.id|stringformat:"s" in shopingList %}
+                            {% for product_id, quantity in qnty %}
+                                {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
+                                    <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carret: {{ quantity }}</button>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+
+                            <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Afegir al carret</button>
+                        {% endif %}
+
+                        {% if product.id in favorites %}
+                            <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', true)">
+                                <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                            </button>
+                        {% else %}
+                            <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', false)">
+                                <img src="{% static 'en.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No hi ha productes disponibles.</p>
             {% endfor %}
-        </ul>
-    </div>
+        </div>
+    </div>  
+    <script defer src="{% static 'js/ajax.js' %}"></script> 
+    {% include 'layouts/footer.html' %}
     {% endblock %}
-    <style>
-        .content {
-            padding: 20px;
-        }
-        .products-list {
-            list-style-type: none;
-            padding: 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .product-item {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-            text-align: center;
-        }
-        .product-item:hover {
-            background-color: #e9e9e9;
-        }
-        .product-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .product-details {
-            margin-top: 10px;
-        }
-        .product-name {
-            font-size: 1.2em;
-            margin: 0;
-        }
-        .product-price {
-            color: #555;
-        }
-    </style>
+
+    
 </body>
 </html>

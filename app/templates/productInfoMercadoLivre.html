@@ -17,8 +17,9 @@
     <div class="content">
         {% if product %}
             <div class="productInfoContainer">
-                <h1>{{product.name}}</h1>
-                <img class="productImage" src="{{product.image}}" alt="Imatge de {{product.name}}">
+                
+                <h1>{{product.title}}</h1>
+                <img class="productImage" src="{% static 'na.png' %}" alt="Imatge de {{product.title}}">
 
                 {% if user.is_authenticated %}
                     <div class="productActions">
@@ -32,7 +33,7 @@
                             </div>
                         {% else %}
                             <div id="actionsContainer">
-                                <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Afegir producte</button>
+                                <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo2('{{ product.id }}')">Afegir producte</button>
                             </div>
                         {% endif %}
                     </div>

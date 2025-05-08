@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/products.css' %}">
     <div class="content">
         <h1>Productes</h1>
-        <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+            <a class="tornarButton" href="{% url 'subcategories' 5 %}">Tornar</a>
         {% if user.is_authenticated %}
             <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
                 <option value="user">El meu perfil</option>

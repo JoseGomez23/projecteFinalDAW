@@ -32,7 +32,12 @@
 
                         <h2 id="name{{ product.product_id}}" class="productField">{{ product.name }}</h2>
 
-                        <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image" style="height: 50px; width: 50px;">
+                        {% if not product.image %}
+                            <img id="image{{ product.product_id }}" src="{% static 'na.png' %}" alt="product image" style="height: 50px; width: 50px;">
+                        {% else %}
+                            <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image" style="height: 50px; width: 50px;">
+                        {% endif %}
+                        
 
                         <p id="price{{product.product_id}}" class="productField">{{ product.price }}€</p>
 

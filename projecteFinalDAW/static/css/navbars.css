@@ -101,14 +101,12 @@ body {
     background-color: #f1f1f1;
 }
 
-/* MOSTRAR el menú cuando se hace hover en el contenedor */
 .userDropdown:hover .dropdown-menu {
     display: block;
     z-index: 1001;
     transform: translateX(-5px);
 }
 
-/* Estilo opcional para la imagen del usuario */
 .userImage {
     width: 40px;
     height: 40px;

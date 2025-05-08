@@ -76,6 +76,56 @@ function addProductToCart(productId, group_id) {
     .catch(error => console.error("Error:", error));
 }
 
+function addProductToCart2(productId) {
+    
+    url = `/addProductToListMercadoLivre/${productId}/`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),  
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.quantity !== undefined) {
+            let button = document.getElementById(`addToCartButton2${productId}`);
+            button.innerText = `En el carret: ${data.quantity}`;
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+function toggleFavorite2(productId, isFavorite) {
+    let button = document.getElementById(`favoriteButton2${productId}`);
+    
+    let url = isFavorite ? `/removeFavoriteMercadoLivre/${productId}/` : `/addFavoriteMercadoLivre/${productId}/`;
+    let newImageSrc = isFavorite ? "/static/en.png" : "/static/ea.png";
+    let newOnClick = `toggleFavorite2('${productId}', ${!isFavorite})`;
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),  
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (button) {
+            button.innerHTML = `<img style="width: 16px; height: 16px;" src="${newImageSrc}" alt="${isFavorite ? 'Afegir a favorits' : 'Treure de favorits'}">`;
+            button.setAttribute("onclick", newOnClick);
+        } else {
+            console.error("Error: Botón no encontrado.");
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+
 function addOne(productId, group_id) {
 
     if(group_id == undefined || group_id == "") {
@@ -607,16 +657,45 @@ function removeFromInfo(productId){
             }
         }else {
             if (actionsContainer) {
-                actionsContainer.innerHTML = `
-                    <button class="buttonsContainer" id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('${productId}')">Afegir producte</button>
-                `;
+                
+                if(/[a-zA-Z]/.test(productId)){
+                    actionsContainer.innerHTML = `
+                        <button class="buttonsContainer" id="addToCartButton2{{ product.id }}" onclick="addFirstFromInfo2('${productId}')">Afegir producte</button>
+                    `;
+                }else{
+                    actionsContainer.innerHTML = `
+                        <button class="buttonsContainer" id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('${productId}')">Afegir producte</button>
+                    `;
+                }
             }
         }
+    })
+}
 
-        
+function addFirstFromInfo2(productId){
 
-        
+    let url = `/addProductToListMercadoLivre/${productId}/`;
 
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        let actionsContainer = document.getElementById('actionsContainer');
+        if (actionsContainer) {
+            actionsContainer.innerHTML = `
+            <div class="divHelper">
+                <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('${productId}')">-</button>
+                <p id="totalProduct">Al carret: ${data.quantity !== undefined ? data.quantity : 0}</p>
+                <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('${productId}')">+</button>
+            </div>
+            `;
+        }
     })
 }
 

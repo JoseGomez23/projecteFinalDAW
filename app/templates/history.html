@@ -8,6 +8,7 @@
 <body>
     {% extends 'layouts/navbars.html' %}
     {% block content %}
+    {% load custom_filters %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/history.css' %}">
@@ -34,20 +35,29 @@
                                 {% for product in history.products %}
                                     <div id="product{{ product.product_id }}" class="divCartProducts">
                                         <h2 id="name{{ product.product_id }}" class="productField">{{ product.name }}</h2>
-                                        <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="Product Image" style="height: 50px; width: 50px;">
+                                        {% if not product.image %}
+                                            <img id="image{{ product.product_id }}" src="{% static 'na.png' %}" alt="Product Image" style="height: 50px; width: 50px;">
+                                        {% else %}
+                                            <a class="productLink" href="{% url 'productInfo' product.product_id %}">
+                                                <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="Product Image" style="height: 50px; width: 50px;">
+                                            </a>
+                                        {% endif %}
+                                        
                                         <p id="price{{ product.product_id }}" class="productField">{{ product.price }}€</p>
                                         {% if product.old_price %}
                                             <p id="oldPrice{{ product.product_id }}" class="productField oldPrice">{{ product.old_price }}€</p>
                                         {% endif %}
                                         <p id="quantity{{ product.product_id }}">Quantitat: {{ product.quantity }}</p>
-                                        {% if product.product_id in cartItems %}
-                                            <button class="tickButton" id="removeButton{{ product.product_id }}" type="button">
-                                            <img class="buttonImg" src="{% static 'tick.png' %}" alt="Product already in cart">
-                                            </button>
-                                        {% else %}
-                                            <button class="listButtons" id="addButton{{ product.product_id }}" type="button" onclick="addProductHistory('{{ product.product_id }}', '{{ history.ticket_id }}')">
-                                            <img class="buttonImg" src="{% static 'plus.png' %}" alt="Add product">
-                                            </button>
+                                        {% if not product.product_id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                            {% if product.product_id in cartItems %}
+                                                <button class="tickButton" id="removeButton{{ product.product_id }}" type="button">
+                                                <img class="buttonImg" src="{% static 'tick.png' %}" alt="Product already in cart">
+                                                </button>
+                                            {% else %}
+                                                <button class="listButtons" id="addButton{{ product.product_id }}" type="button" onclick="addProductHistory('{{ product.product_id }}', '{{ history.ticket_id }}')">
+                                                <img class="buttonImg" src="{% static 'plus.png' %}" alt="Add product">
+                                                </button>
+                                            {% endif %}
                                         {% endif %}
                                     </div>
                                 {% endfor %}
