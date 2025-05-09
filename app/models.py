@@ -48,7 +48,7 @@ class ShoppingCartList(models.Model):
     old_price = models.DecimalField(null=True, blank=True, max_digits=6, decimal_places=2)
     image = models.URLField(null=True, blank=True)
     quantity = models.IntegerField(default=1)
-    supermarket = models.BooleanField(default=0)
+    supermarket = models.IntegerField(default=0)
     
     class Meta:
         unique_together = ('user', 'product_id', 'group_id')

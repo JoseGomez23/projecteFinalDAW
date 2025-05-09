@@ -24,11 +24,11 @@ def configuration(request):
         username = request.POST['username']
         email = request.POST['email']
         
-        print(username)
-        print(email)
+        #print(username)
+        #print(email)
         
-        print(request.user.username)
-        print(request.user.email)
+        #print(request.user.username)
+        #print(request.user.email)
         
         if username != request.user.username or email != request.user.email:
             
@@ -53,7 +53,7 @@ def deleteAccount(request):
             groups = GrupFamiliar.objects.filter(id__in=UsuarioGrupo.objects.filter(user=request.user).values_list('group_id', flat=True))
             group_name = [group.name for group in groups]
             
-            print(group_name)
+            #print(group_name)
 
         qtFavProducts = FavoriteProducts.objects.filter(user=request.user).count()
         
@@ -62,7 +62,7 @@ def deleteAccount(request):
         
         userGroup = UsuarioGrupo.objects.filter(user=request.user)
         
-        print(userGroup)
+        #print(userGroup)
         
         if userGroup:
             group = userGroup.group

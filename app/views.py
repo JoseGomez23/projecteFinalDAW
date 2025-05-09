@@ -47,57 +47,30 @@ def subcategories(request, categoria_id):
 
     return render(request, "categories.html", {"categories": subcategorias, "title": title})
 
-#def subcategoriesLidl(request):
-#   getUrl = request.GET.get("value", "")  # Recoge el valor del parámetro 'value' de la URL
-#
-#    url = f"https://lidl.p.rapidapi.com/getProductByURL?url={getUrl}"
-#
-#   headers = {
-#       "X-RapidAPI-Key": "1a19d39feemshb2b10cd076a4975p1530fbjsnc80df8b13690",
-#       "X-RapidAPI-Host": "lidl.p.rapidapi.com"
-#   }
-#
-#   response = requests.get(url, headers=headers)
-#   title = "Products"
-#
-#   products = []
-#   if response.status_code == 200:
-#       raw_products = response.json()  # ← Si es una lista, no uses .get()
-#       for product in raw_products:
-#           products.append({
-#               "title": product.get("gridbox", {}).get("conutry").get("fullTitle"),
-#               "image": product.get("image"),
-#               "price": product.get("price", {}).get("price"),
-#               "currency": product.get("price", {}).get("currencySymbol", "€"),
-#               "brand": product.get("brand", {}).get("name", ""),
-#               "rating": product.get("ratings", {}).get("average", "N/A"),
-#               "rating_count": product.get("ratings", {}).get("count", 0),
-#               "url": "https://www.lidl.fr" + product.get("canonicalPath", "#")
-#           })
-#           print(product)
-#       
-#
-#   else:
-#       print("Error al obtener productos:", response.status_code)
-#        
-#        
-#   return render(request, "productsLidl.html", {"products": products, "title": title})
 
 def categoriesMercadoLivre(request, group_id=""):
     
-    category_id = request.GET.get("value", "")  # Recoge el valor del parámetro 'value' de la URL
+    category_id = request.GET.get("value", "") 
     
-    print(category_id)
+    #print(category_id)
+    
+    user = request.user
     
     upd = timezone.now() - timedelta(days=1)
     
     mercado_livre_category = MercadoLivreCategory.objects.filter(category_id=category_id).first()
     if mercado_livre_category:
         upd = mercado_livre_category.next_update
+        
     
-    qnty = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
-    favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
-    shopingList = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
+    if user.is_authenticated:
+        qnty = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
+        favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
+        shopingList = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
+    else:
+        qnty = []
+        favorites = []
+        shopingList = []
     
     if upd < timezone.now():
     
@@ -110,7 +83,6 @@ def categoriesMercadoLivre(request, group_id=""):
         
         response = requests.get(url , headers=headers)
         
-        print(response.json())
         
         products = []
         if response.status_code == 200:
@@ -243,8 +215,7 @@ def products(request, categoria_id, group_id=""):
             favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             shopingList = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             qnty = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
-            
-            print(products)
+
 
             return render(request, "products.html", {
                 "products": products,
@@ -345,7 +316,7 @@ def acceptInvite(request, group_id, invite_token):
 
     group = get_object_or_404(GrupFamiliar, id=group_id)
 
-    # Check if the invite token matches
+
     if group.invite_token != invite_token:
         return render(request, 'acceptInvite.html', {'error': 'El token d\'invitació no és vàlid!'})
 
@@ -480,7 +451,6 @@ def addProductToList(request, product_id, group_id=None):
         if group_id:
             group = GrupFamiliar.objects.get(id=int(group_id))
 
-        #cambiar el supermarket a 1 cuando acabe el coso de lidl :D
         list_item, created = ShoppingCartList.objects.get_or_create(
             user=request.user,
             group_id=group,
@@ -498,9 +468,6 @@ def addProductToList(request, product_id, group_id=None):
         return JsonResponse({"message": "Añadido al carrito" if created else "Cantidad incrementada en el carrito", "quantity": list_item.quantity})
     else:
         return JsonResponse({"error": "Método no permitido"}, status=405)
-    
-#def addProductToList(request, product_id, group_id=None):
-    
     
     
 @login_required
@@ -536,7 +503,7 @@ def removeOneProduct(request, product_id, group_id=""):
             
             if not group_id or group_id == 1:
                 shopping_cart_item = ShoppingCartList.objects.get(user=request.user, product_id=product_id, group_id=None)
-                print("xdddd")
+
             else:
                 
                 if not GrupFamiliar.objects.filter(id=group_id).exists():
@@ -677,8 +644,6 @@ def addFromHistory(request, product_id, ticket_id):
     return JsonResponse({"error": "Método de solicitud no válido"}, status=400)
 
 
-
-
 @login_required
 def removeChecked(request, group_id=""):
     if request.method == "POST":
@@ -763,7 +728,7 @@ def productInfo(request, product_id, group_id=""):
     
     subcategories = data.get("categories", [])[0].get("categories", [])[0].get("id")
     
-    print(subcategories)
+    #print(subcategories)
     
     product = {
         "id": product_id,

@@ -111,7 +111,7 @@ def authHelper(request):
 
     
     if auth_header:
-        print("Authorization header:", auth_header)
+        #print("Authorization header:", auth_header)
         
         token_obj = ApiToken.objects.filter(token=auth_header).first()
         
@@ -128,11 +128,11 @@ def authHelper(request):
         return True
     elif authorization_cookie:
         
-        print("Authorization cookie:", authorization_cookie)
+        #print("Authorization cookie:", authorization_cookie)
         
         token_obj = ApiToken.objects.filter(token=authorization_cookie).first()
         
-        print("Token object:", token_obj)
+        #print("Token object:", token_obj)
 
         if not token_obj:
             return JsonResponse({'error': 'Unauthorized'}, status=401)

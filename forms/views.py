@@ -105,11 +105,11 @@ def login(request):
                 
                 response.set_cookie(
                 key='Authorization',
-                value=f'{apiToken.token}',  # Estilo típico de auth header
-                httponly=True,  # Importante para seguridad
-                secure=True,  # Solo HTTPS
-                samesite='Lax',  # Puedes usar 'Strict' o 'None' si es necesario
-                expires=apiToken.exp_date  # Expira cuando expire el token
+                value=f'{apiToken.token}',  
+                httponly=True,  
+                secure=True,  
+                samesite='Lax',  
+                expires=apiToken.exp_date 
     )
 
     return response
@@ -213,9 +213,7 @@ def qrReader(request):
             else:
                
                 result = "No s'ha pogut extraure informació del QR."
-        
-        
-            print(raw_text)
+    
         
             if result.startswith('https://projectefinaldaw-2.onrender.com/'):
                 
@@ -256,7 +254,8 @@ def createGroup(request):
             'form': CreateGroup(),
             'error': 'Ja existeix un grup amb aquest nom'
             })
-            
+
+@login_required  
 def addProductApi(request):
         
     if request.method == 'POST':
@@ -337,10 +336,6 @@ def resetPassword(request, token):
         
         try:
             password_token = PasswordToken.objects.get(token=token)
-            
-            print(password_token.exp_date)
-            print(datetime.now())
-            
             
             if password_token.exp_date < datetime.now(password_token.exp_date.tzinfo):
                 return render(request, 'resetPassword.html', {
