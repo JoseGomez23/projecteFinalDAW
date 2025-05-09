@@ -33,9 +33,9 @@
                         <h2 id="name{{ product.product_id}}" class="productField">{{ product.name }}</h2>
 
                         {% if not product.image %}
-                            <img id="image{{ product.product_id }}" src="{% static 'na.png' %}" alt="product image" style="height: 50px; width: 50px;">
+                            <img class="productImg" id="image{{ product.product_id }}" src="{% static 'na.png' %}" alt="product image">
                         {% else %}
-                            <img id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image" style="height: 50px; width: 50px;">
+                            <img class="productImg" id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image">
                         {% endif %}
                         
 
@@ -51,9 +51,9 @@
                         </div>
 
                         {% if product.supermarket == 1 %}
-                            <img id="supermarket{{ product.product_id }}" src="{% static 'lidl.png' %}" alt="Lidl" style="height: 50px; width: 50px; margin: 0 3rem 0 3rem;">
+                            <img class="brandImg" id="supermarket{{ product.product_id }}" src="{% static 'lidl.png' %}" alt="MercadoLivre">
                         {% else %}
-                            <img id="supermarket{{ product.product_id }}" src="{% static 'mercadona.png' %}" alt="Mercadona" style="height: 50px; width: 50px; margin: 0 3rem 0 3rem;">
+                            <img class="brandImg" id="supermarket{{ product.product_id }}" src="{% static 'mercadona.png' %}" alt="Mercadona">
                         {% endif %}
 
                         <button class="listButtons" id="removeButton{{ product.product_id }}" type="button" onclick="removeProduct('{{ product.product_id }}', '{{ group_id }}')">

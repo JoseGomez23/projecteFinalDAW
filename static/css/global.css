@@ -111,6 +111,16 @@ body {
     border-radius: 10px;
 }
 
+.productImg{
+    width: 50px;
+    height: 50px;
+}
+
+.brandImg{
+    height: 50px; 
+    width: 50px; 
+    margin: 0 3rem 0 3rem;
+}
 
 @media (max-width: 768px) {
 

@@ -8,6 +8,7 @@ import uuid
 from django.utils import timezone
 import json
 from datetime import datetime, timedelta
+from django.utils.http import url_has_allowed_host_and_scheme
 # Create your views here.
 
 
@@ -31,6 +32,7 @@ def subcategories(request, categoria_id):
     response = requests.get(url)
     
     title = "Subcategories"
+    
 
     if response.status_code == 200:
         data = response.json().get("results", [])  
@@ -216,12 +218,19 @@ def products(request, categoria_id, group_id=""):
             for subcategoria in data.get("categories", []):
                 for product in subcategoria.get("products", []): 
                     
-                    category = product.get("category", [{}]).get("id", None)
-                    
                     if product.get("published", False): 
                         products.append(product)  
         else:
             products = []
+            
+        
+        subcategory_id = None    
+        
+        first_product = products[0] if products else None
+        if first_product:
+            subcategory_id = first_product.get("categories",[])[0].get("id")
+            
+        print(subcategory_id)
             
         favorites = []
         shopingList = []
@@ -229,10 +238,6 @@ def products(request, categoria_id, group_id=""):
         if request.user.is_authenticated:
             userGroups = UsuarioGrupo.objects.filter(user=request.user)
             group = [userGroup.group for userGroup in userGroups]
-        
-        #print(group)
-        subcategoriaId = 5
-        
         
         if request.user.is_authenticated:    
             favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
@@ -248,14 +253,14 @@ def products(request, categoria_id, group_id=""):
                 "qnty": qnty,
                 "groups": group,
                 "categoria_id": categoria_id,
-                "subcategoriaId": subcategoriaId
+                "subcategory_id": subcategory_id,
             })
         
         else:
             return render(request, "products.html", {
                 "products": products,
                 "categoria_id": categoria_id,
-                "subcategoriaId": subcategoriaId
+                "subcategory_id": subcategory_id,
             })
     
     else:
@@ -297,7 +302,8 @@ def products(request, categoria_id, group_id=""):
             "shopingList": shopingList,
             "qnty": qnty,
             "groups": group,
-            "categoria_id": categoria_id
+            "categoria_id": categoria_id,
+            "subcategory_id": subcategory_id,
         })
     
 
@@ -754,7 +760,10 @@ def productInfo(request, product_id, group_id=""):
         
     price_info = data.get("price_instructions", {})
     details = data.get("details", {})
-        
+    
+    subcategories = data.get("categories", [])[0].get("categories", [])[0].get("id")
+    
+    print(subcategories)
     
     product = {
         "id": product_id,
@@ -779,9 +788,7 @@ def productInfo(request, product_id, group_id=""):
         productQty = ""
     
     
-    
-    
-    return render(request, "productInfo.html", {"product": product, "productDB": productQty})
+    return render(request, "productInfo.html", {"product": product, "productDB": productQty, "subcategory_id": subcategories})
 
 def productInfoMercadoLivre(request, product_id):
     

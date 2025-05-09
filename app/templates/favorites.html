@@ -39,7 +39,9 @@
                     <div class="divProducts">
 
                         {% if not product.image %}
-                            <img src="{% static 'na.png' %}" alt="{{ product.name }}">
+                            <a class="productLink" href="{% url 'productInfo2' product.id %}">
+                                <img src="{% static 'na.png' %}" alt="{{ product.name }}">
+                            </a>
                         {% else %}
                             <a class="productLink" href="{% url 'productInfo' product.id %}">
                                 
@@ -59,6 +61,8 @@
                         <hr>
                         {% if not product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
                             <a class="moreInfo" href="{% url 'productInfo' product.id %}">Més informació</a>
+                        {% else %}
+                            <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Més informació</a>
                         {% endif %}
 
                         {% if product.id|stringformat:"s" in shopingList %}

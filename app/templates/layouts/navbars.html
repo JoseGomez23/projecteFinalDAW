@@ -75,15 +75,15 @@
         <br>
         <a class="sidebarUrls" href="{% url 'history' %}">
             <img class="logos" src="{% static 'historial.png' %}" alt="historial de compra">
-            <p style="margin: 0;"><b>Historial</b></p>
+            <p class="sidebarLogoText"><b>Historial</b></p>
         </a>
         <a class="sidebarUrls" href="{% url 'groups' %}">
             <img class="logos" src="{% static 'grupo.png' %}" alt="Grups dels usuaris">
-            <p style="margin: 0;"><b>Grups</b></p>
+            <p class="sidebarLogoText"><b>Grups</b></p>
         </a>
         <a class="sidebarUrls" href="{% url 'favorites' %}">
             <img class="logos" src="{% static 'corazon.png' %}" alt="Productes Favorits">
-            <p style="margin: 0;"><b>Favorits</b></p>
+            <p class="sidebarLogoText"><b>Favorits</b></p>
         </a>
         <div class="divLogos">
             <img class="logos" src="{% static 'lidl.png' %}" alt="Logo de lidl">
@@ -92,64 +92,64 @@
     </div>
 </nav>
 
-        <script>
-            function toggleSidebar() {
-                document.getElementById('sidebar').classList.toggle('sidebarOpen');
-                document.getElementById('sidebarOverlay').classList.toggle('visible');
-            }
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('sidebarOpen');
+            document.getElementById('sidebarOverlay').classList.toggle('visible');
+        }
 
-            function toggleDropdown() {
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = 'block';
+        }
+
+        function delayedCloseDropdown() {
+            setTimeout(() => {
+                const active = document.activeElement;
                 const dropdownMenu = document.getElementById('dropdownMenu');
-                dropdownMenu.style.display = 'block';
-            }
-    
-            function delayedCloseDropdown() {
-                setTimeout(() => {
-                    const active = document.activeElement;
-                    const dropdownMenu = document.getElementById('dropdownMenu');
-                    if (!dropdownMenu.contains(active)) {
-                        dropdownMenu.style.display = 'none';
-                    }
-                }, 100);
-            }
-    
-            function toggleMenu() {
-                const menu = document.getElementById('navContent');
-                menu.classList.toggle('show');
-            }
-
-            function toggleTopbarMenu() {
-                const menu = document.getElementById("horizontalMenu");
-                menu.classList.toggle("show");
-                if (menu.classList.contains("show")) {
-                    menu.style.display = 'flex';
-                } else {
-                    menu.style.display = 'none';
+                if (!dropdownMenu.contains(active)) {
+                    dropdownMenu.style.display = 'none';
                 }
+            }, 100);
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('navContent');
+            menu.classList.toggle('show');
+        }
+
+        function toggleTopbarMenu() {
+            const menu = document.getElementById("horizontalMenu");
+            menu.classList.toggle("show");
+            if (menu.classList.contains("show")) {
+                menu.style.display = 'flex';
+            } else {
+                menu.style.display = 'none';
             }
+        }
 
-            function checkOrientationAndToggleMenu() {
-                const hamburger = document.querySelector(".hamburger");
-                const sidebar = document.querySelector(".sidebar");
-                const menu = document.getElementById("horizontalMenu");
+        function checkOrientationAndToggleMenu() {
+            const hamburger = document.querySelector(".hamburger");
+            const sidebar = document.querySelector(".sidebar");
+            const menu = document.getElementById("horizontalMenu");
 
-                if (window.innerHeight < window.innerWidth && window.innerHeight < 500) {
-                    
-                    hamburger.style.display = "block";
-                    if (sidebar) sidebar.style.display = "none";
-                } else {
-                    
-                    hamburger.style.display = "none";
-                    if (sidebar) sidebar.style.display = "flex";
-                    if (menu) menu.style.display = "none";
-                    if (menu) menu.classList.remove("show");
-                }
+            if (window.innerHeight < window.innerWidth && window.innerHeight < 500) {
+                
+                hamburger.style.display = "block";
+                if (sidebar) sidebar.style.display = "none";
+            } else {
+                
+                hamburger.style.display = "none";
+                if (sidebar) sidebar.style.display = "flex";
+                if (menu) menu.style.display = "none";
+                if (menu) menu.classList.remove("show");
             }
+        }
 
-            
-            window.addEventListener("load", checkOrientationAndToggleMenu);
-            window.addEventListener("resize", checkOrientationAndToggleMenu);
-        </script>
+        
+        window.addEventListener("load", checkOrientationAndToggleMenu);
+        window.addEventListener("resize", checkOrientationAndToggleMenu);
+    </script>
 
     {% block content %}
     {% endblock %}

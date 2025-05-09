@@ -14,12 +14,13 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/productInfo.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbars.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
     <div class="content">
+       
         {% if product %}
             <div class="productInfoContainer">
                 <h1>{{product.name}}</h1>
                 <img class="productImage" src="{{product.image}}" alt="Imatge de {{product.name}}">
-
                 {% if user.is_authenticated %}
                     <div class="productActions">
                         {% if productDB %}
@@ -37,7 +38,7 @@
                         {% endif %}
                     </div>
                 {% endif %}
-
+                
                 <p>Preu: {{product.price}}€</p>
                 <div class="productSpecifications">
                     {% if product.origin %}
@@ -64,6 +65,8 @@
                 <h1>Producte no trobat</h1>
             {% endif %}
         {% endif %}
+        <a href="{% url 'products' subcategory_id %}" class="buyButton">Tornar</a>
+
     </div>  
     <script defer src="{% static 'js/ajax.js' %}"></script> 
     
