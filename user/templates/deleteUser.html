@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <div class="content">
+        <h2>Estàs segur que vols eliminar el teu compte?</h2>
+        <p>Si elimines el teu compte no podràs recuperar-lo.</p>
+        {% if group %}
+            <p>Actualment estàs en el grup/s: <b>
+                {% for grp in group %}
+                    {{ grp }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </b>. Si elimines el compte també sortiras del grup/s.</p>
+        {% endif %}
+
+        {% if qtFavProducts %}
+            <p>Tens un total de <b>{{qtFavProducts}}</b> productes favorits, si elimines el teu compte perdràs tots els teus productes.</p>
+        {% endif %}
+        <form action="{% url 'deleteAccount' %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Eliminar">
+        </form>
+    </div>
+    
+    {% include 'layouts/footer.html' %}
+    {% endblock %}
+    
+    
+</body>
+</html>

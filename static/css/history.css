@@ -1,0 +1,87 @@
+.ticketSummary {
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: white;
+    border: none;
+    padding: 1rem 1rem 1rem 1rem;
+    border-radius: 10px;
+    box-shadow: inset;
+}
+
+details {
+    overflow-y: scroll;
+    transition: max-height 0.3s ease-in-out;
+    max-height: 2rem; 
+    
+}
+
+details[open] {
+    max-height: 500px; 
+}
+
+
+.divCartProducts {
+    font-size: small;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: none;
+    border-radius: 10px;
+    background-color: white;
+    width: 68rem;
+    padding: 1rem;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 1%;
+    border: 1px solid #ccc;
+}
+
+@media (max-width: 768px) {
+    .ticketSummary {
+        font-size: x-small;
+        padding: 0.5rem;
+        border-radius: 5px;
+    }
+
+    details {
+        max-height: 1.5rem;
+    }
+
+    details[open] {
+        max-height: 600px;
+    }
+
+    .divCartProducts {
+        flex-direction: column;
+        width: 12rem;
+        padding: 0.5rem;
+        gap: 0.2rem;
+        margin-top: 2%;
+        height: 12;
+        
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .ticketSummary {
+        font-size: 1rem;
+        padding: 0.8rem;
+        border-radius: 8px;
+    }
+
+    details {
+        max-height: 2rem;
+    }
+
+    details[open] {
+        max-height: 500px;
+    }
+
+    .divCartProducts {
+        flex-direction: row;
+        width: 28.5rem;
+        padding: 0.8rem;
+        gap: 0.5rem;
+        margin-top: 1.5%;
+    }
+}

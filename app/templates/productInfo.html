@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Informació del producte</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load custom_filters %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/productInfo.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbars.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+    <div class="content">
+       
+        {% if product %}
+            <div class="productInfoContainer">
+                <h1>{{product.name}}</h1>
+                <img class="productImage" src="{{product.image}}" alt="Imatge de {{product.name}}">
+                {% if user.is_authenticated %}
+                    <div class="productActions">
+                        {% if productDB %}
+                            <div id="actionsContainer">
+                                <div class="divHelper">
+                                    <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('{{product.id}}')">-</button>
+                                    <p id="totalProduct">Al carret: {{productDB}}</p>
+                                    <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('{{product.id}}')">+</button>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div id="actionsContainer">
+                                <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Afegir producte</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                <p>Preu: {{product.price}}€</p>
+                <div class="productSpecifications">
+                    {% if product.origin %}
+                        <p>Òrigen: {{product.origin}}</p>
+                    {% else %}
+                        <p>Òrigen: Desconegut</p>
+                    {% endif %}
+                    {% if product.brand %}
+                        <p>Marca: {{product.brand}}</p>
+                    {% else %}
+                        <p>Marca: Desconeguda</p>
+                    {% endif %}
+                    {% if product.usage_instructions %}
+                        <p>Instruccions d'ús: {{product.usage_instructions}}</p>
+                    {% else %}
+                        <p>Instruccions d'ús: No disponibles</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            {% if error %}
+                <h1>{{error}}</h1>
+            {% else %}
+                <h1>Producte no trobat</h1>
+            {% endif %}
+        {% endif %}
+        <a href="{% url 'products' subcategory_id %}" class="buyButton">Tornar</a>
+
+    </div>  
+    <script defer src="{% static 'js/ajax.js' %}"></script> 
+    
+    {% include 'layouts/footer.html' %}
+    {% endblock %}
+
+    
+</body>
+</html>

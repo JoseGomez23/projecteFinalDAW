@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productes</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+    <div class="content">
+        <h1>Productes</h1>
+            <a class="tornarButton" href="{% url 'subcategories' subcategory_id %}">Tornar</a>
+        {% if user.is_authenticated %}
+            <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
+                <option value="user">El meu perfil</option>
+                {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        {% endif %}
+        <div id="productsContainer" class="divProducts-container">
+            {% for product in products %}
+                <div class="divProducts">
+                    <a class="afix" href="{% url 'productInfo' product.id %}">
+                        <img src="{{ product.thumbnail }}" alt="{{ product.display_name }}">
+                    </a>
+                    <strong>{{ product.display_name }}</strong>
+
+                    <div class="price">
+                    {% if product.price_instructions.previous_unit_price %}
+                        <span class="oldPrice">{{ product.price_instructions.previous_unit_price }}€</span>
+                    {% endif %}
+                    <span>{{ product.price_instructions.unit_price }}€</span>
+                    </div>
+                    
+                    <hr>
+                    <a class="moreInfo" href="{% url 'productInfo' product.id %}">Més informació</a>
+
+                    {% if user.is_authenticated %}
+
+                        {% if product.id|stringformat:"s" in shopingList %}
+                            {% for product_id, quantity in qnty %}
+                                {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
+                                    <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carret: {{ quantity }}</button>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+
+                            <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">Afegir al carret</button>
+                        {% endif %}
+
+                        {% if product.id|stringformat:"s" in favorites %}
+                            <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true, getSelectedGroupId())">
+                                <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                            </button>
+                        {% else %}
+                            <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false, getSelectedGroupId())">
+                                <img src="{% static 'en.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% empty %}
+                <p>No hi ha productes disponibles.</p>
+            {% endfor %}
+        </div>
+    </div>  
+    <script defer src="{% static 'js/ajax.js' %}"></script> 
+    {% include 'layouts/footer.html' %}
+    {% endblock %}
+
+    
+</body>
+</html>

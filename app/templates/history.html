@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load custom_filters %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/history.css' %}">
+    <div class="content">
+        <form method="post">
+            {% if history %}
+                <h2>Historial de comandes</h2>
+                <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupTickets(this.value)">
+                    <option value="user">El meu perfil</option>
+                    {% for group in groups %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+                <div id="ticketsContainer">
+                    <ul>
+                        {% for history in history %}
+                        <div class="ticketSummary">
+                            <details>
+                                
+                                <summary>Ticket ID: {{ history.ticket_id }}</summary>
+                                <hidden id="{{ history.ticket_id }}"></hidden>
+                                
+                                <ul>
+                                {% for product in history.products %}
+                                    <div id="product{{ product.product_id }}" class="divCartProducts">
+                                        <h2 id="name{{ product.product_id }}" class="productField">{{ product.name }}</h2>
+                                        {% if not product.image %}
+                                            <img class="productImg" id="image{{ product.product_id }}" src="{% static 'na.png' %}" alt="Product Image" >
+                                        {% else %}
+                                            <a class="productLink" href="{% url 'productInfo' product.product_id %}">
+                                                <img class="productImg" id="image{{ product.product_id }}" src="{{ product.image }}" alt="Product Image" >
+                                            </a>
+                                        {% endif %}
+                                        
+                                        <p id="price{{ product.product_id }}" class="productField">{{ product.price }}€</p>
+                                        {% if product.old_price %}
+                                            <p id="oldPrice{{ product.product_id }}" class="productField oldPrice">{{ product.old_price }}€</p>
+                                        {% endif %}
+                                        <p id="quantity{{ product.product_id }}">Quantitat: {{ product.quantity }}</p>
+                                        {% if not product.product_id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                            {% if product.product_id in cartItems %}
+                                                <button class="tickButton" id="removeButton{{ product.product_id }}" type="button">
+                                                <img class="buttonImg" src="{% static 'tick.png' %}" alt="Product already in cart">
+                                                </button>
+                                            {% else %}
+                                                <button class="listButtons" id="addButton{{ product.product_id }}" type="button" onclick="addProductHistory('{{ product.product_id }}', '{{ history.ticket_id }}')">
+                                                <img class="buttonImg" src="{% static 'plus.png' %}" alt="Add product">
+                                                </button>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                                </ul>
+                            </details>
+                        </div>
+                        <br>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+            <div id="ticketsContainer">
+                <h2>No hi ha historial de comandes.</h2>
+            </div>
+            {% endif %}
+            
+        </form>
+    </div>
+    <script src="{% static 'js/ajax.js' %}" defer></script>
+
+    {% include 'layouts/footer.html' %}
+    {% endblock %}
+</body>
+</html>

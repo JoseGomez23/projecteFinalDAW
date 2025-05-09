@@ -1,0 +1,46 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+
+    path('', views.index, name="index"),
+    path('indexLogat/', views.index, name="indexLogat"),
+    path('leaveGroup/<int:group_id>/', views.leaveGroup, name="leaveGroup"),
+    path('acceptInvite/<int:group_id>/<str:invite_token>/', views.acceptInvite, name="acceptInvite"),
+    path('subcategories/<int:categoria_id>/', views.subcategories, name="subcategories"),
+    #path('subcategoriesLidl/', views.subcategoriesLidl, name="subcategoriesLidl"),
+    path('productsMercadoLivre/', views.categoriesMercadoLivre, name="productsMercadoLivre"),
+    path('addFavoriteMercadoLivre/<str:product_id>/', views.addFavoriteMercadoLivre, name="subcategoriesMercadoLivre"),
+    path('removeFavoriteMercadoLivre/<str:product_id>/', views.removeFavoriteMercadoLivre, name="subcategoriesMercadoLivre"),
+    path('addProductToListMercadoLivre/<str:product_id>/', views.addProductToListMercadoLivre, name="addProductToListMercadoLivre"),
+    path('products/<int:categoria_id>/', views.products, name="products"),
+    path('products/<int:categoria_id>/<int:group_id>/', views.products, name="products"),
+    path("addFavorite/<str:product_id>/", views.addFavorite , name="addFavorite"),
+    path("addGroupFavorite/<str:product_id>/<int:group_id>/", views.addFavorite , name="addGroupFavorite"),
+    path("removeFavorite/<str:product_id>/", views.removeFavorites , name="removeFavorite"),
+    path("removeGroupFavorite/<str:product_id>/<int:group_id>/", views.removeFavorites , name="removeGroupFavorite"),
+    path('favorites/', views.showFavorites, name="favorites"),
+    path('favorites/<int:group_id>/', views.showFavorites, name="favorites"),
+    path('addProductToList/<str:product_id>/', views.addProductToList, name="addProductToList"),
+    path('addProductToList/<str:product_id>/<int:group_id>/', views.addProductToList, name="addProductToList"),
+    path('addProductToList2/<str:product_id>/', views.addProductToList, name="addProductToList"),
+    path('addProductToList2/<str:product_id>/<int:group_id>/', views.addProductToList, name="addProductToList"),
+    path('shoppingCartList/', views.shoppingCartList, name="shoppingCartList"),
+    path('shoppingCartList/<int:group_id>/', views.shoppingCartList, name="shoppingCartList"),
+    path('addOneProduct/<str:product_id>/' , views.addOneProduct, name="addOneProduct"),
+    path('addOneProduct/<str:product_id>/<int:group_id>/' , views.addOneProduct, name="addOneProductGroups"),
+    path('removeOneProduct/<str:product_id>/' , views.removeOneProduct, name="removeOneProduct"),
+    path('removeOneProduct/<str:product_id>/<int:group_id>/' , views.removeOneProduct, name="removeOneProductGroups"),
+    path('removeProduct/<str:product_id>/' , views.removeProductFromList, name="removeProduct"),
+    path('removeProduct/<str:product_id>/<int:group_id>/' , views.removeProductFromList, name="removeProductGroups"),
+    path('removeChecked/<str:group_id>/', views.removeChecked, name="removeCheckedProducts"),
+    path('history/', views.history, name="history"),
+    path('history/<int:group_id>/', views.history, name="historyGroups"),
+    path('addFromHistory/<str:product_id>/<str:ticket_id>/', views.addFromHistory, name="addFromHistory"),
+    path('productInfo/<str:product_id>/', views.productInfo, name="productInfo"),
+    path('productInfo2/<str:product_id>/', views.productInfoMercadoLivre, name="productInfo2"),
+    path('marketsMap/', views.showMap, name="map"),
+    path('refreshFavorites/', views.refreshFavorites, name="refreshFavorites"),
+    path('groups/', views.groups, name="groups")    
+]
+

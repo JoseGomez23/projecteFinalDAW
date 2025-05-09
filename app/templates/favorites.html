@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productes favorits</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load custom_filters %}
+    {% load static %}
+    
+    
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
+    <script defer src="{% static 'js/ajax.js' %}"></script>
+
+    <div class="content">
+        <h1>Productes favorits</h1>
+
+        <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+
+        <select class="groupsDropdown" id="groupsDropdown" onchange="refreshFavoriteGroups(this.value)">
+            <option value="user">El meu perfil</option>
+            {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+            {% endfor %}
+        </select>
+
+        <form method="post" id="updateProductsForm" action="{% url 'refreshFavorites' %}">
+            <button>Actualitzar productes</button>
+            {% csrf_token %}
+        </form>
+
+        <div id="productsContainer" class="divProducts-container">
+            {% for product in products %}
+                {% if not product.group_id %}
+                    <div class="divProducts">
+
+                        {% if not product.image %}
+                            <a class="productLink" href="{% url 'productInfo2' product.id %}">
+                                <img src="{% static 'na.png' %}" alt="{{ product.name }}">
+                            </a>
+                        {% else %}
+                            <a class="productLink" href="{% url 'productInfo' product.id %}">
+                                
+                                <img src="{{ product.image }}" alt="{{ product.name }}">
+                            </a>
+                        {% endif %}
+                        
+                        <strong>{{ product.name }}</strong>
+
+                        <div class="price">
+                            {% if product.old_price %}
+                                <span class="oldPrice">{{ product.old_price }}€</span>
+                            {% endif %}
+                            <span>{{ product.price }}€</span>
+                        </div>
+
+                        <hr>
+                        {% if not product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                            <a class="moreInfo" href="{% url 'productInfo' product.id %}">Més informació</a>
+                        {% else %}
+                            <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Més informació</a>
+                        {% endif %}
+
+                        {% if product.id|stringformat:"s" in shopingList %}
+                            {% for product_id, quantity in qnty %}
+                                {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
+                                    {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                        <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">En el carret: {{ quantity }}</button>
+                                    {% else %}
+                                        <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carret: {{ quantity }}</button>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]"  %}
+                                <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Afegir al carret</button>
+                            {% else %}
+                                <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">Afegir al carret</button>
+                            {% endif %}
+                        {% endif %}
+                    
+                        {% if product.id|stringformat:"s" in products %}
+                            {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', false)">
+                                    <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                                </button>
+                            {% else %}
+                                <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false, getSelectedGroupId())">
+                                    <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                                </button>
+                            {% endif %}
+                        {% else %}
+
+                            {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', true)">
+                                    <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                                </button>
+                            {% else %}
+                                <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true, getSelectedGroupId())">
+                                    <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                                </button>
+                            {% endif %}
+
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% empty %}
+                <p>No hi ha productes favorits.</p>
+            {% endfor %}
+        </div>
+    </div>  
+    {% include 'layouts/footer.html' %}
+    {% endblock %}
+</body>
+</html>
