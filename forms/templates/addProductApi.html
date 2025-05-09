@@ -18,15 +18,18 @@
         <div class="divApiForms">
             <h1>Crear un producte</h1>
             {% if name %}
+            <br>
                 <p>{{name}}</p>
-            {% endif %}
-            <form method="post">
-                
-                {% csrf_token %}
-                {{form.as_p}}
-                <button type="submit">Crear</button>
+                <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+            {% else %}
+                <form method="post">
+                    
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button type="submit">Crear</button>
 
-            </form>
+                </form>
+            {% endif %}
 
             {% if error %}
                 <div class="errors">

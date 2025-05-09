@@ -275,7 +275,7 @@ def addProductApi(request):
         
         ApiProducts.objects.create(name=name, old_price=old_price, price=price, image_url=image_url)
         
-        return render(request, 'addProductApi.html', {'name': name})
+        return render(request, 'addProductApi.html', {'name': "Producte afegit correctament"})
     return render(request, 'addProductApi.html', {'form': apiForms.addProductApi()})
 
 
