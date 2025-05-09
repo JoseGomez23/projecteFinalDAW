@@ -1,0 +1,106 @@
+.configForm {
+
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1rem 1rem 1rem;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin: 2rem 0 2rem -1rem;
+    left: 25%;
+    background-color: wheat;
+    border: none;
+    height: 50%;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.saveButton{
+    
+    background-color: #007bff;
+    color: white;
+    border: none;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    width: 100%;
+}
+
+.configInputs{
+
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    width: 100%;        
+}
+
+.dngButton{
+    
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    width: 100%;
+}
+
+.dngButton:hover{
+    background-color: #7f0202;
+}
+
+.resetPwdForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1rem 1rem 1rem;
+    position: relative;
+    margin: 2rem 0 2rem -1rem;
+    left: 25%;
+    background-color: white;
+    border: none;
+    height: 50%;
+    width: 50%;
+    border-radius: 10px;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.resetPwdForm input{
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    width: 100%;
+    
+}
+
+.resetPwdForm p{
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.resetPwdForm button{
+    background-color: #007bff;
+    color: white;
+    border: none;
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    width: 105%;
+    transition: background-color 0.3s ease;
+}
+
+.resetPwdForm input:focus{
+    border-color: #007bff;
+    outline: none;
+}
+
+.resetPwdForm button:hover{
+    background-color: #0056b3;
+}
+
