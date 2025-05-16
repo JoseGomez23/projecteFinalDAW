@@ -11,4 +11,25 @@ class ApiProducts(models.Model):
         return self.name
 
     class Meta:
-        unique_together = ('name', 'image_url', 'price')  
+        unique_together = ('name', 'image_url', 'price') 
+        
+    def getProducts():
+        try:
+            products = ApiProducts.objects.all()
+            return products
+        except ApiProducts.DoesNotExist:
+            return None
+        
+    def getProduct(name, price):
+        try:
+            product = ApiProducts.objects.filter(name=name, price=price)
+            return product
+        except ApiProducts.DoesNotExist:
+            return None
+        
+    def createProduct(name, old_price, price, image_url):
+        try:
+            product =  ApiProducts.objects.create(name=name, old_price=old_price, price=price, image_url=image_url)
+            return product
+        except ApiProducts.DoesNotExist:
+            return None

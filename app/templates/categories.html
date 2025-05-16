@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cat">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{% static 'css/categories.css' %}">
         <div class="content">
 
-            <h1>{{title}}</h1>
+            <h1>Subcategorias</h1>
 
             <div class="categories-container">
                 {% for category in categories %}
@@ -23,9 +23,6 @@
                     </a>
                 {% endfor %}
             </div>
-
-            
-            
         </div>
 
     {% endblock  %}

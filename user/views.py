@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import Config
 from .forms import Config
+from .models import getUser
 from app.models import FavoriteProducts, GrupFamiliar, UsuarioGrupo
 # Create your views here.
 
@@ -9,6 +10,7 @@ from app.models import FavoriteProducts, GrupFamiliar, UsuarioGrupo
 def configuration(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
+            
             initial_data = {
                 "username": request.user.username,
                 "email": request.user.email
@@ -32,21 +34,29 @@ def configuration(request):
         
         if username != request.user.username or email != request.user.email:
             
-            user = request.user
-            user.username = username
-            user.email = email
-            user.save()
-            form = Config(initial={"username": user.username, "email": user.email})
-            return render(request, "userConfiguration.html", {"form": form, "message": "La configuració s'ha actualitzat correctament"})
+            userExists = getUser(username)
+            
+            if not userExists:
+                user = request.user
+                user.username = username
+                user.email = email
+                user.save()
+                form = Config(initial={"username": user.username, "email": user.email})
+                return render(request, "userConfiguration.html", {"form": form, "message": "La configuración se ha actualizado correctamente"})
+            else:
+                form = Config(initial={"username": username, "email": email})
+                return render(request, "userConfiguration.html", {"form": form, "error": "Ya existe un usuario con ese nombre de usuario"})
         else:
             form = Config(initial={"username": username, "email": email})
-            return render(request, "userConfiguration.html", {"form": form, "error": "Has de canviar algun camp per poder actualitzar la configuració"})
+            return render(request, "userConfiguration.html", {"form": form, "error": "Debes cambiar algún campo para poder actualizar la configuración"})
     
 @login_required
 def deleteAccount(request):
     if request.method == 'GET':
         
-        usuario_grupo = UsuarioGrupo.objects.filter(user=request.user).first()
+        user = getUser(request.user.username)
+        
+        usuario_grupo = UsuarioGrupo.getGroups(user)
         group_name = None
 
         if usuario_grupo:
@@ -60,21 +70,22 @@ def deleteAccount(request):
         return render(request, "deleteUser.html", {"group": group_name, "qtFavProducts": qtFavProducts})
     elif request.method == 'POST':
         
-        userGroup = UsuarioGrupo.objects.filter(user=request.user)
+        user = getUser(request.user.username)
         
-        #print(userGroup)
-        
-        if userGroup:
+        userGroups = UsuarioGrupo.getGroups(user)
+
+        for userGroup in userGroups:
             group = userGroup.group
             userGroup.delete()
             
-            if not UsuarioGrupo.objects.filter(group=group).exists():
+            if not UsuarioGrupo.getUsers(group):
                 group.delete()
+
         
         user = request.user
         user.delete()
         
         return redirect("index")
     else:
-        return render(request, "userConfiguration.html", {"error": "S'ha produït un error a l'hora d'eliminar l'usuari"})
+        return render(request, "userConfiguration.html", {"error": "Se ha producido un error al eliminar el usuario"})
 

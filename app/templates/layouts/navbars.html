@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
     
 </head>
 <body>
-    <button class="skipToContent" id="skipToContent" onclick="document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });">Anar al contingut</button>
+    <button class="skipToContent" id="skipToContent" onclick="document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });">Bajar al contenido</button>
     <nav class="topbar">
         <div class="topbarItems">
             <!-- Logo -->
@@ -23,7 +23,7 @@
             <!-- Contenedor de navegación que se colapsa en móvil -->
             <div class="navContent" id="navContent">
                 {% if user.is_authenticated %}
-                    <h2 class="topbarUsername">Benvingut {{ user.username }}</h2>
+                    <h2 class="topbarUsername">Bienvenido, {{ user.username }}.</h2>
     
                     <a href="{% url 'indexLogat' %}"><img alt="Inici" class="homeButton" src="{% static 'casa.png' %}"></a>
                     <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
@@ -39,15 +39,15 @@
                             <img alt="Imatge de l'usuari" src="{% static 'user.png' %}" class="userImage" id="userImage" tabindex="0" aria-haspopup="true" aria-expanded="false" onfocus="toggleDropdown()" onblur="delayedCloseDropdown()">
                             <div class="dropdown-menu" id="dropdownMenu">
                                 <a tabindex="0" href="{% url 'configuration' %}">Editar perfil</a>
-                                <a tabindex="0" href="{% url 'logout' %}">Tancar sessió</a>
+                                <a tabindex="0" href="{% url 'logout' %}">Cerrar sessión</a>
                             </div>
                         </div>
                     </div>
                 {% else %}
                     <a href="{% url 'index' %}"><img class="homeButton" src="{% static 'casa.png' %}"></a>
                     <div class="divAuth">
-                        <a class="loginBtn" href="{% url 'login' %}">Logar-se</a>
-                        <a class="registerBtn" href="{% url 'register' %}">Registrar-se</a>
+                        <a class="loginBtn" href="{% url 'login' %}">Iniciar sesión</a>
+                        <a class="registerBtn" href="{% url 'register' %}">Registrarse</a>
                     </div>
                 {% endif %}
             </div>
@@ -64,8 +64,8 @@
 
 <div class="horizontalMenu" id="horizontalMenu">
     <a href="{% url 'history' %}"><img src="{% static 'historial.png' %}" alt="Historial"><span>Historial</span></a>
-    <a href="{% url 'groups' %}"><img src="{% static 'grupo.png' %}" alt="Grups"><span>Grups</span></a>
-    <a href="{% url 'favorites' %}"><img src="{% static 'corazon.png' %}" alt="Favorits"><span>Favorits</span></a>
+    <a href="{% url 'groups' %}"><img src="{% static 'grupo.png' %}" alt="Grups"><span>Grupos</span></a>
+    <a href="{% url 'favorites' %}"><img src="{% static 'corazon.png' %}" alt="Favorits"><span>Favoritos</span></a>
 </div>
 
 
@@ -79,11 +79,11 @@
         </a>
         <a class="sidebarUrls" href="{% url 'groups' %}">
             <img class="logos" src="{% static 'grupo.png' %}" alt="Grups dels usuaris">
-            <p class="sidebarLogoText"><b>Grups</b></p>
+            <p class="sidebarLogoText"><b>Grupos</b></p>
         </a>
         <a class="sidebarUrls" href="{% url 'favorites' %}">
             <img class="logos" src="{% static 'corazon.png' %}" alt="Productes Favorits">
-            <p class="sidebarLogoText"><b>Favorits</b></p>
+            <p class="sidebarLogoText"><b>Favoritos</b></p>
         </a>
         <div class="divLogos">
             <img class="logos" src="{% static 'lidl.png' %}" alt="Logo de lidl">

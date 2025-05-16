@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="cat">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,10 +15,10 @@
 
     <div class="content">
         <h1>Productes</h1>
-        <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+        <a class="tornarButton" href="{% url 'indexLogat' %}">Volver</a>
         {% if user.is_authenticated %}
             <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
-                <option value="user">El meu perfil</option>
+                <option value="user">Mi perfil</option>
                 {% for group in groups %}
                 <option value="{{ group.id }}">{{ group.name }}</option>
                 {% endfor %}
@@ -40,19 +40,19 @@
                     </div>
                     
                     <hr>
-                    <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Més informació</a>
+                    <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Más informacion</a>
                     
                     {% if user.is_authenticated %}
 
                         {% if product.id|stringformat:"s" in shopingList %}
                             {% for product_id, quantity in qnty %}
                                 {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
-                                    <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carret: {{ quantity }}</button>
+                                    <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carro: {{ quantity }}</button>
                                 {% endif %}
                             {% endfor %}
                         {% else %}
 
-                            <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Afegir al carret</button>
+                            <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Añadir al carro</button>
                         {% endif %}
 
                         {% if product.id in favorites %}
@@ -67,7 +67,7 @@
                     {% endif %}
                 </div>
             {% empty %}
-                <p>No hi ha productes disponibles.</p>
+                <p>No hay productos disponibles.</p>
             {% endfor %}
         </div>
     </div>  

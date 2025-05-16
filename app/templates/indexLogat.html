@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cat">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="{% static 'css/categories.css' %}">
     <div class="content">
 
-        <h1>{{title}}</h1>
+        <h1>Categorias</h1>
 
         <div class="categories-container">
             {% for category in categories %}
@@ -23,15 +23,15 @@
                 </a>
             {% endfor %}
 
-            <a class="category-button" href="https://projectefinaldaw-2.onrender.com/productsMercadoLivre/?value=/alimentos-bebidas/comida-preparada/">
+            <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/comida-preparada/">
                 Menjar Preparat (MercadoLivre)
             </a>
 
-            <a class="category-button" href="https://projectefinaldaw-2.onrender.com/productsMercadoLivre/?value=/alimentos-bebidas/bebidas/">
+            <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/bebidas/">
                 Begudes (MercadoLivre)
             </a>
 
-            <a class="category-button" href="https://projectefinaldaw-2.onrender.com/productsMercadoLivre/?value=/alimentos-bebidas/congelados/">
+            <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/congelados/">
                 Congelats (MercadoLivre)
             </a>
         </div>

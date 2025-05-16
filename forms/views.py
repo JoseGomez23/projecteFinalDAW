@@ -13,10 +13,9 @@ import api.forms as apiForms
 from api.models import ApiProducts
 import aspose.barcode as barcode
 from .utils import generate_qr_code
-from app.models import UsuarioGrupo, GrupFamiliar
+from app.models import UsuarioGrupo, GrupFamiliar, createUser, getUser, getUserByEmail
 from user.models import ApiToken, PasswordToken
 import os
-from app.models import GrupFamiliar
 import re
 from datetime import datetime, timedelta
 
@@ -37,7 +36,7 @@ def register(request):
         if request.POST['password'] == request.POST['password2']:
             
             try: 
-                user = User.objects.create_user(username=request.POST['username'], email=request.POST['email'] ,password=request.POST['password'])
+                user = createUser(request.POST['username'], request.POST['email'], request.POST['password'])
                 user.save()
                 _login(request, user)
                 return redirect('indexLogat')
@@ -76,17 +75,18 @@ def login(request):
                 })
             else:
                 
-                user = User.objects.get(username=request.POST['username'])
+                user = getUser(request.POST['username'])
 
-                apiToken = ApiToken.objects.filter(user=user).first()
+                apiToken = ApiToken.getApiToken(request.POST['username'])
                 
                 if apiToken:
+                    
                     apiToken.token = str(uuid.uuid4())
                     apiToken.exp_date = datetime.now() + timedelta(hours=1)
                     apiToken.save()
-                    
-                    
+                             
                 else:
+                    
                     token_str = str(uuid.uuid4())
                     exp_date = datetime.now() + timedelta(hours=1)
 
@@ -116,24 +116,30 @@ def login(request):
             
 @login_required
 def groups(request, group_id):
-    user_groups = UsuarioGrupo.objects.filter(user=request.user)
+    
+    
+    user_groups = UsuarioGrupo.getGroups(request.user)
     groups = [user_group.group for user_group in user_groups]
     
-    
-
     if request.method == 'GET':
         
-        group = GrupFamiliar.objects.get(id=group_id)
-        invite_token = group.invite_token
-        invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group_id, invite_token]))
+        try:
+            group = GrupFamiliar.getGroup(group_id)
+            invite_token = group.invite_token
+            invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group_id, invite_token]))
 
-        buffer = generate_qr_code(invite_url)
-        qrCode = base64.b64encode(buffer.getvalue()).decode()
-        
-        return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'groups': groups, 'qrCode': qrCode})
+            buffer = generate_qr_code(invite_url)
+            qrCode = base64.b64encode(buffer.getvalue()).decode()
+            
+            return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'groups': groups, 'qrCode': qrCode})
+        except:
+            return render(request, 'addGroupMember.html', {
+                'error': 'El grup no existeix',
+                'groups': groups
+            })
     else:
         try:
-            user = User.objects.get(username=request.POST['username'])
+            user = getUser(request.POST['username'])
             email = user.email
         except User.DoesNotExist:
             return render(request, 'addGroupMember.html', {
@@ -143,23 +149,29 @@ def groups(request, group_id):
             })
 
         try:
-            group = GrupFamiliar.objects.get(id=group_id)
+            group = GrupFamiliar.getGroup(group_id)
         except GrupFamiliar.DoesNotExist:
             return render(request, 'addGroupMember.html', {
                 'form': AddUserToGroup(),
                 'error': 'El grup no existeix',
                 'groups': groups
             })
-
-        if UsuarioGrupo.objects.filter(user=user, group=group).exists():
+            
+            
+        userExists = UsuarioGrupo.userInGroup(user, group)
+        
+        if  userExists:
             return render(request, 'addGroupMember.html', {
                 'form': AddUserToGroup(),
                 'error': 'L\'usuari ja pertany a aquest grup',
                 'groups': groups
             })
+         
+        
 
         if email:
-            invite_token = GrupFamiliar.objects.get(id=group_id).invite_token
+            
+            invite_token = GrupFamiliar.getGroup(group_id).invite_token
             invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
 
             send_mail(
@@ -215,7 +227,7 @@ def qrReader(request):
                 result = "No s'ha pogut extraure informació del QR."
     
         
-            if result.startswith('https://projectefinaldaw-2.onrender.com/'):
+            if result.startswith('https://projectefinaldaw-2.onrender.com/') or result.startswith('http://127.0.0.1:8000/'):
                 
                 return render(request, 'readQr.html', {'results': result, 'form': QrCode()})
             else:
@@ -245,8 +257,8 @@ def createGroup(request):
             })
         
         try:
-            group = GrupFamiliar.objects.create(name=request.POST['name'], invite_token=str(uuid.uuid4()))
-            userGroup = UsuarioGrupo.objects.create(user=request.user, group=group)
+            group = GrupFamiliar.createGroup(request.POST['name'], str(uuid.uuid4()))
+            userGroup = UsuarioGrupo.addUser(request.user, group)
             userGroup.save()
             return redirect('groups')
         except IntegrityError:
@@ -265,7 +277,7 @@ def addProductApi(request):
         price = request.POST['price']
         image_url = request.POST['image_url']
         
-        exists = ApiProducts.objects.filter(name=name, price=price)
+        exists = ApiProducts.getProduct(name=name, price=price)
         
         if exists:
             return render(request, 'addProductApi.html', {'error': "Aquest producte ja existeix", 'form': apiForms.addProductApi()})
@@ -273,7 +285,7 @@ def addProductApi(request):
         if not old_price:
             old_price = None
         
-        ApiProducts.objects.create(name=name, old_price=old_price, price=price, image_url=image_url)
+        ApiProducts.createProduct(name=name, old_price=old_price, price=price, image_url=image_url)
         
         return render(request, 'addProductApi.html', {'name': "Producte afegit correctament"})
     return render(request, 'addProductApi.html', {'form': apiForms.addProductApi()})
@@ -292,20 +304,28 @@ def sendEmail(request):
             })
         
         try:
-            user = User.objects.get(email=email)
+            user = getUserByEmail(email)
             token = str(uuid.uuid4())
             exp_date = datetime.now() + timedelta(hours=1)
             
-            if PasswordToken.objects.filter(user=user).exists():
+            pwdToken = PasswordToken.getPasswordToken(user)
+            
+            if pwdToken:
+                
                 password_token = PasswordToken.objects.get(user=user)
                 password_token.token = token
                 password_token.exp_date = exp_date
                 password_token.save()
             else:
+                if user:
+                    PasswordToken.createPasswordToken(user, token, exp_date)
+                else:
+                    return render(request, 'resetEmailPwd.html', {
+                        'form': ResetEmailPwd(),
+                        'error': 'No existeix cap usuari amb aquest correu electrònic'
+                    })
             
-                PasswordToken.objects.create(user=user, token=token, exp_date=exp_date)
-            
-            reset_url = "http://127.0.1:8000/forms/resetPassword/" + token
+            reset_url = request.build_absolute_uri(reverse('resetPassword', args=[token]))
             
             send_mail(
                 'Restabliment de contrasenya',
@@ -335,7 +355,7 @@ def resetPassword(request, token):
     if request.method == 'GET':
         
         try:
-            password_token = PasswordToken.objects.get(token=token)
+            password_token = PasswordToken.checkPasswordToken(token=token)
             
             if password_token.exp_date < datetime.now(password_token.exp_date.tzinfo):
                 return render(request, 'resetPassword.html', {
@@ -356,7 +376,7 @@ def resetPassword(request, token):
         if request.POST['password'] == request.POST['password2']:
             
             try:
-                password_token = PasswordToken.objects.get(token=token)
+                password_token = PasswordToken.checkPasswordToken(token=token)
                 
                 user = password_token.user
                 

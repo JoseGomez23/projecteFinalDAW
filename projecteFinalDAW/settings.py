@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*+3+w_!+g+p3t-g-%wl_kiy4zn#8t*l3xh8q%f*q+k9q68b*hh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['projectefinaldaw-2.onrender.com','projectefinaldaw.onrender.com', 'localhost', '127.0.0.1']
 
@@ -87,8 +87,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',  # Motor de la base de datos
+        'NAME': 'ddb253510',  # El nombre de tu base de datos en MySQL
+        'USER': 'ddb253510',  # El usuario con el que accedes a MySQL
+        'PASSWORD': 'Jose23082005',  # La contraseña de ese usuario
+        'HOST': 'bbdd.josegomez.cat',  # El dominio o IP del servidor MySQL
+        'PORT': '3306',  # Puerto por defecto para MySQL
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            
+        },
     }
 }
 

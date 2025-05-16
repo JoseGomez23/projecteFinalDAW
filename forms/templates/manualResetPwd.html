@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Documento</title>
 </head>
 <body>
 
@@ -14,11 +14,11 @@
         <link rel="stylesheet" href="{% static 'css/userForms.css' %}">
         <div class="content">
             <div class="resetPwdForm">
-                <h1>Restablir contrasenya</h1>
+                <h1>Restablecer contraseña</h1>
                 <form method="post">
                     {% csrf_token %}
                     {{form.as_p}}
-                    <button type="submit">Submit</button>
+                    <button type="submit">Enviar</button>
                 </form>
             </div>
             {% if error %}

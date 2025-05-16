@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="cat">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,14 +22,14 @@
         <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
 
         <select class="groupsDropdown" id="groupsDropdown" onchange="refreshFavoriteGroups(this.value)">
-            <option value="user">El meu perfil</option>
+            <option value="user">Mi perfil</option>
             {% for group in groups %}
                 <option value="{{ group.id }}">{{ group.name }}</option>
             {% endfor %}
         </select>
 
         <form method="post" id="updateProductsForm" action="{% url 'refreshFavorites' %}">
-            <button>Actualitzar productes</button>
+            <button>Actualitzar productos</button>
             {% csrf_token %}
         </form>
 
@@ -60,26 +60,26 @@
 
                         <hr>
                         {% if not product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
-                            <a class="moreInfo" href="{% url 'productInfo' product.id %}">Més informació</a>
+                            <a class="moreInfo" href="{% url 'productInfo' product.id %}">Más información</a>
                         {% else %}
-                            <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Més informació</a>
+                            <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Más información</a>
                         {% endif %}
 
                         {% if product.id|stringformat:"s" in shopingList %}
                             {% for product_id, quantity in qnty %}
                                 {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
                                     {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
-                                        <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">En el carret: {{ quantity }}</button>
+                                        <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">En el carro: {{ quantity }}</button>
                                     {% else %}
-                                        <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carret: {{ quantity }}</button>
+                                        <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carro: {{ quantity }}</button>
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
                         {% else %}
                             {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]"  %}
-                                <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Afegir al carret</button>
+                                <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Añadir al carrito</button>
                             {% else %}
-                                <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">Afegir al carret</button>
+                                <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">Añadir al carrito</button>
                             {% endif %}
                         {% endif %}
                     
@@ -109,10 +109,11 @@
                     </div>
                 {% endif %}
             {% empty %}
-                <p>No hi ha productes favorits.</p>
+                <p>No hay productos favoritos.</p>
             {% endfor %}
         </div>
-    </div>  
+    </div> 
+    
     {% include 'layouts/footer.html' %}
     {% endblock %}
 </body>

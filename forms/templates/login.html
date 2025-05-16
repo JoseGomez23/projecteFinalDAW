@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Iniciar sesión</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
@@ -23,7 +23,7 @@
     
     <div class="divSupers">
 
-        <p>Trobaràs productes dels següents supermercats.</p>
+        <p>Encontrarás productos de los siguientes supermercados.</p>
 
         <div class="divLogos">
 
@@ -35,7 +35,7 @@
    
 
     <div class="divContent">
-        <h1>Login</h1>
+        <h1>Iniciar sesión</h1>
 
         {{error}}
 
@@ -43,9 +43,9 @@
 
             {% csrf_token %}
             {{form.as_p}}
-            <p>Si no tens un compte, <a href="{% url 'register' %}">Registra't</a></p>
-            <p>Has oblidat la contrasenya? <a href="{% url 'sendEmail' %}">Restableix-la</a></p>
-            <button type="submit">Login</button>
+            <p>Si no tienes una cuenta, <a href="{% url 'register' %}">Regístrate</a></p>
+            <p>¿Has olvidado la contraseña? <a href="{% url 'sendEmail' %}">Restablécela</a></p>
+            <button type="submit">Iniciar sesión</button>
         </form>
     </div>
 

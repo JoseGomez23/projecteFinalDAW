@@ -25,7 +25,11 @@ def index(request):
     else:
         categorias = []
 
-    return render(request, "indexLogat.html", {"categories": categorias, "title": title})
+    url1 = request.build_absolute_uri()
+    
+    url = url1.split("indexLogat/")[0]
+        
+    return render(request, "indexLogat.html", {"categories": categorias, "title": title, "url": url})
 
 def subcategories(request, categoria_id):
     url = "https://tienda.mercadona.es/api/categories/"
@@ -33,7 +37,6 @@ def subcategories(request, categoria_id):
     
     title = "Subcategories"
     
-
     if response.status_code == 200:
         data = response.json().get("results", [])  
         subcategorias = []
@@ -179,45 +182,41 @@ def removeFavoriteMercadoLivre(request, product_id):
 
 def products(request, categoria_id, group_id=""):
     
-    if not group_id:
-        url = f"https://tienda.mercadona.es/api/categories/{categoria_id}"
-        response = requests.get(url)
+    url = f"https://tienda.mercadona.es/api/categories/{categoria_id}"
+    response = requests.get(url)
+    products = []
+    subcategory_id = None
 
-        if response.status_code == 200:
-            data = response.json()  
-            products = []
-        
+    if response.status_code == 200:
+        data = response.json()
+        try:
             for subcategoria in data.get("categories", []):
-                for product in subcategoria.get("products", []): 
-                    
-                    if product.get("published", False): 
-                        products.append(product)  
-        else:
+                for product in subcategoria.get("products", []):
+                    if product.get("published", False):
+                        products.append(product)
+            if products:
+                first_product = products[0]
+                subcategories = first_product.get("categories", [])
+                if subcategories:
+                    subcategory_id = subcategories[0].get("id")
+        except:
             products = []
+            subcategory_id = None
             
-        
-        subcategory_id = None    
-        
-        first_product = products[0] if products else None
-        if first_product:
-            subcategory_id = first_product.get("categories",[])[0].get("id")
-            
-        print(subcategory_id)
-            
-        favorites = []
-        shopingList = []
-        
+                
+    favorites = []
+    shopingList = []
+    qnty = []
+    group = []
+
+    if not group_id:
         if request.user.is_authenticated:
             userGroups = UsuarioGrupo.objects.filter(user=request.user)
             group = [userGroup.group for userGroup in userGroups]
-        
-        if request.user.is_authenticated:    
             favorites = FavoriteProducts.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             shopingList = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", flat=True)
             qnty = ShoppingCartList.objects.filter(user=request.user, group_id=None).values_list("product_id", "quantity")
-
-
-            return render(request, "products.html", {
+            context = {
                 "products": products,
                 "favorites": favorites,
                 "shopingList": shopingList,
@@ -225,49 +224,20 @@ def products(request, categoria_id, group_id=""):
                 "groups": group,
                 "categoria_id": categoria_id,
                 "subcategory_id": subcategory_id,
-            })
-        
+            }
         else:
-            return render(request, "products.html", {
+            context = {
                 "products": products,
                 "categoria_id": categoria_id,
                 "subcategory_id": subcategory_id,
-            })
-    
+            }
     else:
-        
-        url = f"https://tienda.mercadona.es/api/categories/{categoria_id}"
-        response = requests.get(url)
-
-        if response.status_code == 200:
-            data = response.json()  
-            products = []
-        
-            for subcategoria in data.get("categories", []):
-                for product in subcategoria.get("products", []): 
-                    if product.get("published", False): 
-                        products.append(product)  
-        else:
-            products = []
-            
-        favorites = []
-        shopingList = []
-        
         group = UsuarioGrupo.objects.filter(group_id=group_id)
-        
-        
-        #print(group)
-        
-        #print(group_id)
-        
-        
-        if request.user.is_authenticated:    
+        if request.user.is_authenticated:
             favorites = FavoriteProducts.objects.filter(group_id=group_id).values_list("product_id", flat=True)
             shopingList = ShoppingCartList.objects.filter(group_id=group_id).values_list("product_id", flat=True)
             qnty = ShoppingCartList.objects.filter(group_id=group_id).values_list("product_id", "quantity")
-            
-
-        return render(request, "products.html", {
+        context = {
             "products": products,
             "favorites": favorites,
             "shopingList": shopingList,
@@ -275,7 +245,9 @@ def products(request, categoria_id, group_id=""):
             "groups": group,
             "categoria_id": categoria_id,
             "subcategory_id": subcategory_id,
-        })
+        }
+
+    return render(request, "products.html", context)
     
 
     
@@ -450,6 +422,8 @@ def addProductToList(request, product_id, group_id=None):
         group = None
         if group_id:
             group = GrupFamiliar.objects.get(id=int(group_id))
+            
+        
 
         list_item, created = ShoppingCartList.objects.get_or_create(
             user=request.user,

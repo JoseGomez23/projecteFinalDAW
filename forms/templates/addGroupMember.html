@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grups</title>
+    <title>Grupos</title>
 </head>
 <body>
     {% extends 'layouts/navbars.html' %}
@@ -14,12 +14,12 @@
     <div class="content">
     
         
-        <h1>Afegir Integrant al grup familiar</h1>
+        <h1>Añadir integrante al grupo familiar</h1>
         <form method="post">
 
             {% csrf_token %}
             {{form.as_p}}
-            <button type="submit">Afegir</button>
+            <button type="submit">Añadir</button>
         </form>
 
         {% if message %}
@@ -36,8 +36,8 @@
 
         {% if qrCode %}
         <div>
-            <h2>O si tens un lector de QR's a mà</h2>
-            <img style="height: 400px; width: 400px;" src="data:image/png;base64,{{ qrCode }}" alt="QR Code">
+            <h2>O si tienes un lector de QR a mano</h2>
+            <img style="height: 400px; width: 400px;" src="data:image/png;base64,{{ qrCode }}" alt="Código QR">
         </div>
         {% endif %}
     </div>

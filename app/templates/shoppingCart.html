@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping cart</title>
+    <title>Carrito de la compra</title>
 </head>
 <body>
     
@@ -20,7 +20,7 @@
         {% if groupVar %}
             <form id="buyForm" method="post" action="{% url 'removeCheckedProducts' groupVar %}">
 
-                <h1>Carret de la compra</h1>
+                <h1>Carrito de la compra</h1>
                 {{ error}}
                 <hidden id="groupId" name="groupId" value="user"></hidden>
 
@@ -33,15 +33,13 @@
                         <h2 id="name{{ product.product_id}}" class="productField">{{ product.name }}</h2>
 
                         {% if not product.image %}
-                            <img class="productImg" id="image{{ product.product_id }}" src="{% static 'na.png' %}" alt="product image">
+                            <img class="productImg" id="image{{ product.product_id }}" src="{% static 'na.png' %}" alt="imagen del producto">
                         {% else %}
-                            <img class="productImg" id="image{{ product.product_id }}" src="{{ product.image }}" alt="product image">
+                            <img class="productImg" id="image{{ product.product_id }}" src="{{ product.image }}" alt="imagen del producto">
                         {% endif %}
                         
-
                         <p id="price{{product.product_id}}" class="productField">{{ product.price }}€</p>
 
-                        
                         <div class="divUtils">
                             <button class="buttons" id="-{{ product.product_id }}" type="button" onclick="deleteOne('{{ product.product_id }}', '{{ group_id }}')"> - </button>
 
@@ -51,25 +49,32 @@
                         </div>
 
                         {% if product.supermarket == 1 %}
-                            <img class="brandImg" id="supermarket{{ product.product_id }}" src="{% static 'lidl.png' %}" alt="MercadoLivre">
+                            <img class="brandImg" id="supermarket{{ product.product_id }}" src="{% static 'lidl.png' %}" alt="Lidl">
                         {% else %}
                             <img class="brandImg" id="supermarket{{ product.product_id }}" src="{% static 'mercadona.png' %}" alt="Mercadona">
                         {% endif %}
 
                         <button class="listButtons" id="removeButton{{ product.product_id }}" type="button" onclick="removeProduct('{{ product.product_id }}', '{{ group_id }}')">
-                            <img class="buttonImg" src="{% static 'x.webp' %}" alt="Eliminar producte">
+                            <img class="buttonImg" src="{% static 'x.webp' %}" alt="Eliminar producto">
                         </button>
                     </div>
+                {% empty %}
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <h2>Aún no has añadido ningún producto. Empieza <a href="{% url 'indexLogat' %}">aquí</a></h2>
                 {% endfor %}
             
                 <div class="divTotal">
-                    <p>Això nomes és un preu de referencia, pot variar de l’original i ser diferent dels supermercats de la teva zona. Es un preu aproximat.</p>
+                    <p>Esto solo es un precio de referencia, puede variar del original y ser diferente en los supermercados de tu zona. Es un precio aproximado.</p>
                     <p id="total">Total = {{ totalPrice }}€</p>
                     <button class="buyButton" type="submit">Comprar</button>
                 </div>
             </form>
         {% else %}
-            <h1>Aquest grup no existeix.</h1>
+            <h1>Este grupo no existe.</h1>
         {% endif %}
     </div>
         <script defer src="{% static 'js/ajax.js' %}"></script> 

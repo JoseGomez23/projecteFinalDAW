@@ -4,31 +4,28 @@
     <div class="footer-section">
         <h4>General</h4>
         <ul>
-            <li><a href="{% url 'index' %}">Home</a></li>
-            <li><a href="{% url 'indexLogat' %}">Home Logat</a></li>
-            <li><a href="{% url 'groups' %}">Groups</a></li>
-            <li><a href="{% url 'map' %}">Markets Map</a></li>
+            <li><a href="{% url 'groups' %}">Grupos</a></li>
+            <li><a href="{% url 'map' %}">Mapa de Mercados</a></li>
         </ul>
     </div>
     <div class="footer-section">
-        <h4>Products</h4>
+        <h4>Productos</h4>
         <ul>
-            <li><a href="{% url 'favorites' %}">Favorites</a></li>
-            <li><a href="{% url 'shoppingCartList' %}">Shopping Cart</a></li>
-            <li><a href="{% url 'history' %}">History</a></li>
+            <li><a href="{% url 'favorites' %}">Favoritos</a></li>
+            <li><a href="{% url 'shoppingCartList' %}">Carrito de Compras</a></li>
+            <li><a href="{% url 'history' %}">Historial</a></li>
         </ul>
     </div>
     <div class="footer-section">
         <h4>API</h4>
         <ul>
-            <li><a href="{% url 'getProducts' %}">Get Products</a></li>
-            <li><a href="{% url 'getProduct' name='example' %}">Get Product by Name</a></li>
-            <li><a href="{% url 'getProductP' price='10' %}">Get Product by Price</a></li>
-            <li><a href="{% url 'getProductPHigher' price='10' %}">Get Products Higher Price</a></li>
-            <li><a href="{% url 'getProductPLower' price='10' %}">Get Products Lower Price</a></li>
-            <li><a href="{% url 'getProductWithDiscount' boolean='true' %}">Get Products with Discount</a></li>
-            <li><a href="{% url 'addProductApi' %}">Add product to api</a></li>
+            <li><a href="{% url 'getProducts' %}">Obtener Productos</a></li>
+            <li><a href="{% url 'getProduct' name='example' %}">Obtener Producto por Nombre</a></li>
+            <li><a href="{% url 'getProductP' price='10' %}">Obtener Producto por Precio</a></li>
+            <li><a href="{% url 'getProductPHigher' price='10' %}">Obtener Productos con Precio Mayor</a></li>
+            <li><a href="{% url 'getProductPLower' price='10' %}">Obtener Productos con Precio Menor</a></li>
+            <li><a href="{% url 'getProductWithDiscount' boolean='true' %}">Obtener Productos con Descuento</a></li>
+            <li><a href="{% url 'addProductApi' %}">Añadir Producto a la API</a></li>
         </ul>
     </div>
 </footer>
-

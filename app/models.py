@@ -9,6 +9,18 @@ class GrupFamiliar(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+    def createGroup(name, token):
+        group = GrupFamiliar.objects.create(name=name, invite_token=token)
+        return group
+    
+    def getGroup(id):
+        try:
+            group = GrupFamiliar.objects.get(id=id)
+            return group
+        except GrupFamiliar.DoesNotExist:
+            return None
 
 class UsuarioGrupo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  
@@ -19,6 +31,42 @@ class UsuarioGrupo(models.Model):
 
     def __str__(self):
         return self.group.name + ' - ' + self.user.username
+    
+    def getGroup(user):
+        try:
+            group = UsuarioGrupo.objects.get(user=user)
+            return group.group
+        except UsuarioGrupo.DoesNotExist:
+            return None
+        
+    def getGroups(user):
+        try:
+            groups = UsuarioGrupo.objects.filter(user=user)
+            return groups
+        except UsuarioGrupo.DoesNotExist:
+            return None
+        
+    def getUsers(group):
+        try:
+            users = UsuarioGrupo.objects.filter(group=group).exists()
+            return users
+        except UsuarioGrupo.DoesNotExist:
+            return None
+        
+    def userInGroup(user, group):
+        try:
+            user = UsuarioGrupo.objects.filter(user=user, group=group).exists()
+            print(user)
+            return True
+        except UsuarioGrupo.DoesNotExist:
+            return False
+        
+    def addUser(user, group):
+        try:
+            user = UsuarioGrupo.objects.create(user=user, group=group)
+            return user
+        except UsuarioGrupo.DoesNotExist:
+            return user
     
     
 class FavoriteProducts(models.Model):
@@ -91,3 +139,22 @@ class MercadoLivreCategory(models.Model):
     
     def __str__(self):
         return self.id + " - " + self.title
+    
+
+def getUser(username):
+    try:
+        user = User.objects.get(username=username)
+        return user
+    except User.DoesNotExist:
+        return None
+
+def createUser(username, email, password):
+    user = User.objects.create_user(username=username, password=password, email=email)
+    return user
+
+def getUserByEmail(email):
+    try:
+        user = User.objects.get(email=email)
+        return user
+    except User.DoesNotExist:
+        return None

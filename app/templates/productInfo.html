@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="cat">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Informació del producte</title>
+    <title>Informacion del producto</title>
 </head>
 <body>
     {% extends 'layouts/navbars.html' %}
@@ -27,13 +27,13 @@
                             <div id="actionsContainer">
                                 <div class="divHelper">
                                     <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('{{product.id}}')">-</button>
-                                    <p id="totalProduct">Al carret: {{productDB}}</p>
+                                    <p id="totalProduct">En el carrito: {{productDB}}</p>
                                     <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('{{product.id}}')">+</button>
                                 </div>
                             </div>
                         {% else %}
                             <div id="actionsContainer">
-                                <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Afegir producte</button>
+                                <button class="buttonsContainer"  id="addToCartButton{{ product.id }}" onclick="addFirstFromInfo('{{ product.id }}')">Añadir producto</button>
                             </div>
                         {% endif %}
                     </div>
@@ -42,9 +42,9 @@
                 <p>Preu: {{product.price}}€</p>
                 <div class="productSpecifications">
                     {% if product.origin %}
-                        <p>Òrigen: {{product.origin}}</p>
+                        <p>Origen: {{product.origin}}</p>
                     {% else %}
-                        <p>Òrigen: Desconegut</p>
+                        <p>Origen: Desconegut</p>
                     {% endif %}
                     {% if product.brand %}
                         <p>Marca: {{product.brand}}</p>
@@ -52,9 +52,9 @@
                         <p>Marca: Desconeguda</p>
                     {% endif %}
                     {% if product.usage_instructions %}
-                        <p>Instruccions d'ús: {{product.usage_instructions}}</p>
+                        <p>Instrucciones de uso: {{product.usage_instructions}}</p>
                     {% else %}
-                        <p>Instruccions d'ús: No disponibles</p>
+                        <p>Instrucciones de uso: No disponibles</p>
                     {% endif %}
                 </div>
             </div>
@@ -65,7 +65,11 @@
                 <h1>Producte no trobat</h1>
             {% endif %}
         {% endif %}
-        <a href="{% url 'products' subcategory_id %}" class="buyButton">Tornar</a>
+        {% if subcategory_id %}
+            <a href="{% url 'products' subcategory_id %}" class="buyButton">Volver</a>
+        {% else %}
+            <a href="{% url 'indexLogat' %}" class="buyButton">Volver</a>
+        {% endif %}
 
     </div>  
     <script defer src="{% static 'js/ajax.js' %}"></script> 
