@@ -33,3 +33,45 @@ class ApiProducts(models.Model):
             return product
         except ApiProducts.DoesNotExist:
             return None
+        
+    def getProductsByName(name):
+        try:
+            products = ApiProducts.objects.filter(name__iregex=name)
+            return products
+        except ApiProducts.DoesNotExist:
+            return None
+        
+    def getProductsByPrice(price):
+        try:
+            products = ApiProducts.objects.filter(price=price)
+            return products
+        except ApiProducts.DoesNotExist:
+            return None
+        
+    def getProductsByHigherPrice(price):
+        try:
+            products = ApiProducts.objects.filter(price__gt=price)
+            return products
+        except ApiProducts.DoesNotExist:
+            return None
+        
+    def getProductsByLowerPrice(price):
+        try:
+            products = ApiProducts.objects.filter(price__lt=price)
+            return products
+        except ApiProducts.DoesNotExist:
+            return None
+        
+    def getProductsWithDiscount():
+        try:
+            products = ApiProducts.objects.filter(old_price__gt=0)
+            return products
+        except ApiProducts.DoesNotExist:
+            return None
+        
+    def getProductsWithouthDiscount():
+        try:
+            products = ApiProducts.objects.filter(old_price__isnull=True)
+            return products
+        except ApiProducts.DoesNotExist:
+            return None

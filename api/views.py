@@ -13,7 +13,7 @@ def getProducts(request):
     if result != True:
         return JsonResponse({'error': 'Unauthorized'}, status=401)
     else:
-        products = ApiProducts.objects.all()
+        products = ApiProducts.getProducts()
         return JsonResponse({'products': list(products.values())})
 
 def getProduct(request, name):
@@ -24,7 +24,7 @@ def getProduct(request, name):
         return JsonResponse({'error': 'Unauthorized'}, status=401)
     else:
         try:
-            products = ApiProducts.objects.filter(name__iregex=name)
+            products = ApiProducts.getProductsByName(name)
             if products.exists():
                 return JsonResponse({'products': list(products.values())})
             else:
@@ -40,7 +40,7 @@ def getProductP(request, price):
         return JsonResponse({'error': 'Unauthorized'}, status=401)
     else:
         try:
-            products = ApiProducts.objects.filter(price=price)
+            products = ApiProducts.getProductsByPrice(price)
             if products.exists():
                 return JsonResponse({'products': list(products.values())})
             else:
@@ -57,7 +57,7 @@ def getProductHigher(request, price):
         return JsonResponse({'error': 'Unauthorized'}, status=401)
     else:
         try:
-            products = ApiProducts.objects.filter(price__gt=price)
+            products = ApiProducts.getProductsByHigherPrice(price)
             if products.exists():
                 return JsonResponse({'products': list(products.values())})
             else:
@@ -73,7 +73,7 @@ def getProductPLower(request, price):
         return JsonResponse({'error': 'Unauthorized'}, status=401)
     else:
         try:
-            products = ApiProducts.objects.filter(price__lt=price)
+            products = ApiProducts.getProductsByLowerPrice(price)
             if products.exists():
                 return JsonResponse({'products': list(products.values())})
             else:
@@ -93,9 +93,9 @@ def getProductWithDiscount(request, boolean):
             boolean = str(boolean).capitalize()
             
             if boolean != "True":
-                products = ApiProducts.objects.filter(old_price__gt=0)
+                products = ApiProducts.getProductsWithouthDiscount()
             else:
-                products = ApiProducts.objects.filter(old_price=None)
+                products = ApiProducts.getProductsWithDiscount()
                 
             if products.exists():
                 return JsonResponse({'products': list(products.values())})
@@ -113,7 +113,7 @@ def authHelper(request):
     if auth_header:
         #print("Authorization header:", auth_header)
         
-        token_obj = ApiToken.objects.filter(token=auth_header).first()
+        token_obj = ApiToken.getApiTokenHeader(auth_header)
         
         if not token_obj:
             return JsonResponse({'error': 'Unauthorized'}, status=401)
@@ -130,7 +130,7 @@ def authHelper(request):
         
         #print("Authorization cookie:", authorization_cookie)
         
-        token_obj = ApiToken.objects.filter(token=authorization_cookie).first()
+        token_obj = ApiToken.getApiTokenHeader(authorization_cookie)
         
         #print("Token object:", token_obj)
 

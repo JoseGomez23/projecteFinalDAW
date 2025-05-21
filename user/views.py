@@ -78,7 +78,7 @@ def deleteAccount(request):
             group = userGroup.group
             userGroup.delete()
             
-            if not UsuarioGrupo.getUsers(group):
+            if not UsuarioGrupo.hasUsers(group):
                 group.delete()
 
         
