@@ -15,13 +15,16 @@
     <link rel="stylesheet" href="{% static 'css/productInfo.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbars.css' %}">
     <link rel="stylesheet" href="{% static 'css/products.css' %}">
+    <main role="main">
     <div class="content">
        
         {% if product %}
+            <section aria-labelledby="product-title">
             <div class="productInfoContainer">
-                <h1>{{product.name}}</h1>
+                <h1 id="product-title">{{product.name}}</h1>
                 <img class="productImage" src="{{product.image}}" alt="Imatge de {{product.name}}">
                 {% if user.is_authenticated %}
+                    <nav aria-label="Accions del producte">
                     <div class="productActions">
                         {% if productDB %}
                             <div id="actionsContainer">
@@ -37,10 +40,12 @@
                             </div>
                         {% endif %}
                     </div>
+                    </nav>
                 {% endif %}
                 
                 <p>Preu: {{product.price}}€</p>
-                <div class="productSpecifications">
+                <section aria-labelledby="specifications-title" class="productSpecifications">
+                    <h3 id="specifications-title" class="visually-hidden">Especificaciones del producto</h2>
                     {% if product.origin %}
                         <p>Origen: {{product.origin}}</p>
                     {% else %}
@@ -56,22 +61,27 @@
                     {% else %}
                         <p>Instrucciones de uso: No disponibles</p>
                     {% endif %}
-                </div>
+                </section>
             </div>
+            </section>
         {% else %}
+            <section aria-labelledby="error-title">
             {% if error %}
-                <h1>{{error}}</h1>
+                <h1 id="error-title">{{error}}</h1>
             {% else %}
-                <h1>Producte no trobat</h1>
+                <h1 id="error-title">Producte no trobat</h1>
             {% endif %}
+            </section>
         {% endif %}
+        <nav aria-label="Enllaços de navegació">
         {% if subcategory_id %}
             <a href="{% url 'products' subcategory_id %}" class="buyButton">Volver</a>
         {% else %}
             <a href="{% url 'indexLogat' %}" class="buyButton">Volver</a>
         {% endif %}
-
+        </nav>
     </div>  
+    </main>
     <script defer src="{% static 'js/ajax.js' %}"></script> 
     
     {% include 'layouts/footer.html' %}

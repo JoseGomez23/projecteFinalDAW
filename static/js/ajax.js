@@ -667,11 +667,14 @@ function addFirstFromInfo2(productId){
     })
 }
 
-function buscarProductos() {
+function buscarProductos(variable) {
     const query = document.getElementById('search-input').value;
+    let group_id = "user"; // Default group_id
 
-    group_id = getSelectedGroupId();
-
+    alert(variable);
+    if (variable === "1") {
+        group_id = getSelectedGroupId();
+    }
     if (query.trim() === '') {
         document.getElementById('resultados-container').innerHTML = '';
         return;
@@ -679,12 +682,13 @@ function buscarProductos() {
 
     let url = "";
 
-    if (group_id != "user") {
+    if (group_id != "user" ) {
         url = `/searchProducts/${encodeURIComponent(query)}/${group_id}`;
     } else {
         url = `/searchProducts/${encodeURIComponent(query)}/`;
     }
 
+    alert(url);    
     fetch(url, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'

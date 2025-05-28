@@ -40,6 +40,9 @@ def register(request):
             try: 
                 user = createUser(request.POST['username'], request.POST['email'], request.POST['password'])
                 user.save()
+                
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
+                
                 _login(request, user)
                 return redirect('indexLogat')
             

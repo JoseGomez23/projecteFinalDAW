@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    
     <title>Aceptar Invitación</title>
+    
 </head>
 <body>
 
@@ -10,6 +12,7 @@
     {% block content %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <main>
     <div class="content">
         {% if message %}
             <div class="messages">
@@ -23,6 +26,7 @@
             </div>
         {% endif %}
     </div>
+    </main>
     {% endblock %}
 </body>
 </html>

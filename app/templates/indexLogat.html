@@ -27,7 +27,11 @@
                     {% endfor %}
                 </select>
             {% endif %}
-            <input type="text" id="search-input" placeholder="Buscar productos..." onchange="buscarProductos()">
+            {% if user.is_authenticated %}
+                <input type="text" id="search-input" placeholder="Buscar productos..." onchange="buscarProductos(0)">
+            {% else %}
+                <input type="text" id="search-input" placeholder="Buscar productos..." onchange="buscarProductos(1)">
+            {% endif %}
             <div id="divProducts" class="divProducts-container"></div>
 
 

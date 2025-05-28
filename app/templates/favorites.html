@@ -16,8 +16,11 @@
     <link rel="stylesheet" href="{% static 'css/products.css' %}">
     <script defer src="{% static 'js/ajax.js' %}"></script>
 
+    <main>
     <div class="content">
-        <h1>Productes favorits</h1>
+        <header>
+            <h1>Productes favorits</h1>
+        </header>
 
         <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
 
@@ -128,7 +131,8 @@
             {% endif %}
         </div>
 
-    </div> 
+    </div>
+    </main>
 
     <script>
             

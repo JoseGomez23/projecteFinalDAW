@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/shoppingCart.css' %}">
     <link rel="stylesheet" href="{% static 'css/products.css' %}">
     
+    <main>
     <div class="content">
         {{ message }}
         {% if groupVar %}
@@ -77,6 +78,7 @@
             <h1>Este grupo no existe.</h1>
         {% endif %}
     </div>
+    </main>
         <script defer src="{% static 'js/ajax.js' %}"></script> 
     {% include 'layouts/footer.html' %}
     {% endblock %}

@@ -14,13 +14,13 @@
     <button class="skipToContent" id="skipToContent" onclick="document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });">Bajar al contenido</button>
     <nav class="topbar">
         <div class="topbarItems">
-            <!-- Logo -->
+          
             <img class="logoweb" src="{% static 'logo.png' %}" alt="Logo de la web">
     
-            <!-- Botón hamburguesa -->
+ 
             <button class="menuToggle" onclick="toggleMenu()">☰</button>
     
-            <!-- Contenedor de navegación que se colapsa en móvil -->
+
             <div class="navContent" id="navContent">
                 {% if user.is_authenticated %}
                     <h2 class="topbarUsername">Bienvenido, {{ user.username }}.</h2>

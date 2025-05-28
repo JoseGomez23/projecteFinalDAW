@@ -12,6 +12,8 @@
 
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <link rel="stylesheet" href="{% static 'css/groups.css' %}">
+
+    <main>
     <div class="content">
         {% if groups_with_members %}
             <h2>Tus grupos:</h2>
@@ -52,7 +54,7 @@
             </div>
         {% endif %}
     </div>
-
+    </main>
     {% include 'layouts/footer.html' %}
     {% endblock %}
 </body>

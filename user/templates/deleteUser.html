@@ -11,6 +11,7 @@
     {% block content %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <main>
     <div class="content">
         <h2>Estàs segur que vols eliminar el teu compte?</h2>
         <p>Si elimines el teu compte no podràs recuperar-lo.</p>
@@ -30,7 +31,7 @@
             <input type="submit" value="Eliminar">
         </form>
     </div>
-    
+    </main>
     {% include 'layouts/footer.html' %}
     {% endblock %}
     
