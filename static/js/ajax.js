@@ -328,37 +328,29 @@ function checkProduct(productId) {
     let plus = document.getElementById(`+${productId}`);
     let image = document.getElementById(`image${productId}`);
     let remove = document.getElementById(`removeButton${productId}`);
+    let supermarketImg = document.getElementById(`supermarket${productId}`);
     
 
     if (checkbox.checked) {
 
-        div.style.backgroundColor = "#d4fcd4";
-        name.style.filter = "blur(2px)";
-        price.style.filter = "blur(2px)";
-        quantity.style.filter = "blur(2px)";
-        minus.style.filter = "blur(2px)";
+        div.style.backgroundColor = "#e0e0e0";
+        name.style.textDecoration = "line-through";
+        price.style.textDecoration = "line-through";
+        quantity.style.textDecoration = "line-through";
         minus.disabled = true;
-        plus.style.filter = "blur(2px)";
         plus.disabled = true;
-        image.style.filter = "blur(2px)";
-        remove.style.filter = "blur(2px)";
         remove.backgroundColor = "#d4fcd4";
         remove.disabled = true;
-
         div.style.transition = "background-color 0.3s ease, filter 0.3s ease";
         
     } else {
 
         div.style.backgroundColor = "#ffffff";
-        name.style.filter = "blur(0px)";
-        price.style.filter = "blur(0px)";
-        quantity.style.filter = "blur(0px)";
-        minus.style.filter = "blur(0px)";
+        name.style.textDecoration = "none";
+        price.style.textDecoration = "none";
+        quantity.style.textDecoration = "none";
         minus.disabled = false;
-        plus.style.filter = "blur(0px)";
         plus.disabled = false;
-        image.style.filter = "blur(0px)";
-        remove.style.filter = "blur(0px)";
         remove.disabled = false;
     }
 }
@@ -418,6 +410,8 @@ function refreshGroupProducts(group_id) {
         url = `/products/${category}/`;
     }
 
+    //document.cookie = `group_id=${group_id}; path=/; max-age=86400`;
+
     fetch(url, {
         method: "GET",
         headers: {
@@ -458,35 +452,9 @@ function refreshFavoriteGroups(group_id) {
         url = `/favorites/`;
     }
 
-    fetch(url, {
-        method: "GET",
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken"),
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Server response error");
-        }
-        return response.text();
-    })
-    .then(html => {
-        let parser = new DOMParser();
-        let doc = parser.parseFromString(html, "text/html");
-        let productsElement = doc.querySelector(".divProducts-container"); 
-        if (productsElement) {
-            let productsContainer = document.querySelector(".divProducts-container");
-            if (productsContainer) {
-                productsContainer.innerHTML = productsElement.innerHTML;
-            } else {
-                console.error("Error: No se encontró el contenedor de productos en el documento actual.");
-            }
-        } else {
-            console.error("Error: Contenedor de productos no encontrado en la respuesta.");
-        }
-    })
-    .catch(error => console.error("Error:", error));
+    document.cookie = `group_id=${group_id}; path=/; max-age=86400`;
+    
+    window.location.href = url;
 }
 
 
@@ -698,6 +666,115 @@ function addFirstFromInfo2(productId){
         }
     })
 }
+
+function buscarProductos() {
+    const query = document.getElementById('search-input').value;
+
+    group_id = getSelectedGroupId();
+
+    if (query.trim() === '') {
+        document.getElementById('resultados-container').innerHTML = '';
+        return;
+    }
+
+    let url = "";
+
+    if (group_id != "user") {
+        url = `/searchProducts/${encodeURIComponent(query)}/${group_id}`;
+    } else {
+        url = `/searchProducts/${encodeURIComponent(query)}/`;
+    }
+
+    fetch(url, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+
+    .then(res => res.json())
+    .then(data => {
+        const container = document.getElementById('divProducts');
+        container.innerHTML = '';
+
+        if (data.length === 0) {
+            container.innerHTML = '<p>No se encontraron productos.</p>';
+            return;
+        }
+
+        if (data.user != null) {
+            let contador = 0;
+
+            //console.log(data.qnty);
+            data.resultados.forEach(producto => {
+                
+                const divProducts = document.createElement('div');
+                const div = document.createElement('div');
+                div.className = 'divProducts';
+               
+                let addToCartButton = '';
+                let favoriteButton = '';
+
+                //console.log(data.qnty[producto.id[0]]);
+                
+
+                
+                if (data.shopingList && data.shopingList.includes(producto.id)) {
+                    
+                    addToCartButton = `<button class="buttonsContainer" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">En el carret</button>`;
+                } else {
+                    addToCartButton = `<button class="buttonsContainer" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">Afegir al carret</button>`;
+                }
+
+                
+                if (data.favorites && data.favorites.includes(producto.id)) {
+                    favoriteButton = `<button class="buttonsContainer" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', true, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/ea.png" alt="Afegir a favorits"></button>`;
+                } else {
+
+                    favoriteButton = `<button class="buttonsContainer" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', false, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/en.png" alt="Treure de favorits"></button>`;
+                }
+
+                div.innerHTML = `
+                    <a class="afix" href="/productInfo/${producto.id}">
+                        <img src="${producto.image}" alt="${producto.name}">
+                    </a>
+                    <strong>${producto.name}</strong>
+                    <div class="price">
+                        ${producto.price && producto.old_price ? `<span class="oldPrice">${producto.old_price}€</span>` : ''}
+                        <span>${producto.price ? producto.price : ''}€</span>
+                    </div>
+                    <a class="moreInfo" href="/productInfo/${producto.id}">Más información</a>
+                    ${addToCartButton}
+                    ${favoriteButton}
+                `;
+                container.appendChild(div);
+            });
+
+            ++contador;
+        } else {
+                
+            data.resultados.forEach(producto => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                
+                    <a class="afix" href="/productInfo/${producto.id}">
+                        <img src="${producto.image}" alt="${producto.name}">
+                    </a>
+                    <strong>${producto.name}</strong>
+                    <div class="price">
+                        ${producto.price && producto.old_price ? `<span class="oldPrice">${producto.old_price}€</span>` : ''}
+                        <span>${producto.price ? producto.price : ''}€</span>
+                    </div>
+                    <a class="moreInfo" href="/productInfo/${producto.id}">Más información</a>
+            
+                `;
+                container.appendChild(div);
+            });
+        }
+    })
+    .catch(error => console.error('Error:', error));
+        
+}
+
 
 
 function getCookie(name) {

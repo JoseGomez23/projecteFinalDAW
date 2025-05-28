@@ -7,12 +7,163 @@ from django.http import JsonResponse
 import uuid
 from django.utils import timezone
 import json
+from django.conf import settings
+import os
 from datetime import datetime, timedelta
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 from django.utils.http import url_has_allowed_host_and_scheme
+import unicodedata
 # Create your views here.
 
 
+
 def index(request):
+    return render(request, "index.html")
+
+def recolectar_productos(request):
+    
+    url = "https://tienda.mercadona.es/api/categories/"
+    response = requests.get(url)
+    
+    # Obtener la fecha de actualización si existe en el JSON
+    fecha_actualizacion = None
+    try:
+        with open(os.path.join(settings.BASE_DIR, 'static', 'products.json'), 'r', encoding='utf-8') as f:
+            json_data = json.load(f)
+            fecha_actualizacion = json_data.get("fecha_actualizacion")
+    except (FileNotFoundError, json.JSONDecodeError):
+        fecha_actualizacion = None
+
+    if fecha_actualizacion < datetime.now().strftime("%Y-%m-%d %H:%M:%S") or not fecha_actualizacion:
+        if response.status_code == 200:
+            data = response.json()
+            subcategorias = []
+
+            for categoria_principal in data.get("results", []):
+                subcategorias.extend(categoria_principal.get("categories", []))
+                
+
+            #print(subcategorias)  # o haz lo que quieras con ellas
+        else:
+            subcategorias = []
+            print("Error al obtener las categorías")
+        
+        
+        productos = []
+
+        for categoria in subcategorias:
+            categoria_id = categoria.get("id")
+            print(f"Consultando subcategoría {categoria_id}")
+            
+            url2 = f"https://tienda.mercadona.es/api/categories/{categoria_id}"
+            response2 = requests.get(url2)
+
+            if response2.status_code == 200:
+                data2 = response2.json()
+                subcategorias2 = data2.get("categories", [])
+
+                for subcat in subcategorias2:
+                    productos_en_subcat = subcat.get("products", [])
+                    for producto in productos_en_subcat:
+                        producto_info = {
+                            "id": producto.get("id"),
+                            "name": producto.get("display_name"),
+                            "price": producto.get("price_instructions", {}).get("unit_price"),
+                            "old_price": producto.get("price_instructions", {}).get("previous_unit_price"),
+                            "image": producto.get("thumbnail")
+                        }
+                        productos.append(producto_info)
+            else:
+                print(f"Error en subcategoría {categoria_id}")
+
+
+
+        #print(productos)
+                    
+        # Añadir fecha de actualización al JSON
+        next_update = (datetime.now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        data_to_save = {
+            "fecha_actualizacion": next_update.strftime("%Y-%m-%d %H:%M:%S"),
+            "productos": productos
+        }
+
+        static_path = os.path.join(settings.BASE_DIR, 'static', 'products.json')
+
+        with open(static_path, 'w', encoding='utf-8') as f:
+            json.dump(data_to_save, f, ensure_ascii=False, indent=2)
+        
+    url = "https://tienda.mercadona.es/api/categories/"
+    response = requests.get(url)
+    
+    title = "Categories"
+
+    if response.status_code == 200:
+        data = response.json() 
+        categorias = data.get("results", [])  
+    else:
+        categorias = []
+    
+    user = request.user
+    group = []
+    
+    if user.is_authenticated:    
+        userGroups = UsuarioGrupo.getGroups(request.user)
+        group = [userGroup.group for userGroup in userGroups]
+    
+
+    return render(request, "indexLogat.html", {"categories": categorias, "title": title, "groups": group})
+
+
+def searchProducts(request, search_query, group_id=0):
+    # Cargar productos desde el JSON local
+    static_path = os.path.join(settings.BASE_DIR, 'static', 'products.json')
+    try:
+        with open(static_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            productos = data.get("productos", [])
+    except (FileNotFoundError, json.JSONDecodeError):
+        productos = []
+
+    def normalize(text):
+        return unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode('utf-8').lower()
+
+    search_normalized = normalize(search_query)
+    user = request.user
+    resultados = [
+
+        producto for producto in productos
+        if search_normalized in normalize(producto.get("name", ""))
+    ]
+    
+    group = UsuarioGrupo.getGroup(group_id)
+    if request.user.is_authenticated and group_id:
+        favorites = FavoriteProducts.getFavorites(request.user, group_id=group_id)
+        shopingList = ShoppingCartList.getShoppingList(request.user, group_id=group_id)
+        qnty = ShoppingCartList.getQty(request.user, group_id=group_id)
+    else:
+        favorites = FavoriteProducts.getFavorites(request.user, group_id=None)
+        shopingList = ShoppingCartList.getShoppingList(request.user, group_id=None)
+        qnty = ShoppingCartList.getQty(request.user, group_id=None)
+    
+
+    # 👇 Aquí decides si devolver JSON o renderizar HTML
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            "resultados": resultados,
+            "user": user.username if user.is_authenticated else None,
+            "favorites": list(favorites) if favorites else [],
+            "shopingList": list(shopingList) if shopingList else [],
+            "qnty": list(qnty) if qnty else []
+        }, safe=False)
+
+    return render(request, "indexLogat.html", {
+        "search_query": search_query,
+        "resultados": resultados,
+        #"user": user
+    })
+    
+def categories(request):
     
     url = "https://tienda.mercadona.es/api/categories/"
     response = requests.get(url)
@@ -65,7 +216,8 @@ def categoriesMercadoLivre(request, group_id=""):
     if mercado_livre_category:
         upd = mercado_livre_category.next_update
         
-    
+    print(upd)
+    print(timezone.now())
     if user.is_authenticated:
         qnty = ShoppingCartList.getQty(user, group_id=None)
         favorites = FavoriteProducts.getFavorites(user, group_id=None)
@@ -102,12 +254,12 @@ def categoriesMercadoLivre(request, group_id=""):
 
                 if not created:
                     product.price = round(realPrice, 2)
-                    product.rating = item.get('rating')
-                    product.votes = item.get('votes')
                     product.next_update = datetime.now() + timedelta(days=1)
                     product.save()
             
-            products = MercadoLivreCategory.getProductCategory(category_id)
+            products = MercadoLivreCategory.getProductsByCategory(category_id)
+            
+            print(products)
                     
             return render(request, "productsLidl.html", {"products": products, "title": "Products", "qnty": qnty, "favorites": favorites, "shopingList": shopingList})
 
@@ -116,7 +268,7 @@ def categoriesMercadoLivre(request, group_id=""):
         
     else:
         
-        products = MercadoLivreCategory.getProductCategory(category_id)
+        products = MercadoLivreCategory.getProductsByCategory(category_id)
         
         if not products.exists():
             return render(request, "productsLidl.html", {"error": "No hi ha productes disponibles"})
@@ -212,6 +364,21 @@ def products(request, categoria_id, group_id=""):
     shopingList = []
     qnty = []
     group = []
+    
+    items_per_page = 40
+
+   
+    paginator = Paginator(products, items_per_page)
+
+    
+    page = request.GET.get("page", 1)
+
+    try:
+        products_page = paginator.page(page)
+    except PageNotAnInteger:
+        products_page = paginator.page(1)
+    except EmptyPage:
+        products_page = paginator.page(paginator.num_pages)
 
     if not group_id:
         if request.user.is_authenticated:
@@ -221,7 +388,7 @@ def products(request, categoria_id, group_id=""):
             shopingList = ShoppingCartList.getShoppingList(request.user, group_id=None)
             qnty = ShoppingCartList.getQty(request.user, group_id=None)
             context = {
-                "products": products,
+                "products": products_page,
                 "favorites": favorites,
                 "shopingList": shopingList,
                 "qnty": qnty,
@@ -231,25 +398,26 @@ def products(request, categoria_id, group_id=""):
             }
         else:
             context = {
-                "products": products,
+                "products": products_page,
                 "categoria_id": categoria_id,
                 "subcategory_id": subcategory_id,
             }
     else:
-        group = UsuarioGrupo.objects.filter(group_id=group_id)
+       
         if request.user.is_authenticated:
+            group = UsuarioGrupo.getGroup(group_id)
             favorites = FavoriteProducts.getFavorites(request.user, group_id=group_id)
             shopingList = ShoppingCartList.getShoppingList(request.user, group_id=group_id)
             qnty = ShoppingCartList.getQty(request.user, group_id=group_id)
-        context = {
-            "products": products,
-            "favorites": favorites,
-            "shopingList": shopingList,
-            "qnty": qnty,
-            "groups": group,
-            "categoria_id": categoria_id,
-            "subcategory_id": subcategory_id,
-        }
+            context = {
+                "products": products_page,
+                "favorites": favorites,
+                "shopingList": shopingList,
+                "qnty": qnty,
+                "groups": group,
+                "categoria_id": categoria_id,
+                "subcategory_id": subcategory_id,
+            }
 
     return render(request, "products.html", context)
     
@@ -384,10 +552,28 @@ def showFavorites(request, group_id=""):
         for favorite in favorites
     ]
 
+    # PAGINACIÓN
+    items_per_page = 20
+    paginator = Paginator(products, items_per_page)
+    page = request.GET.get("page", 1)
+
+    try:
+        products_page = paginator.page(page)
+    except PageNotAnInteger:
+        products_page = paginator.page(1)
+    except EmptyPage:
+        products_page = paginator.page(paginator.num_pages)
+
     userGroups = UsuarioGrupo.getGroups(request.user)
     group = [userGroup.group for userGroup in userGroups]
 
-    return render(request, "favorites.html", {"products": products, "shopingList": shopingList, "qnty": qnty, "groups": group})
+    return render(request, "favorites.html", {
+        "products": products_page,
+        "shopingList": shopingList,
+        "qnty": qnty,
+        "groups": group
+    })
+
 
 @login_required
 def removeFavorites(request, product_id, group_id=""):
@@ -439,9 +625,11 @@ def addProductToList(request, product_id, group_id=None):
             price=price,
             old_price=old_price,
             quantity=1,
-            supermarket=1
-            
+            supermarket=0
         )
+        
+        print(list_item)
+        print(created)
         if not created:
             if list_item.quantity < 99:
                 list_item.quantity += 1
@@ -462,9 +650,9 @@ def addOneProduct(request, product_id, group_id=""):
             shoppingCartItem = ""
             
             if not group_id:
-                shoppingCartItem = ShoppingCartList.getProduct(product_id, request.user, group_id=None)
+                shoppingCartItem = ShoppingCartList.getProduct(request.user, group_id=None, product_id=product_id)
             else:
-                shoppingCartItem = ShoppingCartList.getProduct(product_id, None, group_id)
+                shoppingCartItem = ShoppingCartList.getProduct(None, group_id, product_id=product_id)
                 
             if shoppingCartItem.quantity < 99:
                 shoppingCartItem.quantity
@@ -486,7 +674,7 @@ def removeOneProduct(request, product_id, group_id=""):
             shopping_cart_item = ""
             
             if not group_id or group_id == 1:
-                shopping_cart_item = ShoppingCartList.getProduct(product_id, request.user, group_id=None)
+                shopping_cart_item = ShoppingCartList.getProduct(request.user, group_id=None, product_id=product_id)
 
             else:
                 
@@ -495,7 +683,7 @@ def removeOneProduct(request, product_id, group_id=""):
                 if not UsuarioGrupo.objects.filter(user=request.user, group_id=group_id).exists():
                     return JsonResponse({"error": "You are not a member of this group"}, status=403)
                 
-                shopping_cart_item = ShoppingCartList.getProduct(product_id, None, group_id)
+                shopping_cart_item = ShoppingCartList.getProduct(None, group_id, product_id)
             
             if shopping_cart_item.quantity > 1 and group_id != 1: 
                 shopping_cart_item.quantity -= 1
@@ -523,9 +711,9 @@ def removeProductFromList(request, product_id, group_id=""):
             shopping_cart_item = ""
             
             if not group_id:
-                shopping_cart_item = ShoppingCartList.getProduct(product_id, request.user, group_id=None)
+                shopping_cart_item = ShoppingCartList.getProduct(request.user, group_id=None, product_id=product_id)
             else:
-                shopping_cart_item = ShoppingCartList.getProduct(product_id, None, group_id)
+                shopping_cart_item = ShoppingCartList.getProduct(None, group_id, product_id=product_id)
             
             shopping_cart_item.delete()
             return JsonResponse({"message": "Product removed from cart"})
@@ -737,14 +925,15 @@ def productInfo(request, product_id, group_id=""):
         "usage_instructions": details.get("usage_instructions", "")
     }
     
+    print(group_id)
     
     if request.user.is_authenticated:
-        productDB = ShoppingCartList.getProduct(product_id, request.user, group_id=None)
+        productDB = ShoppingCartList.getProduct(request.user, group_id=None, product_id=product_id)
         
-        if productDB.exists():
-            productQty = productDB[0].quantity
+        if productDB:
+            productQty = productDB.quantity
         else:
-            productQty = ""
+            productQty = ""     
     else:
         productQty = ""
     
@@ -756,10 +945,10 @@ def productInfoMercadoLivre(request, product_id):
     product = MercadoLivreCategory.getProduct(product_id)
     
     if request.user.is_authenticated:
-        productDB = ShoppingCartList.getProduct(product_id, request.user, group_id=None)
+        productDB = ShoppingCartList.getProduct(request.user, group_id=None, product_id=product_id)
         
         if productDB.exists():
-            productQty = productDB[0].quantity
+            productQty = productDB.quantity
         else:
             productQty = ""
     else:

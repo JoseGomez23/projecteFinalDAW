@@ -207,9 +207,7 @@ class ShoppingCartList(models.Model):
                 'supermarket': supermarket
             }
         )
-        if not created:
-            product.quantity += quantity
-            product.save()
+        
         return product, created
     
     def getProduct(user, group_id, product_id):
@@ -299,6 +297,13 @@ class MercadoLivreCategory(models.Model):
     
     def __str__(self):
         return self.id + " - " + self.title
+    
+    def getProductsByCategory(category_id):
+        try:
+            products = MercadoLivreCategory.objects.filter(category_id=category_id)
+            return products
+        except MercadoLivreCategory.DoesNotExist:
+            return None
     
     def getProductCategory(id):
         try:

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión</title>
     {% load static %}
+    {% load socialaccount %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -45,7 +46,10 @@
             {{form.as_p}}
             <p>Si no tienes una cuenta, <a href="{% url 'register' %}">Regístrate</a></p>
             <p>¿Has olvidado la contraseña? <a href="{% url 'sendEmail' %}">Restablécela</a></p>
+            <a href="{% provider_login_url 'google' %}">Login amb Google</a>
+            <a href="{% provider_login_url 'github' %}">Login amb Github</a>
             <button type="submit">Iniciar sesión</button>
+            
         </form>
     </div>
 

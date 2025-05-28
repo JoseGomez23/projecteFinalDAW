@@ -24,7 +24,11 @@
         <select class="groupsDropdown" id="groupsDropdown" onchange="refreshFavoriteGroups(this.value)">
             <option value="user">Mi perfil</option>
             {% for group in groups %}
-                <option value="{{ group.id }}">{{ group.name }}</option>
+            <option value="{{ group.id }}"
+                {% if request.COOKIES.group_id and request.COOKIES.group_id|stringformat:"s" == group.id|stringformat:"s" %}
+                selected
+                {% endif %}
+            >{{ group.name }}</option>
             {% endfor %}
         </select>
 
@@ -112,7 +116,35 @@
                 <p>No hay productos favoritos.</p>
             {% endfor %}
         </div>
+        <div class="pagination">
+            {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            <span>Página {{ products.number }} de {{ products.paginator.num_pages }}</span>
+
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">Siguiente</a>
+            {% endif %}
+        </div>
+
     </div> 
+
+    <script>
+            
+        document.addEventListener('DOMContentLoaded', function() {
+        function getCookie(name) {
+            let value = "; " + document.cookie;
+            let parts = value.split("; " + name + "=");
+            if (parts.length === 2) return parts.pop().split(";").shift();
+        }
+        var groupId = getCookie('group_id');
+        if (groupId) {
+            var dropdown = document.getElementById('groupsDropdown');
+            if (dropdown) dropdown.value = groupId;
+        }
+        });
+    </script>
     
     {% include 'layouts/footer.html' %}
     {% endblock %}

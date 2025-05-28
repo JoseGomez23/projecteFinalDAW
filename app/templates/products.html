@@ -78,6 +78,19 @@
                 <h2>No hay productos disponibles</h2>
             </div>
         {% endif %}
+
+        <div class="pagination">
+            {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            <span>Página {{ products.number }} de {{ products.paginator.num_pages }}</span>
+
+            {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}">Siguiente</a>
+            {% endif %}
+        </div>
+
     </div>  
     <script defer src="{% static 'js/ajax.js' %}"></script> 
     {% include 'layouts/footer.html' %}

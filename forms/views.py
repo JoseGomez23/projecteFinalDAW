@@ -20,6 +20,8 @@ import re
 from datetime import datetime, timedelta
 
 # Create your views here.
+
+
 def register(request):
     
     if request.method == 'GET':
@@ -96,6 +98,7 @@ def login(request):
                         exp_date=exp_date
                     )
                 
+                user.backend = 'django.contrib.auth.backends.ModelBackend'
                 _login(request, user)
 
                 next_url = request.GET.get('next', 'indexLogat')

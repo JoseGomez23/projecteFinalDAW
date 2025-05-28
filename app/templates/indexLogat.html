@@ -10,34 +10,52 @@
     {% block content %}
     {% load static %}
 
-        <link rel="stylesheet" href="{% static 'css/global.css' %}">
-        <link rel="stylesheet" href="{% static 'css/categories.css' %}">
-    <div class="content">
+    <link rel="stylesheet" href="{% static 'css/categories.css' %}">
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    <link rel="stylesheet" href="{% static 'css/products.css' %}">
 
-        <h1>Categorias</h1>
+    <main>
+        <div class="content">
+            <header>
+                <h1>Categorias</h1>
+            </header>
+            {% if user.is_authenticated %}
+                <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
+                    <option value="user">Mi perfil</option>
+                    {% for group in groups %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+            <input type="text" id="search-input" placeholder="Buscar productos..." onchange="buscarProductos()">
+            <div id="divProducts" class="divProducts-container"></div>
 
-        <div class="categories-container">
-            {% for category in categories %}
-                <a href="{% url 'subcategories' category.id %}" class="category-button">
-                    {{category.id}} - {{ category.name }}
-                </a>
-            {% endfor %}
 
-            <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/comida-preparada/">
-                Menjar Preparat (MercadoLivre)
-            </a>
+            <section class="categories-section">
+                <div class="categories-container">
+                    {% for category in categories %}
+                        <a href="{% url 'subcategories' category.id %}" class="category-button">
+                            {{category.id}} - {{ category.name }}
+                        </a>
+                    {% endfor %}
 
-            <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/bebidas/">
-                Begudes (MercadoLivre)
-            </a>
+                    <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/comida-preparada/">
+                        Menjar Preparat (MercadoLivre)
+                    </a>
 
-            <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/congelados/">
-                Congelats (MercadoLivre)
-            </a>
+                    <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/bebidas/">
+                        Begudes (MercadoLivre)
+                    </a>
+
+                    <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/congelados/">
+                        Congelats (MercadoLivre)
+                    </a>
+                </div>
+            </section>
         </div>
-            
+    </main>
 
-    </div>
+    <script src="{% static 'js/ajax.js' %}"></script>
 
     {% include 'layouts/footer.html' %}
     {% endblock  %}

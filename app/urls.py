@@ -4,7 +4,7 @@ from . import views
 urlpatterns = [
 
     path('', views.index, name="index"),
-    path('indexLogat/', views.index, name="indexLogat"),
+    path('indexLogat/', views.recolectar_productos, name="indexLogat"),
     path('leaveGroup/<int:group_id>/', views.leaveGroup, name="leaveGroup"),
     path('acceptInvite/<int:group_id>/<str:invite_token>/', views.acceptInvite, name="acceptInvite"),
     path('subcategories/<int:categoria_id>/', views.subcategories, name="subcategories"),
@@ -41,6 +41,8 @@ urlpatterns = [
     path('productInfo2/<str:product_id>/', views.productInfoMercadoLivre, name="productInfo2"),
     path('marketsMap/', views.showMap, name="map"),
     path('refreshFavorites/', views.refreshFavorites, name="refreshFavorites"),
-    path('groups/', views.groups, name="groups")    
+    path('groups/', views.groups, name="groups"),
+    path('searchProducts/<str:search_query>/', views.searchProducts, name="searchProducts"),
+    path('searchProducts/<str:search_query>/<str:group_id>', views.searchProducts, name="searchProducts"),
 ]
 

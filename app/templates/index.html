@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="cat">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    {% extends 'layouts/navbars.html' %}
+    {% block content %}
+    {% load static %}
+        <script src="{% static 'js/productsPreloader.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/global.css' %}">
+        <link rel="stylesheet" href="{% static 'css/categories.css' %}">
+    <div class="content">
+
+            <div class="banners">
+                <a href="{% url 'indexLogat' %}" class="banner">
+                    <img src="{% static 'fons.jpg' %}" alt="Consultar productes" class="banner-img">
+                    <span>Consultar productes</span>
+                </a>
+                <a href="{% url 'favorites' %}" class="banner">
+                    <img src="{% static 'corazon.png' %}" alt="Consultar favorits" class="banner-img">
+                    <span>Consultar favorits</span>
+                </a>
+                <a href="{% url 'history' %}" class="banner">
+                    <img src="{% static 'historial.png' %}" alt="Consultar historial" class="banner-img">
+                    <span>Consultar historial</span>
+                </a>
+                <a href="{% url 'groups' %}" class="banner">
+                    <img src="{% static 'grupo.png' %}" alt="Consultar grups" class="banner-img">
+                    <span>Consultar grups</span>
+                </a>
+            </div>
+            <style>
+            .banners {
+                display: flex;
+                flex-direction: column;
+                gap: 2rem;
+                align-items: stretch;
+                margin: 2rem 0;
+                width: 100%;
+            }
+            .banner {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                width: 90%;
+                min-height: 100px;
+                background-color: white;
+                color: #000000;
+                font-size: 1.3rem;
+                font-weight: 600;
+                border-radius: 18px;
+                box-shadow: 0 4px 18px rgba(78,84,200,0.12);
+                text-decoration: none;
+                transition: transform 0.18s, box-shadow 0.18s;
+                gap: 1.5rem;
+                padding: 0 2rem;
+            }
+            .banner-img {
+                width: 64px;
+                height: 64px;
+                object-fit: cover;
+                border-radius: 10%;
+                margin-right: 1rem;
+                background: #fff;
+                flex-shrink: 0;
+            }
+            .banner:hover {
+                transform: translateY(-6px) scale(1.04);
+                box-shadow: 0 8px 28px rgba(78,84,200,0.18);
+                background-color: lightgray;
+            }
+            </style>
+    </div>
+
+    {% include 'layouts/footer.html' %}
+    {% endblock  %}
+    
+</body>
+</html>

@@ -13,5 +13,6 @@ urlpatterns = [
     path('sendEmail/', views.sendEmail , name="sendEmail"),
     path('resetPassword/<str:token>', views.resetPassword, name="resetPassword"),
     path('manualResetPassword/', views.manualResetPwd, name="manualResetPassword"),
-    path('logout/', views.logout, name="logout")
+    path('logout/', views.logout, name="logout"),
+    
 ]

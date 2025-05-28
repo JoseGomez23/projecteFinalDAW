@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-*+3+w_!+g+p3t-g-%wl_kiy4zn#8t*l3xh8q%f*q+k9q68b*hh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['projectefinaldaw-2.onrender.com','projectefinaldaw.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['projectefinaldaw-2.onrender.com','projectefinaldaw.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -40,13 +40,29 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
     'forms',
     'api',
     'app',
     'user',
-    
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
 ]
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_LOGIN_ON_GET=True
+
+LOGIN_REDIRECT_URL = '/indexLogat/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR,'static'),
@@ -61,6 +77,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'projecteFinalDAW.urls'
@@ -155,3 +172,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'j.gomez4@sapalomera.cat'
 EMAIL_HOST_PASSWORD = 'dwhj aeqn eqbn unik'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_LOGIN_ON_GET=True
+SOCIALACCOUNT_ADAPTER = 'projecteFinalDAW.adapters.CustomSocialAccountAdapter'
