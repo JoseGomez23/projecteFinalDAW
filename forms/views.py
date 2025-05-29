@@ -292,6 +292,7 @@ def addProductApi(request):
         old_price = request.POST['old_price']
         price = request.POST['price']
         image_url = request.POST['image_url']
+        print(image_url)
         
         exists = ApiProducts.getProduct(name=name, price=price)
         
@@ -301,7 +302,7 @@ def addProductApi(request):
         if not old_price:
             old_price = None
         
-        ApiProducts.createProduct(name=name, old_price=old_price, price=price, image_url=image_url)
+        ApiProducts.createProduct(name=name, old_price=old_price, price=price, image=image_url)
         
         return render(request, 'addProductApi.html', {'name': "Producte afegit correctament"})
     return render(request, 'addProductApi.html', {'form': apiForms.addProductApi()})
