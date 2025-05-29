@@ -596,7 +596,7 @@ function addFromInfo(productId){
         if (data.quantity !== undefined) {
             let quantityElement = document.getElementById('totalProduct');
         if (quantityElement) {
-            quantityElement.innerText = `Al carret: ${data.quantity}`;
+            quantityElement.innerText = `En el carro: ${data.quantity}`;
         }
         }
 
@@ -623,7 +623,7 @@ function addFirstFromInfo(productId){
             actionsContainer.innerHTML = `
             <div class="divHelper">
                 <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('${productId}')">-</button>
-                <p id="totalProduct">Al carret: ${data.quantity !== undefined ? data.quantity : 0}</p>
+                <p id="totalProduct">En el carro: ${data.quantity !== undefined ? data.quantity : 0}</p>
                 <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('${productId}')">+</button>
             </div>
             `;
@@ -653,7 +653,7 @@ function removeFromInfo(productId){
         if(data.quantity !== undefined) {
             let quantityElement = document.getElementById('totalProduct');
             if (quantityElement) {
-                quantityElement.innerText = `Al carret: ${data.quantity}`;
+                quantityElement.innerText = `En el carro: ${data.quantity}`;
             }
         }else {
             if (actionsContainer) {
@@ -691,7 +691,7 @@ function addFirstFromInfo2(productId){
             actionsContainer.innerHTML = `
             <div class="divHelper">
                 <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('${productId}')">-</button>
-                <p id="totalProduct">Al carret: ${data.quantity !== undefined ? data.quantity : 0}</p>
+                <p id="totalProduct">En el carro: ${data.quantity !== undefined ? data.quantity : 0}</p>
                 <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('${productId}')">+</button>
             </div>
             `;

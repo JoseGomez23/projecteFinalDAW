@@ -70,7 +70,7 @@ function addProductToCart(productId, group_id) {
     .then(data => {
         if (data.quantity !== undefined) {
             let button = document.getElementById(`addToCartButton${productId}`, getSelectedGroupId());
-            button.innerText = `En el carret: ${data.quantity}`;
+            button.innerText = `En el carrito: ${data.quantity}`;
         }
     })
     .catch(error => console.error("Error:", error));
@@ -92,7 +92,7 @@ function addProductToCart2(productId) {
     .then(data => {
         if (data.quantity !== undefined) {
             let button = document.getElementById(`addToCartButton2${productId}`);
-            button.innerText = `En el carret: ${data.quantity}`;
+            button.innerText = `En el carrito: ${data.quantity}`;
         }
     })
     .catch(error => console.error("Error:", error));
@@ -564,7 +564,7 @@ function addFromInfo(productId){
         if (data.quantity !== undefined) {
             let quantityElement = document.getElementById('totalProduct');
         if (quantityElement) {
-            quantityElement.innerText = `Al carret: ${data.quantity}`;
+            quantityElement.innerText = `En el carro: ${data.quantity}`;
         }
         }
 
@@ -591,7 +591,7 @@ function addFirstFromInfo(productId){
             actionsContainer.innerHTML = `
             <div class="divHelper">
                 <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('${productId}')">-</button>
-                <p id="totalProduct">Al carret: ${data.quantity !== undefined ? data.quantity : 0}</p>
+                <p id="totalProduct">En el carro: ${data.quantity !== undefined ? data.quantity : 0}</p>
                 <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('${productId}')">+</button>
             </div>
             `;
@@ -621,7 +621,7 @@ function removeFromInfo(productId){
         if(data.quantity !== undefined) {
             let quantityElement = document.getElementById('totalProduct');
             if (quantityElement) {
-                quantityElement.innerText = `Al carret: ${data.quantity}`;
+                quantityElement.innerText = `En el carro: ${data.quantity}`;
             }
         }else {
             if (actionsContainer) {
@@ -659,7 +659,7 @@ function addFirstFromInfo2(productId){
             actionsContainer.innerHTML = `
             <div class="divHelper">
                 <button class="buttonsContainer" id="removeFromCart" class="removeFromCart" onclick="removeFromInfo('${productId}')">-</button>
-                <p id="totalProduct">Al carret: ${data.quantity !== undefined ? data.quantity : 0}</p>
+                <p id="totalProduct">En el carro: ${data.quantity !== undefined ? data.quantity : 0}</p>
                 <button class="buttonsContainer" id="addToCart" class="addToCart" onclick="addFromInfo('${productId}')">+</button>
             </div>
             `;
@@ -721,17 +721,17 @@ function buscarProductos(variable) {
                                 
                 if (data.shopingList && data.shopingList.includes(producto.id)) {
                     
-                    addToCartButton = `<button class="buttonsContainer" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">En el carret</button>`;
+                    addToCartButton = `<button class="buyButton" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">En el carrito</button>`;
                 } else {
-                    addToCartButton = `<button class="buttonsContainer" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">Afegir al carret</button>`;
+                    addToCartButton = `<button class="buyButton" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">Añadir al carro</button>`;
                 }
 
                 
                 if (data.favorites && data.favorites.includes(producto.id)) {
-                    favoriteButton = `<button class="buttonsContainer" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', true, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/ea.png" alt="Afegir a favorits"></button>`;
+                    favoriteButton = `<button class="buyButton" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', true, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/ea.png" alt="Afegir a favorits"></button>`;
                 } else {
 
-                    favoriteButton = `<button class="buttonsContainer" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', false, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/en.png" alt="Treure de favorits"></button>`;
+                    favoriteButton = `<button class="buyButton" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', false, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/en.png" alt="Treure de favorits"></button>`;
                 }
 
                 div.innerHTML = `

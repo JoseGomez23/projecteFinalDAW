@@ -32,7 +32,7 @@ def register(request):
         if request.POST['username'] == '' or request.POST['email'] == '' or request.POST['password'] == '' or request.POST['password2'] == '':
             return render(request, 'register.html', {
                 'form': Register(),
-                'error': 'Has d\'omplir tots els camps'
+                'error': 'Debes rellenar todos los campos'
             })
             
         password_regex = re.compile(
@@ -42,7 +42,7 @@ def register(request):
         if not password_regex.match(request.POST['password']):
             return render(request, 'register.html', {
                 'form': Register(),
-                'error': 'La contrasenya no compleix els requisits de seguretat (mínim 8 caràcters, una majúscula, una minúscula, un número i un símbol especial)'
+                'error': 'La contraseña no cumple los requisitos de seguridad (mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial)'
             })
         
         if request.POST['password'] == request.POST['password2']:
@@ -59,10 +59,10 @@ def register(request):
             except IntegrityError:
                 return render(request, 'register.html',{
                 'form': Register(),
-                'error': 'L\'usuari ja existeix'
+                'error': 'El usuario ya existe'
             })
         return render(request, 'register.html', {'form': Register(),
-        'error': 'Les contrasenyes no coincideixen'})
+        'error': 'Las contraseñas no coinciden'})
 
 def login(request):
     
@@ -74,7 +74,7 @@ def login(request):
         if request.POST['username'] == '' or request.POST['password'] == '':
             return render(request, 'login.html', {
                 'form': Login(),
-                'error': 'Has d\'omplir tots els camps'
+                'error': 'Debes rellenar todos los campos'
             })
             
         else:
@@ -86,7 +86,7 @@ def login(request):
                 return render(request, 'login.html', {
                     
                     'form': Login(),
-                    'error': 'eMail o contrasenya incorrectes'
+                    'error': 'Correo electrónico o contraseña incorrectos'
                 })
             else:
                 
@@ -150,17 +150,24 @@ def groups(request, group_id):
             return render(request, 'addGroupMember.html', {'form': AddUserToGroup(), 'groups': groups, 'qrCode': qrCode})
         except:
             return render(request, 'addGroupMember.html', {
-                'error': 'El grup no existeix',
+                'error': 'El grupo no existe',
                 'groups': groups
             })
     else:
         try:
             user = getUser(request.POST['username'])
+            if user is None:
+                return render(request, 'addGroupMember.html', {
+                    'form': AddUserToGroup(),
+                    'error': 'El usuario no existe',
+                    'groups': groups
+                })
+                
             email = user.email
         except User.DoesNotExist:
             return render(request, 'addGroupMember.html', {
                 'form': AddUserToGroup(),
-                'error': 'L\'usuari no existeix',
+                'error': 'El usuario no existe',
                 'groups': groups
             })
 
@@ -169,7 +176,7 @@ def groups(request, group_id):
         except GrupFamiliar.DoesNotExist:
             return render(request, 'addGroupMember.html', {
                 'form': AddUserToGroup(),
-                'error': 'El grup no existeix',
+                'error': 'El grupo no existe',
                 'groups': groups
             })
             
@@ -179,7 +186,7 @@ def groups(request, group_id):
         if  userExists:
             return render(request, 'addGroupMember.html', {
                 'form': AddUserToGroup(),
-                'error': 'L\'usuari ja pertany a aquest grup',
+                'error': 'El usuario ya pertenece a este grupo',
                 'groups': groups
             })
          
@@ -191,9 +198,9 @@ def groups(request, group_id):
             invite_url = request.build_absolute_uri(reverse('acceptInvite', args=[group.id, invite_token]))
 
             send_mail(
-                'Benvingut al grup!',
-                f'Has estat convidat a unir-te al grup {group.name} (ID: {group.id}). '
-                f'Fes clic al següent enllaç per acceptar la invitació: {invite_url}',
+                '¡Bienvenido al grupo!',
+                f'Has sido invitado a unirte al grupo {group.name} (ID: {group.id}). '
+                f'Haz clic en el siguiente enlace para aceptar la invitación: {invite_url}',
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email],
                 fail_silently=False,
@@ -201,13 +208,13 @@ def groups(request, group_id):
 
             return render(request, 'addGroupMember.html', {
                 'form': AddUserToGroup(),
-                'message': 'Correu enviat correctament, avisa a l\'usuari de la teva invitació',
+                'message': 'Correo enviado correctamente, avisa al usuario de tu invitación',
                 'groups': groups
             })
         else:
             return render(request, 'addGroupMember.html', {
                 'form': AddUserToGroup(),
-                'error': 'L\'usuari no té un correu electrònic vinculat',
+                'error': 'El usuario no tiene un correo electrónico vinculado',
                 'groups': groups
             })
          
@@ -240,7 +247,7 @@ def qrReader(request):
                 result = raw_text + invite_token
             else:
                
-                result = "No s'ha pogut extraure informació del QR."
+                result = "No se ha podido extraer información del QR."
     
         
             if result.startswith('https://projectefinaldaw-2.onrender.com/') or result.startswith('http://127.0.0.1:8000/'):
@@ -248,7 +255,7 @@ def qrReader(request):
                 return render(request, 'readQr.html', {'results': result, 'form': QrCode()})
             else:
                 
-                return render(request, 'readQr.html', {'error': 'Aquest lector només accepta QR\'s de la pròpia web.', 'form': QrCode()})
+                return render(request, 'readQr.html', {'error': 'Este lector solo acepta QR de la propia web.', 'form': QrCode()})
         
         
     else:
@@ -256,7 +263,7 @@ def qrReader(request):
         return render(request, 'readQr.html', {'form': QrCode()})
 
     
-    return render(request, 'readQr.html', {'error': 'No s\'ha pogut processar la sol·licitud.', 'form': QrCode()})
+    return render(request, 'readQr.html', {'error': 'No se ha podido procesar la solicitud.', 'form': QrCode()})
 
 @login_required
 def createGroup(request):
@@ -269,7 +276,7 @@ def createGroup(request):
         if request.POST['name'] == '':
             return render(request, 'createGroup.html', {
             'form': CreateGroup(),
-            'error': 'Has d\'omplir tots els camps'
+            'error': 'Debes rellenar todos los campos'
             })
         
         try:
@@ -280,7 +287,7 @@ def createGroup(request):
         except IntegrityError:
             return render(request, 'createGroup.html', {
             'form': CreateGroup(),
-            'error': 'Ja existeix un grup amb aquest nom'
+            'error': 'Ya existe un grupo con ese nombre'
             })
 
 @login_required  
@@ -297,14 +304,14 @@ def addProductApi(request):
         exists = ApiProducts.getProduct(name=name, price=price)
         
         if exists:
-            return render(request, 'addProductApi.html', {'error': "Aquest producte ja existeix", 'form': apiForms.addProductApi()})
+            return render(request, 'addProductApi.html', {'error': "Este producto ya existe", 'form': apiForms.addProductApi()})
         
         if not old_price:
             old_price = None
         
         ApiProducts.createProduct(name=name, old_price=old_price, price=price, image=image_url)
         
-        return render(request, 'addProductApi.html', {'name': "Producte afegit correctament"})
+        return render(request, 'addProductApi.html', {'name': "Producto añadido correctamente"})
     return render(request, 'addProductApi.html', {'form': apiForms.addProductApi()})
 
 
@@ -317,7 +324,7 @@ def sendEmail(request):
         if email == "":
             return render(request, 'resetEmailPwd.html', {
                 'form': ResetEmailPwd(),
-                'error': 'Afegeix un correu electrònic'
+                'error': 'Añade un correo electrónico'
             })
         
         try:
@@ -339,29 +346,29 @@ def sendEmail(request):
                 else:
                     return render(request, 'resetEmailPwd.html', {
                         'form': ResetEmailPwd(),
-                        'error': 'No existeix cap usuari amb aquest correu electrònic'
+                        'error': 'No existe ningún usuario con ese correo electrónico'
                     })
             
             reset_url = request.build_absolute_uri(reverse('resetPassword', args=[token]))
             
             send_mail(
-                'Restabliment de contrasenya',
-                f'Fes clic aquí per restablir la teva contrasenya (1h per fer el canvi a partir d\'aquest correu): <a href="{reset_url}">Fes clic aquí</a>',
+                'Restablecimiento de contraseña',
+                f'Haz clic aquí para restablecer tu contraseña (1h para hacer el cambio a partir de este correo): <a href="{reset_url}">Haz clic aquí</a>',
                 settings.DEFAULT_FROM_EMAIL,
                 [email],
                 fail_silently=False,
-                html_message=f'Fes clic aquí per restablir la teva contrasenya (1h per fer el canvi a partir d\'aquest correu): <a href="{reset_url}">Fes clic aquí</a>',
+                html_message=f'Haz clic aquí para restablecer tu contraseña (1h para hacer el cambio a partir de este correo): <a href="{reset_url}">Haz clic aquí</a>',
             )
             
             return render(request, 'resetEmailPwd.html', {
                 'form': ResetEmailPwd(),
-                'success': 'S\'ha enviat un correu electrònic amb les instruccions per restablir la contrasenya'
+                'success': 'Se ha enviado un correo electrónico con las instrucciones para restablecer la contraseña'
             })
         
         except User.DoesNotExist:
             return render(request, 'resetEmailPwd.html', {
                 'form': ResetEmailPwd(),
-                'error': 'No existeix cap usuari amb aquest correu electrònic'
+                'error': 'No existe ningún usuario con ese correo electrónico'
             })
     
     else:
@@ -377,7 +384,7 @@ def resetPassword(request, token):
             if password_token.exp_date < datetime.now(password_token.exp_date.tzinfo):
                 return render(request, 'resetPassword.html', {
                     'form': ResetPassword(),
-                    'error': 'El token ha caducat'
+                    'error': 'El token ha caducado'
                 })
             
             return render(request, 'resetPassword.html', {'form': ResetPassword()})
@@ -385,7 +392,7 @@ def resetPassword(request, token):
         except PasswordToken.DoesNotExist:
             return render(request, 'resetPassword.html', {
                 'form': ResetPassword(),
-                'error': 'El token no existeix'
+                'error': 'El token no existe'
             })
     
     else:
@@ -398,7 +405,7 @@ def resetPassword(request, token):
             if not password_regex.match(request.POST['password']):
                 return render(request, 'resetPassword.html', {
                     'form': ResetPassword(),
-                    'error': 'La contrasenya no compleix els requisits de seguretat (mínim 8 caràcters, una majúscula, una minúscula, un número i un símbol especial)'
+                    'error': 'La contraseña no cumple los requisitos de seguridad (mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial)'
                 })
             
             try:
@@ -416,12 +423,12 @@ def resetPassword(request, token):
             except PasswordToken.DoesNotExist:
                 return render(request, 'resetPassword.html', {
                     'form': ResetPassword(),
-                    'error': 'El token no existeix'
+                    'error': 'El token no existe'
                 })
         else:
             return render(request, 'resetPassword.html', {
                 'form': ResetPassword(),
-                'error': 'Les contrasenyes no coincideixen'
+                'error': 'Las contraseñas no coinciden'
             })
 
 @login_required          
@@ -438,7 +445,7 @@ def manualResetPwd(request):
         if request.POST['oldPassword'] == '' or request.POST['password'] == '' or request.POST['password2'] == '':
             return render(request, 'manualResetPwd.html', {
                 'form': ResetManualPassword(),
-                'error': 'Has d\'omplir tots els camps'
+                'error': 'Debes rellenar todos los campos'
             })
         
         if request.POST['password'] == request.POST['password2']:
@@ -452,7 +459,7 @@ def manualResetPwd(request):
                 if not password_regex.match(request.POST['password']):
                     return render(request, 'manualResetPwd.html', {
                         'form': ResetManualPassword(),
-                        'error': 'La contrasenya no compleix els requisits de seguretat (mínim 8 caràcters, una majúscula, una minúscula, un número i un símbol especial)'
+                        'error': 'La contraseña no cumple los requisitos de seguridad (mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial)'
                     })
 
                 user.set_password(request.POST['password'])
@@ -466,13 +473,13 @@ def manualResetPwd(request):
                 
                 return render(request, 'manualResetPwd.html', {
                     'form': ResetManualPassword(),
-                    'error': 'La contrasenya actual no és correcta'
+                    'error': 'La contraseña actual no es correcta'
                 })
         else:
             
             return render(request, 'manualResetPwd.html', {
                 'form': ResetManualPassword(),
-                'error': 'Les contrasenyes no coincideixen'
+                'error': 'Las contraseñas no coinciden'
             })
 
 def logout(request):

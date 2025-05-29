@@ -267,14 +267,14 @@ def categoriesMercadoLivre(request, group_id=""):
             return render(request, "productsLidl.html", {"products": products, "title": "Products", "qnty": qnty, "favorites": favorites, "shopingList": shopingList})
 
         else:
-            return render(request, "productsLidl.html", {"error": "Error al obtenir productes de Mercado Livre"})
+            return render(request, "productsLidl.html", {"error": "Error al obtener productos de Mercado Livre"})
         
     else:
         
         products = MercadoLivreCategory.getProductsByCategory(category_id)
         
         if not products.exists():
-            return render(request, "productsLidl.html", {"error": "No hi ha productes disponibles"})
+            return render(request, "productsLidl.html", {"error": "No hay productos disponibles"})
     
    
     return render(request, "productsLidl.html", {"products": products, "title": "Products", "qnty": qnty, "favorites": favorites, "shopingList": shopingList})
@@ -322,7 +322,7 @@ def addFavoriteMercadoLivre(request, product_id):
             old_price=None
         )
         
-        return JsonResponse({"message": "Afegit a favorits" if created else "Ja estaba a favorits"})
+        return JsonResponse({"message": "Añadido a favoritos" if created else "Ya estaba en favoritoss"})
     else:
         return JsonResponse({"error": "Metode no permés"}, status=405)
     
@@ -463,20 +463,20 @@ def leaveGroup(request, group_id):
 
 def acceptInvite(request, group_id, invite_token):
     if not request.user.is_authenticated:
-        return render(request, 'acceptInvite.html', {'error': 'Has d\'estar autenticat per acceptar la invitació!'})
+        return render(request, 'acceptInvite.html', {'error': 'Tienes que iniciar sesión para aceptar la invitación al grupo.'})
 
     group = get_object_or_404(GrupFamiliar, id=group_id)
 
 
     if group.invite_token != invite_token:
-        return render(request, 'acceptInvite.html', {'error': 'El token d\'invitació no és vàlid!'})
+        return render(request, 'acceptInvite.html', {'error': 'El token de invitacion no es valido!'})
 
     if UsuarioGrupo.userInGroup(request.user, group):
-        return render(request, 'acceptInvite.html', {'error': 'Ja ets membre d\'aquest grup!'})
+        return render(request, 'acceptInvite.html', {'error': 'Ya eres miembro de este grupo!'})
 
     UsuarioGrupo.addUser(request.user, group)
 
-    return render(request, 'acceptInvite.html', {'message': 'Has estat afegit al grup correctament!'})
+    return render(request, 'acceptInvite.html', {'message': 'Se te ha añadido al grupo correctamente!'})
 
 @login_required
 def addFavorite(request, product_id, group_id=""):
@@ -734,7 +734,7 @@ def shoppingCartList(request, group_id=""):
         if group_id:
 
             if not UsuarioGrupo.userInGroup(request.user, group_id):
-                return render (request, "shoppingCart.html", {"error": "No pots veure llistes d'altres grups"}, status=403)
+                return render (request, "shoppingCart.html", {"error": "No puedes ver la lista de otros grupos"}, status=403)
             shoppingCart = ShoppingCartList.getAllShoppingList(None, group_id=group_id)
             groupVar = GrupFamiliar.getGroup(group_id)
         else:
@@ -908,7 +908,7 @@ def productInfo(request, product_id, group_id=""):
     if response.status_code == 200:
         data = response.json()
     else:
-        return render(request, "productInfo.html", {"error": "Producte no trobat"})
+        return render(request, "productInfo.html", {"error": "Producto no encontrado"})
         
     price_info = data.get("price_instructions", {})
     details = data.get("details", {})

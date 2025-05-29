@@ -47,8 +47,8 @@
             {{form.as_p}}
             <p>Si no tienes una cuenta, <a href="{% url 'register' %}">Regístrate</a></p>
             <p>¿Has olvidado la contraseña? <a href="{% url 'sendEmail' %}">Restablécela</a></p>
-            <a href="{% provider_login_url 'google' process='login' %}">Login amb Google</a>
-            <a href="{% provider_login_url 'github' %}">Login amb Github</a>
+            <a href="{% provider_login_url 'google' process='login' %}">Login con Google</a>
+            <a href="{% provider_login_url 'github' %}">Login con Github</a>
             <button type="submit">Iniciar sesión</button>
             
         </form>
