@@ -12,9 +12,17 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url 
 import pymysql
 pymysql.install_as_MySQLdb()
 
+DATABASES = {
+    'default': dj_database_url.config(
+        
+        default='postgresql://bdprojectefinal_user:ub6JGu2xmsIs0JeOKpbxNFHEed9yKZbT@dpg-d0s404i4d50c73b8g360-a.frankfurt-postgres.render.com/bdprojectefinal',
+        conn_max_age=600
+    )
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -53,7 +61,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.github',
 ]
 
-SITE_ID = 1
+SITE_ID = 2
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -105,20 +113,20 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Motor de la base de datos
-        'NAME': 'ddb253510',  # El nombre de tu base de datos en MySQL
-        'USER': 'ddb253510',  # El usuario con el que accedes a MySQL
-        'PASSWORD': 'Jose23082005',  # La contraseña de ese usuario
-        'HOST': 'bbdd.josegomez.cat',  # El dominio o IP del servidor MySQL
-        'PORT': '3306',  # Puerto por defecto para MySQL
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            
-        },
-    }
-}
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',  # Motor de la base de datos
+#        'NAME': 'ddb253510',  # El nombre de tu base de datos en MySQL
+#        'USER': 'ddb253510',  # El usuario con el que accedes a MySQL
+#        'PASSWORD': 'Jose23082005',  # La contraseña de ese usuario
+#        'HOST': 'bbdd.josegomez.cat',  # El dominio o IP del servidor MySQL
+#        'PORT': '3306',  # Puerto por defecto para MySQL
+#        'OPTIONS': {
+#            'charset': 'utf8mb4',
+#            
+#        },
+#    }
+#}
 
 
 # Password validation
@@ -177,4 +185,5 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_LOGIN_ON_GET=True
+ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
 SOCIALACCOUNT_ADAPTER = 'projecteFinalDAW.adapters.CustomSocialAccountAdapter'

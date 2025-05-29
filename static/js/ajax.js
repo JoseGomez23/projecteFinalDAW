@@ -671,7 +671,6 @@ function buscarProductos(variable) {
     const query = document.getElementById('search-input').value;
     let group_id = "user"; // Default group_id
 
-    alert(variable);
     if (variable === "1") {
         group_id = getSelectedGroupId();
     }
@@ -688,7 +687,7 @@ function buscarProductos(variable) {
         url = `/searchProducts/${encodeURIComponent(query)}/`;
     }
 
-    alert(url);    
+        
     fetch(url, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -719,9 +718,7 @@ function buscarProductos(variable) {
                 let favoriteButton = '';
 
                 //console.log(data.qnty[producto.id[0]]);
-                
-
-                
+                                
                 if (data.shopingList && data.shopingList.includes(producto.id)) {
                     
                     addToCartButton = `<button class="buttonsContainer" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">En el carret</button>`;
@@ -746,6 +743,7 @@ function buscarProductos(variable) {
                         ${producto.price && producto.old_price ? `<span class="oldPrice">${producto.old_price}€</span>` : ''}
                         <span>${producto.price ? producto.price : ''}€</span>
                     </div>
+                    <hr>
                     <a class="moreInfo" href="/productInfo/${producto.id}">Más información</a>
                     ${addToCartButton}
                     ${favoriteButton}
@@ -758,8 +756,10 @@ function buscarProductos(variable) {
                 
             data.resultados.forEach(producto => {
                 const div = document.createElement('div');
+                div.className = 'divProducts';
+               
+                                
                 div.innerHTML = `
-                
                     <a class="afix" href="/productInfo/${producto.id}">
                         <img src="${producto.image}" alt="${producto.name}">
                     </a>
@@ -768,8 +768,8 @@ function buscarProductos(variable) {
                         ${producto.price && producto.old_price ? `<span class="oldPrice">${producto.old_price}€</span>` : ''}
                         <span>${producto.price ? producto.price : ''}€</span>
                     </div>
-                    <a class="moreInfo" href="/productInfo/${producto.id}">Más información</a>
-            
+                    <hr>
+                    <a class="moreInfo" href="/productInfo/${producto.id}">Más información</a>  
                 `;
                 container.appendChild(div);
             });

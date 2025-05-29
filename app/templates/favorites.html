@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cat">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +22,7 @@
             <h1>Productes favorits</h1>
         </header>
 
-        <a class="tornarButton" href="{% url 'indexLogat' %}">Tornar</a>
+        <a class="tornarButton" href="{% url 'indexLogat' %}">Volver</a>
 
         <select class="groupsDropdown" id="groupsDropdown" onchange="refreshFavoriteGroups(this.value)">
             <option value="user">Mi perfil</option>
@@ -34,9 +34,11 @@
             >{{ group.name }}</option>
             {% endfor %}
         </select>
-
+        
+        <br>
+        <br>
         <form method="post" id="updateProductsForm" action="{% url 'refreshFavorites' %}">
-            <button>Actualitzar productos</button>
+            <button class="tornarButton">Actualizar productos</button>
             {% csrf_token %}
         </form>
 

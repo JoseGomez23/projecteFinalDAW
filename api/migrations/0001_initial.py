@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100, verbose_name='Nom del producte')),
                 ('old_price', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='Preu antic del producte')),
                 ('price', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='Preu del producte')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='images/', verbose_name='Imatge del producte')),
+                ('image_url', models.ImageField(blank=True, null=True, upload_to='images/', verbose_name='Imatge del producte')),
             ],
             options={
                 'unique_together': {('name', 'image')},

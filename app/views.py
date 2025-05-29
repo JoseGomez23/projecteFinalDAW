@@ -26,7 +26,7 @@ def recolectar_productos(request):
     url = "https://tienda.mercadona.es/api/categories/"
     response = requests.get(url)
     
-    # Obtener la fecha de actualización si existe en el JSON
+   
     fecha_actualizacion = None
     try:
         with open(os.path.join(settings.BASE_DIR, 'static', 'products.json'), 'r', encoding='utf-8') as f:
@@ -111,8 +111,10 @@ def recolectar_productos(request):
         userGroups = UsuarioGrupo.getGroups(request.user)
         group = [userGroup.group for userGroup in userGroups]
     
+    urlMercadoLivre = request.build_absolute_uri()
+    urlMercadoLivre = urlMercadoLivre.split("indexLogat/")[0]
 
-    return render(request, "indexLogat.html", {"categories": categorias, "title": title, "groups": group})
+    return render(request, "indexLogat.html", {"categories": categorias, "title": title, "groups": group, "urlMercadoLivre": urlMercadoLivre})
 
 
 def searchProducts(request, search_query, group_id=0):
@@ -136,15 +138,16 @@ def searchProducts(request, search_query, group_id=0):
         if search_normalized in normalize(producto.get("name", ""))
     ]
     
-    group = UsuarioGrupo.getGroup(group_id)
+    
     if request.user.is_authenticated and group_id:
+        
         favorites = FavoriteProducts.getFavorites(request.user, group_id=group_id)
         shopingList = ShoppingCartList.getShoppingList(request.user, group_id=group_id)
         qnty = ShoppingCartList.getQty(request.user, group_id=group_id)
     else:
-        favorites = FavoriteProducts.getFavorites(request.user, group_id=None)
-        shopingList = ShoppingCartList.getShoppingList(request.user, group_id=None)
-        qnty = ShoppingCartList.getQty(request.user, group_id=None)
+        favorites = []
+        shopingList = []
+        qnty = []
     
 
     # 👇 Aquí decides si devolver JSON o renderizar HTML
@@ -878,12 +881,12 @@ def removeChecked(request, group_id=""):
                     }
                     for item in selected_items
                 ]
-
+                
                 History.createHistory(
                     user=request.user,
                     group_id=group,
                     ticket_id=new_ticket_id,
-                    products=products_list
+                    products_list=products_list
                 )
 
                 selected_items.delete()

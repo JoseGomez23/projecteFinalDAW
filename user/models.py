@@ -64,3 +64,10 @@ def getUser(username):
         return user
     except User.DoesNotExist:
         return None
+    
+def getUserByEmail(email):
+    try:
+        user = User.objects.get(email=email)
+        return user
+    except User.DoesNotExist:
+        return None

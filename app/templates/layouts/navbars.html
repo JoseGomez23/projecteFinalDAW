@@ -14,13 +14,12 @@
     <button class="skipToContent" id="skipToContent" onclick="document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });">Bajar al contenido</button>
     <nav class="topbar">
         <div class="topbarItems">
-          
+            <a href="{% url 'index' %}" class="logoweb">
             <img class="logoweb" src="{% static 'logo.png' %}" alt="Logo de la web">
+            </a>
     
- 
             <button class="menuToggle" onclick="toggleMenu()">☰</button>
     
-
             <div class="navContent" id="navContent">
                 {% if user.is_authenticated %}
                     <h2 class="topbarUsername">Bienvenido, {{ user.username }}.</h2>
@@ -86,8 +85,12 @@
             <p class="sidebarLogoText"><b>Favoritos</b></p>
         </a>
         <div class="divLogos">
-            <img class="logos" src="{% static 'lidl.png' %}" alt="Logo de lidl">
-            <img class="logos" src="{% static 'mercadona.png' %}" alt="Logo de mercadona">
+            <a class="logos" href="https://www.mercadolivre.com.br/">
+            <img style="height: 70px; width: 70px;" src="{% static 'lidl.png' %}" alt="Logo de lidl">
+            </a>
+            <a class="logos" href="https://www.mercadona.es/">
+            <img style="height: 70px; width: 70px;" src="{% static 'mercadona.png' %}" alt="Logo de mercadona">
+            </a>
         </div>
     </div>
 </nav>

@@ -34,6 +34,16 @@ def register(request):
                 'form': Register(),
                 'error': 'Has d\'omplir tots els camps'
             })
+            
+        password_regex = re.compile(
+            r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+        )
+        
+        if not password_regex.match(request.POST['password']):
+            return render(request, 'register.html', {
+                'form': Register(),
+                'error': 'La contrasenya no compleix els requisits de seguretat (mínim 8 caràcters, una majúscula, una minúscula, un número i un símbol especial)'
+            })
         
         if request.POST['password'] == request.POST['password2']:
             
@@ -380,6 +390,15 @@ def resetPassword(request, token):
     else:
         
         if request.POST['password'] == request.POST['password2']:
+            
+            password_regex = re.compile(
+                r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+            )
+            if not password_regex.match(request.POST['password']):
+                return render(request, 'resetPassword.html', {
+                    'form': ResetPassword(),
+                    'error': 'La contrasenya no compleix els requisits de seguretat (mínim 8 caràcters, una majúscula, una minúscula, un número i un símbol especial)'
+                })
             
             try:
                 password_token = PasswordToken.checkPasswordToken(token=token)

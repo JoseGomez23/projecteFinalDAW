@@ -16,12 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
+
+def redirect_social_signup(request):
+  
+    return redirect('/forms/login/')
 
 urlpatterns = [
+    path('accounts/3rdparty/signup/', redirect_social_signup, name='redirect-social-signup'),
     path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
     path('forms/', include('forms.urls')),
     path('user/', include('user.urls')),
     path('api/', include('api.urls')),
-    path('', include('app.urls'))
+    path('', include('app.urls')),
 ]

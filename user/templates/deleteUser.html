@@ -13,18 +13,18 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
     <main>
     <div class="content">
-        <h2>Estàs segur que vols eliminar el teu compte?</h2>
-        <p>Si elimines el teu compte no podràs recuperar-lo.</p>
+        <h2>Estas seguro/a que quieres eliminar tu cuenta?</h2>
+        <p>Si eliminas la cuenta no la podras recuperar.</p>
         {% if group %}
-            <p>Actualment estàs en el grup/s: <b>
+            <p>Actualmente estas en el/los grupo/s: <b>
                 {% for grp in group %}
                     {{ grp }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
-            </b>. Si elimines el compte també sortiras del grup/s.</p>
+            </b>.Si eliminas la cuenta saldras de/los grupo/s.</p>
         {% endif %}
 
         {% if qtFavProducts %}
-            <p>Tens un total de <b>{{qtFavProducts}}</b> productes favorits, si elimines el teu compte perdràs tots els teus productes.</p>
+            <p>Tienes un total de <b>{{qtFavProducts}}</b> productos favoritos, si eliminas tu cuenta perderás todos tus productos.</p>
         {% endif %}
         <form action="{% url 'deleteAccount' %}" method="POST">
             {% csrf_token %}

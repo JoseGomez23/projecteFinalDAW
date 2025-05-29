@@ -162,6 +162,17 @@ body {
     background-color: lightgray;
 }
 
+.bannerLogo {
+    
+    margin-left: 17%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 1rem;
+    background: #fff;
+}
+
 @media (max-width: 768px) {
 
     .content {
@@ -182,6 +193,12 @@ body {
 
     .divCartProducts .productField {
         text-align: center;
+    }
+
+    .bannerLogo {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
     }
 }
 

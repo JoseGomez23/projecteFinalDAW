@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import Config
 from .forms import Config
-from .models import getUser
+from .models import getUser, getUserByEmail
 from app.models import FavoriteProducts, GrupFamiliar, UsuarioGrupo
 # Create your views here.
 
@@ -35,20 +35,38 @@ def configuration(request):
         if username != request.user.username or email != request.user.email:
             
             userExists = getUser(username)
-            
-            if not userExists:
-                user = request.user
-                user.username = username
-                user.email = email
-                user.save()
-                form = Config(initial={"username": user.username, "email": user.email})
-                return render(request, "userConfiguration.html", {"form": form, "message": "La configuración se ha actualizado correctamente"})
+            emailExists = getUserByEmail(email=email)
+
+            # Permitir cambiar el email si el username es el mismo que el actual usuario
+            if username == request.user.username:
+                if email != request.user.email:
+                    if not emailExists or email == request.user.email:
+                        user = request.user
+                        user.email = email
+                        user.save()
+                        form = Config(initial={"username": user.username, "email": user.email})
+                        return render(request, "userConfiguration.html", {"form": form, "message": "La configuración se ha actualizado correctamente"})
+                    else:
+                        form = Config(initial={"username": username, "email": email})
+                        return render(request, "userConfiguration.html", {"form": form, "error": "Ya existe un usuario con ese email"})
+                else:
+                    form = Config(initial={"username": username, "email": email})
+                    return render(request, "userConfiguration.html", {"form": form, "error": "Debes cambiar algún campo para poder actualizar la configuración"})
             else:
-                form = Config(initial={"username": username, "email": email})
-                return render(request, "userConfiguration.html", {"form": form, "error": "Ya existe un usuario con ese nombre de usuario"})
-        else:
-            form = Config(initial={"username": username, "email": email})
-            return render(request, "userConfiguration.html", {"form": form, "error": "Debes cambiar algún campo para poder actualizar la configuración"})
+                if not userExists:
+                    if not emailExists or email == request.user.email:
+                        user = request.user
+                        user.username = username
+                        user.email = email
+                        user.save()
+                        form = Config(initial={"username": user.username, "email": user.email})
+                        return render(request, "userConfiguration.html", {"form": form, "message": "La configuración se ha actualizado correctamente"})
+                    else:
+                        form = Config(initial={"username": username, "email": email})
+                        return render(request, "userConfiguration.html", {"form": form, "error": "Ya existe un usuario con ese email"})
+                else:
+                    form = Config(initial={"username": username, "email": email})
+                    return render(request, "userConfiguration.html", {"form": form, "error": "Ya existe un usuario con ese nombre de usuario"})
     
 @login_required
 def deleteAccount(request):
@@ -81,7 +99,6 @@ def deleteAccount(request):
             if not UsuarioGrupo.hasUsers(group):
                 group.delete()
 
-        
         user = request.user
         user.delete()
         

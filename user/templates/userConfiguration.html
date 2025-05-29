@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuració d'usuari</title>
+    <title>Configuracion de usuario</title>
     
     
     
@@ -22,7 +22,7 @@
                     
                     {% csrf_token %}
                     {{form.as_p}}
-                    <a href="{% url 'manualResetPassword' %}">Canviar contrasenya</a>
+                    <a href="{% url 'manualResetPassword' %}">Cambiar contraseña</a>
 
                     
                     <button class="saveButton" type="submit">Guardar</button>
@@ -45,7 +45,7 @@
                 <div>
                     <h2>!!Danger Zone!!</h2>
                     <br>
-                    <a class="dngButton" href="{% url 'deleteAccount' %}">Eliminar el meu compte</a>
+                    <a class="dngButton" href="{% url 'deleteAccount' %}">Eliminar mi cuenta</a>
                 </div>
             </div>
         </div>
