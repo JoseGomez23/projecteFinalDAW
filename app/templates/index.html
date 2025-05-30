@@ -12,28 +12,30 @@
         <script src="{% static 'js/productsPreloader.js' %}"></script>
         <link rel="stylesheet" href="{% static 'css/global.css' %}">
         <link rel="stylesheet" href="{% static 'css/categories.css' %}">
-    <main class="content">
+    
+    <main>
+        <div class="content">
+            <img src="{% static 'banner.jpg' %}" alt="Logo" class="bannerLogo">
 
-        <img src="{% static 'banner.jpg' %}" alt="Logo" class="bannerLogo">
-
-        <section class="banners">
-            <a href="{% url 'indexLogat' %}" class="banner">
-                <img src="{% static 'fons.jpg' %}" alt="Consultar productos" class="banner-img">
-                <span>Consultar productos</span>
-            </a>
-            <a href="{% url 'favorites' %}" class="banner">
-                <img src="{% static 'corazon.png' %}" alt="Consultar productos favoritos" class="banner-img">
-                <span>Consultar productos favoritos</span>
-            </a>
-            <a href="{% url 'history' %}" class="banner">
-                <img src="{% static 'historial.png' %}" alt="Consultar historial" class="banner-img">
-                <span>Consultar historial</span>
-            </a>
-            <a href="{% url 'groups' %}" class="banner">
-                <img src="{% static 'grupo.png' %}" alt="Consultar grupos" class="banner-img">
-                <span>Consultar grupos</span>
-            </a>
-        </section>
+            <section class="banners">
+                <a href="{% url 'indexLogat' %}" class="banner">
+                    <img src="{% static 'fons.jpg' %}" alt="Consultar productos" class="banner-img">
+                    <span>Consultar productos</span>
+                </a>
+                <a href="{% url 'favorites' %}" class="banner">
+                    <img src="{% static 'corazon.png' %}" alt="Consultar productos favoritos" class="banner-img">
+                    <span>Consultar productos favoritos</span>
+                </a>
+                <a href="{% url 'history' %}" class="banner">
+                    <img src="{% static 'historial.png' %}" alt="Consultar historial" class="banner-img">
+                    <span>Consultar historial</span>
+                </a>
+                <a href="{% url 'groups' %}" class="banner">
+                    <img src="{% static 'grupo.png' %}" alt="Consultar grupos" class="banner-img">
+                    <span>Consultar grupos</span>
+                </a>
+            </section>
+        </div>
         
     </main>
 
