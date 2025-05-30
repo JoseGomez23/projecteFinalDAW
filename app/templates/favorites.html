@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productes favorits</title>
+    <title>Productos favoritos</title>
 </head>
 <body>
     {% extends 'layouts/navbars.html' %}
@@ -19,7 +19,7 @@
     <main>
     <div class="content">
         <header>
-            <h1>Productes favorits</h1>
+            <h1>Productos favoritos</h1>
         </header>
 
         <a class="tornarButton" href="{% url 'indexLogat' %}">Volver</a>
@@ -42,115 +42,106 @@
             {% csrf_token %}
         </form>
 
-        <div id="productsContainer" class="divProducts-container">
-            {% for product in products %}
-                {% if not product.group_id %}
-                    <div class="divProducts">
+        {% if error %}
+        <div id="productsContainer" class="divProducts-container"></div>
+            <p>{{ error }}</p>
+        </div>
+        {% else %}
 
-                        {% if not product.image %}
-                            <a class="productLink" href="{% url 'productInfo2' product.id %}">
-                                <img src="{% static 'na.png' %}" alt="{{ product.name }}">
-                            </a>
-                        {% else %}
-                            <a class="productLink" href="{% url 'productInfo' product.id %}">
-                                
-                                <img src="{{ product.image }}" alt="{{ product.name }}">
-                            </a>
-                        {% endif %}
-                        
-                        <strong>{{ product.name }}</strong>
+            <div id="productsContainer" class="divProducts-container">
+                {% for product in products %}
+                    {% if not product.group_id %}
+                        <div class="divProducts">
 
-                        <div class="price">
-                            {% if product.old_price %}
-                                <span class="oldPrice">{{ product.old_price }}€</span>
+                            {% if not product.image %}
+                                <a class="productLink" href="{% url 'productInfo2' product.id %}">
+                                    <img src="{% static 'na.png' %}" alt="{{ product.name }}">
+                                </a>
+                            {% else %}
+                                <a class="productLink" href="{% url 'productInfo' product.id %}">
+                                    
+                                    <img src="{{ product.image }}" alt="{{ product.name }}">
+                                </a>
                             {% endif %}
-                            <span>{{ product.price }}€</span>
-                        </div>
+                            
+                            <strong>{{ product.name }}</strong>
 
-                        <hr>
-                        {% if not product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
-                            <a class="moreInfo" href="{% url 'productInfo' product.id %}">Más información</a>
-                        {% else %}
-                            <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Más información</a>
-                        {% endif %}
-
-                        {% if product.id|stringformat:"s" in shopingList %}
-                            {% for product_id, quantity in qnty %}
-                                {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
-                                    {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
-                                        <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">En el carro: {{ quantity }}</button>
-                                    {% else %}
-                                        <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carro: {{ quantity }}</button>
-                                    {% endif %}
+                            <div class="price">
+                                {% if product.old_price %}
+                                    <span class="oldPrice">{{ product.old_price }}€</span>
                                 {% endif %}
-                            {% endfor %}
-                        {% else %}
-                            {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]"  %}
-                                <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Añadir al carrito</button>
-                            {% else %}
-                                <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">Añadir al carrito</button>
-                            {% endif %}
-                        {% endif %}
-                    
-                        {% if product.id|stringformat:"s" in products %}
-                            {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
-                                <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', false)">
-                                    <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
-                                </button>
-                            {% else %}
-                                <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false, getSelectedGroupId())">
-                                    <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
-                                </button>
-                            {% endif %}
-                        {% else %}
+                                <span>{{ product.price }}€</span>
+                            </div>
 
-                            {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
-                                <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', true)">
-                                    <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
-                                </button>
+                            <hr>
+                            {% if not product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                <a class="moreInfo" href="{% url 'productInfo' product.id %}">Más información</a>
                             {% else %}
-                                <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true, getSelectedGroupId())">
-                                    <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
-                                </button>
+                                <a class="moreInfo" href="{% url 'productInfo2' product.id %}">Más información</a>
                             {% endif %}
 
-                        {% endif %}
-                    </div>
+                            {% if product.id|stringformat:"s" in shopingList %}
+                                {% for product_id, quantity in qnty %}
+                                    {% if product_id|stringformat:"s" == product.id|stringformat:"s" %}
+                                        {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                            <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">En el carro: {{ quantity }}</button>
+                                        {% else %}
+                                            <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">En el carro: {{ quantity }}</button>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]"  %}
+                                    <button class="buyButton" id="addToCartButton2{{ product.id }}" onclick="addProductToCart2('{{ product.id }}')">Añadir al carrito</button>
+                                {% else %}
+                                    <button class="buyButton" id="addToCartButton{{ product.id }}" onclick="addProductToCart('{{ product.id }}', getSelectedGroupId())">Añadir al carrito</button>
+                                {% endif %}
+                            {% endif %}
+                        
+                            {% if product.id|stringformat:"s" in products %}
+                                {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                    <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', false)">
+                                        <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                                    </button>
+                                {% else %}
+                                    <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', false, getSelectedGroupId())">
+                                        <img src="{% static 'ea.png' %}" alt="Treure de favorits" style="width: 16px; height: 16px;">
+                                    </button>
+                                {% endif %}
+                            {% else %}
+
+                                {% if product.id|stringformat:"s"|regex_search:"[a-zA-Z]" %}
+                                    <button class="buyButton" id="favoriteButton2{{ product.id }}" onclick="toggleFavorite2('{{ product.id }}', true)">
+                                        <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                                    </button>
+                                {% else %}
+                                    <button class="buyButton" id="favoriteButton{{ product.id }}" onclick="toggleFavorite('{{ product.id }}', true, getSelectedGroupId())">
+                                        <img src="{% static 'ea.png' %}" alt="Afegir a favorits" style="width: 16px; height: 16px;">
+                                    </button>
+                                {% endif %}
+
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% empty %}
+                    <p>No hay productos favoritos.</p>
+                {% endfor %}
+            </div>
+            <div class="pagination">
+                {% if products.has_previous %}
+                    <a href="?page={{ products.previous_page_number }}">Anterior</a>
                 {% endif %}
-            {% empty %}
-                <p>No hay productos favoritos.</p>
-            {% endfor %}
+
+                <span>Página {{ products.number }} de {{ products.paginator.num_pages }}</span>
+
+                {% if products.has_next %}
+                    <a href="?page={{ products.next_page_number }}">Siguiente</a>
+                {% endif %}
+            </div>
+
         </div>
-        <div class="pagination">
-            {% if products.has_previous %}
-                <a href="?page={{ products.previous_page_number }}">Anterior</a>
-            {% endif %}
-
-            <span>Página {{ products.number }} de {{ products.paginator.num_pages }}</span>
-
-            {% if products.has_next %}
-                <a href="?page={{ products.next_page_number }}">Siguiente</a>
-            {% endif %}
-        </div>
-
-    </div>
+        {% endif %}
     </main>
-
-    <script>
-            
-        document.addEventListener('DOMContentLoaded', function() {
-        function getCookie(name) {
-            let value = "; " + document.cookie;
-            let parts = value.split("; " + name + "=");
-            if (parts.length === 2) return parts.pop().split(";").shift();
-        }
-        var groupId = getCookie('group_id');
-        if (groupId) {
-            var dropdown = document.getElementById('groupsDropdown');
-            if (dropdown) dropdown.value = groupId;
-        }
-        });
-    </script>
     
     {% include 'layouts/footer.html' %}
     {% endblock %}

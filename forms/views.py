@@ -36,16 +36,18 @@ def register(request):
             })
             
         password_regex = re.compile(
-            r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+            r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$'
         )
+
+        existsUser = getUserByEmail(request.POST['email'])
         
         if not password_regex.match(request.POST['password']):
             return render(request, 'register.html', {
                 'form': Register(),
-                'error': 'La contraseña no cumple los requisitos de seguridad (mínimo 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial)'
+                'error': 'La contraseña no cumple los requisitos de seguridad (mínimo 8 caracteres, una mayúscula, una minúscula y un número)'
             })
         
-        if request.POST['password'] == request.POST['password2']:
+        if request.POST['password'] == request.POST['password2'] and not existsUser:
             
             try: 
                 user = createUser(request.POST['username'], request.POST['email'], request.POST['password'])
@@ -61,6 +63,12 @@ def register(request):
                 'form': Register(),
                 'error': 'El usuario ya existe'
             })
+        else:
+            if existsUser:
+                return render(request, 'register.html', {'form': Register(),
+                    'error': 'Ya existe un usuario con ese correo electrónico'})
+            
+            # Si las contraseñas no coinciden
         return render(request, 'register.html', {'form': Register(),
         'error': 'Las contraseñas no coinciden'})
 
@@ -114,7 +122,7 @@ def login(request):
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
                 _login(request, user)
 
-                next_url = request.GET.get('next', 'indexLogat')
+                next_url = request.GET.get('next', 'index')
                 response = redirect(next_url)
                 
                 response['Authorization'] = f'{apiToken.token}'
@@ -182,6 +190,7 @@ def groups(request, group_id):
             
             
         userExists = UsuarioGrupo.userInGroup(user, group)
+        print(userExists)
         
         if  userExists:
             return render(request, 'addGroupMember.html', {
@@ -400,7 +409,7 @@ def resetPassword(request, token):
         if request.POST['password'] == request.POST['password2']:
             
             password_regex = re.compile(
-                r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+                r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$'
             )
             if not password_regex.match(request.POST['password']):
                 return render(request, 'resetPassword.html', {
@@ -453,7 +462,7 @@ def manualResetPwd(request):
             if user.check_password(request.POST['oldPassword']):
                 
                 password_regex = re.compile(
-                    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
+                    r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$'
                 )
 
                 if not password_regex.match(request.POST['password']):

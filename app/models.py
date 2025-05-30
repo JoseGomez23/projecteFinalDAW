@@ -64,8 +64,11 @@ class UsuarioGrupo(models.Model):
     def userInGroup(user, group):
         try:
             user = UsuarioGrupo.objects.filter(user=user, group=group).exists()
-            print(user)
-            return True
+            
+            if user == True:
+                return True 
+            else:
+                return False
         except UsuarioGrupo.DoesNotExist:
             return False
         

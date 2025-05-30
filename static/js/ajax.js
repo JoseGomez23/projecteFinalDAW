@@ -671,7 +671,7 @@ function buscarProductos(variable) {
     const query = document.getElementById('search-input').value;
     let group_id = "user"; // Default group_id
 
-    if (variable === "1") {
+    if (variable == "0") {
         group_id = getSelectedGroupId();
     }
     if (query.trim() === '') {
@@ -687,7 +687,6 @@ function buscarProductos(variable) {
         url = `/searchProducts/${encodeURIComponent(query)}/`;
     }
 
-        
     fetch(url, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -699,7 +698,7 @@ function buscarProductos(variable) {
         const container = document.getElementById('divProducts');
         container.innerHTML = '';
 
-        if (data.length === 0) {
+        if (data.resultados == "") {
             container.innerHTML = '<p>No se encontraron productos.</p>';
             return;
         }
@@ -707,6 +706,7 @@ function buscarProductos(variable) {
         if (data.user != null) {
             let contador = 0;
 
+            //alert(data.favorites);
             //console.log(data.qnty);
             data.resultados.forEach(producto => {
                 
@@ -717,8 +717,6 @@ function buscarProductos(variable) {
                 let addToCartButton = '';
                 let favoriteButton = '';
 
-                //console.log(data.qnty[producto.id[0]]);
-                                
                 if (data.shopingList && data.shopingList.includes(producto.id)) {
                     
                     addToCartButton = `<button class="buyButton" id="addToCartButton${producto.id}" onclick="addProductToCart('${producto.id}', '${group_id}')">En el carrito</button>`;
@@ -727,10 +725,12 @@ function buscarProductos(variable) {
                 }
 
                 
+                
                 if (data.favorites && data.favorites.includes(producto.id)) {
                     favoriteButton = `<button class="buyButton" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', true, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/ea.png" alt="Afegir a favorits"></button>`;
                 } else {
 
+                    //alert(data.shopingList.includes(producto.id));
                     favoriteButton = `<button class="buyButton" id="favoriteButton${producto.id}" onclick="toggleFavorite('${producto.id}', false, '${group_id}')"><img style="width: 16px; height: 16px;" src="/static/en.png" alt="Treure de favorits"></button>`;
                 }
 

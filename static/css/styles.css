@@ -16,9 +16,6 @@ body {
     overflow: hidden;
 }
 
-
-
-
 a {
     text-decoration: none;
     color: #007bff;
@@ -111,17 +108,38 @@ button{
     cursor: pointer;
 }
 
+.authButtons {
+
+    border-radius: 5px;
+    background-color: #4CAF50;
+    padding: 0.5rem;
+    color: #FFFFFF;
+    
+}
+
+.authButtons:hover , button:hover {
+
+    background-color: #45a049; /* Cambia el color al pasar el mouse */
+}
+
 @media (max-width: 768px) {
     body {
         font-size: x-small;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        
         margin-right: 0;
+    }
+
+    .divContent {
+        width: 90%;
+        margin: 0.2rem; /* Centra el divContent */
+        padding: 0.5rem;
     }
 
     .divSupers{
         width: 50%;
+        height: 20%;
     }
 
     .divLogo {
@@ -129,7 +147,7 @@ button{
         width: 5rem;
         height: 5rem;
         position: relative;
-        margin: 1rem auto; /* Centra el logo en la parte superior */
+        margin: 0.5rem auto; /* Centra el logo en la parte superior */
     }
 
     .logos {
@@ -138,12 +156,12 @@ button{
     }
     .divContent {
         width: 70%;
-        margin: 1rem auto; /* Centra el divContent */
+        margin: 0.2rem auto; /* Centra el divContent */
     }
 
     .divSupers {
         width: 90%;
-        margin: 1rem auto; /* Centra el divSupers */
+        margin: 0.5rem auto; /* Centra el divSupers */
     }
     
 }

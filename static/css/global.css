@@ -173,20 +173,61 @@ body {
     background: #fff;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    border-radius: 4px;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    text-decoration: none;
+    color: #333;
+    transition: background 0.2s;
+}
+
+.pagination a:hover {
+    background: #e0e0e0;
+}
+
+.pagination span {
+    font-weight: bold;
+}
+
 @media (max-width: 768px) {
 
     .content {
         margin-left: 10%;
-        padding: 5rem;
+    
         background-color: #f0f0f0;
         animation: fadeIn 0.5s ease-in-out;
     }
 
+    .bannerLogo {
+
+        margin-left: 0;
+        margin-top: 40%;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .banner {
+        
+        font-size: medium;
+        width: 90%;
+    }
 
     .divCartProducts {
+
         font-size: x-small;
         flex-direction: column;
         width: 18.8rem;
+        margin-right: 1rem;
         padding: 0.5rem;
         gap: 0.5rem;
     }

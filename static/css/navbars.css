@@ -350,7 +350,7 @@ hr {
 
     .content {
         margin-left: 30%;
-        padding: 2rem;
+        
     }
 
     .logos {
@@ -498,6 +498,9 @@ hr {
     gap: 1rem;
 }
 
+.mergedMenu {
+    display: none;
+}
 
 @media (max-width: 768px) {
     .topbarItems {
@@ -505,8 +508,8 @@ hr {
     }
 
     .logos {
-        width: 15%;
-        height: auto;
+        width: 40px;
+        height: 40px;
     }
 
     .menuToggle {
@@ -519,6 +522,36 @@ hr {
         width: 80%;
         background-color: #f0f8ff;
         padding: 1rem;
+    }
+
+    .mergedMenu {
+        margin-top: 7rem;
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        overflow-y: auto;
+        z-index: 1005;
+        padding: 1em;
+    }
+
+    .menuToggle {
+        z-index: 1006;
+    }
+    .mergedMenu.show {
+        display: block;
+    }
+
+
+    .mergedMenu a{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        text-decoration: none;
+        color: black;
+        transition: background-color 0.3s ease;
     }
 
     .navContent.show {

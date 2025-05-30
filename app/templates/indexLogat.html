@@ -27,14 +27,16 @@
                     {% endfor %}
                 </select>
             {% endif %}
+            <br>
+            <br>
             {% if user.is_authenticated %}
-                <input type="text" id="search-input" placeholder="Buscar productos..." onchange="buscarProductos(0)">
+                <input class="searchBar" type="text" id="search-input" placeholder="Buscar productos..." oninput="buscarProductos(0)">
             {% else %}
-                <input type="text" id="search-input" placeholder="Buscar productos..." onchange="buscarProductos(1)">
+                <input class="searchBar" type="text" id="search-input" placeholder="Buscar productos..." oninput="buscarProductos(1)">
             {% endif %}
             <div id="divProducts" class="divProducts-container"></div>
 
-
+            <hr>
             <section class="categories-section">
                 <div class="categories-container">
                     {% for category in categories %}
@@ -44,15 +46,15 @@
                     {% endfor %}
 
                     <a class="category-button" href="{{urlMercadoLivre}}productsMercadoLivre/?value=/alimentos-bebidas/comida-preparada/">
-                        Menjar Preparat (MercadoLivre)
+                        Comida preparada (MercadoLivre)
                     </a>
 
                     <a class="category-button" href="{{urlMercadoLivre}}productsMercadoLivre/?value=/alimentos-bebidas/bebidas/">
-                        Begudes (MercadoLivre)
+                        Bebidas (MercadoLivre)
                     </a>
 
-                    <a class="category-button" href="{{url}}productsMercadoLivre/?value=/alimentos-bebidas/congelados/">
-                        Congelats (MercadoLivre)
+                    <a class="category-button" href="{{urlMercadoLivre}}productsMercadoLivre/?value=/alimentos-bebidas/congelados/">
+                        Congelados (MercadoLivre)
                     </a>
                 </div>
             </section>

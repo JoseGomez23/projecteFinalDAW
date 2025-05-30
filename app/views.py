@@ -11,10 +11,12 @@ from django.conf import settings
 import os
 from datetime import datetime, timedelta
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from dotenv import load_dotenv
 
 from django.utils.http import url_has_allowed_host_and_scheme
 import unicodedata
 # Create your views here.
+
 
 
 
@@ -81,7 +83,6 @@ def recolectar_productos(request):
 
         #print(productos)
                     
-        # Añadir fecha de actualización al JSON
         next_update = (datetime.now() + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
         data_to_save = {
             "fecha_actualizacion": next_update.strftime("%Y-%m-%d %H:%M:%S"),
@@ -117,8 +118,8 @@ def recolectar_productos(request):
     return render(request, "indexLogat.html", {"categories": categorias, "title": title, "groups": group, "urlMercadoLivre": urlMercadoLivre})
 
 
-def searchProducts(request, search_query, group_id=0):
-    # Cargar productos desde el JSON local
+def searchProducts(request, search_query, group_id=""):
+
     static_path = os.path.join(settings.BASE_DIR, 'static', 'products.json')
     try:
         with open(static_path, 'r', encoding='utf-8') as f:
@@ -138,19 +139,25 @@ def searchProducts(request, search_query, group_id=0):
         if search_normalized in normalize(producto.get("name", ""))
     ]
     
+    print(group_id)
     
     if request.user.is_authenticated and group_id:
         
         favorites = FavoriteProducts.getFavorites(request.user, group_id=group_id)
         shopingList = ShoppingCartList.getShoppingList(request.user, group_id=group_id)
         qnty = ShoppingCartList.getQty(request.user, group_id=group_id)
+    elif request.user.is_authenticated:
+        favorites = FavoriteProducts.getFavorites(request.user, group_id=None)
+        shopingList = ShoppingCartList.getShoppingList(request.user, group_id=None)
+        qnty = ShoppingCartList.getQty(request.user, group_id=None)
     else:
         favorites = []
         shopingList = []
         qnty = []
+        
+    if len(search_query) <= 2:
+        resultados = []
     
-
-    # 👇 Aquí decides si devolver JSON o renderizar HTML
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({
             "resultados": resultados,
@@ -231,11 +238,13 @@ def categoriesMercadoLivre(request, group_id=""):
         shopingList = []
     
     if upd < timezone.now():
-    
+        
+        load_dotenv()
+        
         url = f"https://mercado-libre7.p.rapidapi.com/listings_for_category?category_url=https://lista.mercadolivre.com.br{category_id}&sort_by=relevance&page_num=1"
 
         headers = {
-            "x-rapidapi-key": "1a19d39feemshb2b10cd076a4975p1530fbjsnc80df8b13690",
+            "x-rapidapi-key": os.getenv("x-rapidapi-key"),
             "x-rapidapi-host": "mercado-libre7.p.rapidapi.com"
         }
         
@@ -409,6 +418,7 @@ def products(request, categoria_id, group_id=""):
        
         if request.user.is_authenticated:
             group = UsuarioGrupo.getGroup(group_id)
+            group = [group]
             favorites = FavoriteProducts.getFavorites(request.user, group_id=group_id)
             shopingList = ShoppingCartList.getShoppingList(request.user, group_id=group_id)
             qnty = ShoppingCartList.getQty(request.user, group_id=group_id)
@@ -535,6 +545,9 @@ def addFavorite(request, product_id, group_id=""):
 
 @login_required
 def showFavorites(request, group_id=""):
+    
+   
+    
     if group_id:
         favorites = FavoriteProducts.getAllFavorites(None, group_id=group_id)
         shopingList = ShoppingCartList.getShoppingList(None, group_id=group_id)
@@ -543,6 +556,8 @@ def showFavorites(request, group_id=""):
         favorites = FavoriteProducts.getAllFavorites(request.user, group_id=None)
         shopingList = ShoppingCartList.getShoppingList(request.user, group_id=None)
         qnty = ShoppingCartList.getQty(request.user, group_id=None)
+        
+    
 
     products = [
         {
@@ -569,6 +584,15 @@ def showFavorites(request, group_id=""):
 
     userGroups = UsuarioGrupo.getGroups(request.user)
     group = [userGroup.group for userGroup in userGroups]
+    
+    print(group_id)
+    if group_id and group_id != "user":
+        userIsInGroup = UsuarioGrupo.userInGroup(request.user, group_id)
+        if not userIsInGroup:
+            return render(request, "favorites.html", {"error": "No puedes ver los favoritos de otros grupos", "groups": group})
+    
+    
+    
 
     return render(request, "favorites.html", {
         "products": products_page,

@@ -18,6 +18,9 @@
             <header>
                 <h1>Subcategorias</h1>
             </header>
+
+            <a href="{% url 'indexLogat' %}" class="tornarButton">Volver</a>
+
             <div class="categories-container">
                 {% for category in categories %}
                     <a href="{% url 'products' category.id %}" class="category-button">

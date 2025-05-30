@@ -17,15 +17,16 @@
             <a href="{% url 'index' %}" class="logoweb">
             <img class="logoweb" src="{% static 'logo.png' %}" alt="Logo de la web">
             </a>
-    
-            <button class="menuToggle" onclick="toggleMenu()">☰</button>
-    
+            
+             <button class="menuToggle" onclick="toggleMergedMenu()">☰</button>
+            
             <div class="navContent" id="navContent">
                 {% if user.is_authenticated %}
                     <h2 class="topbarUsername">Bienvenido, {{ user.username }}.</h2>
     
-                    <a href="{% url 'indexLogat' %}"><img alt="Inici" class="homeButton" src="{% static 'casa.png' %}"></a>
+                    <a href="{% url 'index' %}"><img alt="Inicio" class="homeButton" src="{% static 'casa.png' %}"></a>
                     <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
+                    
     
                     <div class="userThings">
                         <div>
@@ -44,6 +45,7 @@
                     </div>
                 {% else %}
                     <a href="{% url 'index' %}"><img class="homeButton" src="{% static 'casa.png' %}"></a>
+                    <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
                     <div class="divAuth">
                         <a class="loginBtn" href="{% url 'login' %}">Iniciar sesión</a>
                         <a class="registerBtn" href="{% url 'register' %}">Registrarse</a>
@@ -55,18 +57,13 @@
         
     </nav>
 
-    <button class="sidebarToggle" onclick="toggleSidebar()">☰</button>
-
-<!-- Capa oscura para cerrar el menú -->
-<div class="sidebarOverlay" onclick="toggleSidebar()" id="sidebarOverlay"></div>
-<button class="hamburger" onclick="toggleTopbarMenu()">☰</button>
+    
 
 <div class="horizontalMenu" id="horizontalMenu">
     <a href="{% url 'history' %}"><img src="{% static 'historial.png' %}" alt="Historial"><span>Historial</span></a>
     <a href="{% url 'groups' %}"><img src="{% static 'grupo.png' %}" alt="Grups"><span>Grupos</span></a>
     <a href="{% url 'favorites' %}"><img src="{% static 'corazon.png' %}" alt="Favorits"><span>Favoritos</span></a>
 </div>
-
 
 <nav>
     <div class="sidebar" id="sidebar">  
@@ -95,63 +92,62 @@
     </div>
 </nav>
 
+
+
+
+<div id="mergedMenu" class="mergedMenu">
+    
+    <div class="userThings">
+        <a href="{% url 'history' %}">
+            <img class="logos" src="{% static 'historial.png' %}" alt="historial de compra">
+        </a>
+        <a  href="{% url 'groups' %}">
+            <img class="logos" src="{% static 'grupo.png' %}" alt="Grups dels usuaris">
+        </a>
+        <a  href="{% url 'favorites' %}">
+            <img class="logos" src="{% static 'corazon.png' %}" alt="Productes Favorits">
+        </a>
+    </div>
+    <div class="userThings">
+        {% if user.is_authenticated %}
+    
+                <a href="{% url 'index' %}"><img alt="Inicio" class="homeButton" src="{% static 'casa.png' %}"></a>
+                <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
+
+                <div class="userThings">
+                    <div>
+                        <a href="{% url 'shoppingCartList' %}">
+                            <img class="shoppingCart" src="{% static 'carrito.png' %}">
+                        </a>
+                    </div>
+
+                    <div class="userDropdown">
+                        <img alt="Imatge de l'usuari" src="{% static 'user.png' %}" class="userImage" id="userImage" tabindex="0" aria-haspopup="true" aria-expanded="false" onfocus="toggleDropdown()" onblur="delayedCloseDropdown()">
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <a tabindex="0" href="{% url 'configuration' %}">Editar perfil</a>
+                            <a tabindex="0" href="{% url 'logout' %}">Cerrar sessión</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'index' %}"><img class="homeButton" src="{% static 'casa.png' %}"></a>
+                <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
+                <div class="divAuth">
+                    <a class="loginBtn" href="{% url 'login' %}">Iniciar sesión</a>
+                    <a class="registerBtn" href="{% url 'register' %}">Registrarse</a>
+                </div>
+            {% endif %} 
+    </div>
+</div>
+
+
     <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('sidebarOpen');
-            document.getElementById('sidebarOverlay').classList.toggle('visible');
-        }
 
-        function toggleDropdown() {
-            const dropdownMenu = document.getElementById('dropdownMenu');
-            dropdownMenu.style.display = 'block';
-        }
-
-        function delayedCloseDropdown() {
-            setTimeout(() => {
-                const active = document.activeElement;
-                const dropdownMenu = document.getElementById('dropdownMenu');
-                if (!dropdownMenu.contains(active)) {
-                    dropdownMenu.style.display = 'none';
-                }
-            }, 100);
-        }
-
-        function toggleMenu() {
-            const menu = document.getElementById('navContent');
-            menu.classList.toggle('show');
-        }
-
-        function toggleTopbarMenu() {
-            const menu = document.getElementById("horizontalMenu");
+        function toggleMergedMenu() {
+            const menu = document.getElementById("mergedMenu");
             menu.classList.toggle("show");
-            if (menu.classList.contains("show")) {
-                menu.style.display = 'flex';
-            } else {
-                menu.style.display = 'none';
-            }
         }
 
-        function checkOrientationAndToggleMenu() {
-            const hamburger = document.querySelector(".hamburger");
-            const sidebar = document.querySelector(".sidebar");
-            const menu = document.getElementById("horizontalMenu");
-
-            if (window.innerHeight < window.innerWidth && window.innerHeight < 500) {
-                
-                hamburger.style.display = "block";
-                if (sidebar) sidebar.style.display = "none";
-            } else {
-                
-                hamburger.style.display = "none";
-                if (sidebar) sidebar.style.display = "flex";
-                if (menu) menu.style.display = "none";
-                if (menu) menu.classList.remove("show");
-            }
-        }
-
-        
-        window.addEventListener("load", checkOrientationAndToggleMenu);
-        window.addEventListener("resize", checkOrientationAndToggleMenu);
     </script>
 
     {% block content %}

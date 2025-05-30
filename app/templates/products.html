@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productes</title>
+    <title>Productos</title>
 </head>
 <body>
     {% extends 'layouts/navbars.html' %}
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'css/products.css' %}">
     <main>
     <div class="content">
-        <h1>Productes</h1>
+        <h1>Productos</h1>
         
         {% if subcategory_id %}
             <a class="tornarButton" href="{% url 'subcategories' subcategory_id %}">Volver</a>
