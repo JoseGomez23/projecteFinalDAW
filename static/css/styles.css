@@ -97,7 +97,8 @@ input{
 }
 
 button{
-
+    font-family: monospace, sans-serif;
+    font-size: 13px;
     width: 80%;
     margin: 0.5rem;
     padding: 0.5rem;
@@ -108,8 +109,14 @@ button{
     cursor: pointer;
 }
 
+.perror{
+    color: red;
+}
+
 .authButtons {
 
+    font-size: small;
+    font-family: monospace, sans-serif; 
     border-radius: 5px;
     background-color: #4CAF50;
     padding: 0.5rem;

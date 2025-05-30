@@ -591,9 +591,6 @@ def showFavorites(request, group_id=""):
         if not userIsInGroup:
             return render(request, "favorites.html", {"error": "No puedes ver los favoritos de otros grupos", "groups": group})
     
-    
-    
-
     return render(request, "favorites.html", {
         "products": products_page,
         "shopingList": shopingList,

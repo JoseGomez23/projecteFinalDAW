@@ -39,6 +39,7 @@ def register(request):
             r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$'
         )
 
+        
         existsUser = getUserByEmail(request.POST['email'])
         
         if not password_regex.match(request.POST['password']):
@@ -87,15 +88,17 @@ def login(request):
             
         else:
             
-            user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+            user = authenticate(request, username=request.POST['username'])
+            userPdw = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+            print(userPdw)  
             
-            if user is None:
-            
+
+            if userPdw is None:
                 return render(request, 'login.html', {
-                    
                     'form': Login(),
-                    'error': 'Correo electrónico o contraseña incorrectos'
+                    'error': 'Contraseña o usario incorrecto'
                 })
+            
             else:
                 
                 user = getUser(request.POST['username'])
@@ -113,7 +116,7 @@ def login(request):
                     token_str = str(uuid.uuid4())
                     exp_date = datetime.now() + timedelta(hours=1)
 
-                    apiToken = ApiToken.objects.create(
+                    apiToken = ApiToken.createToken(
                         user=user,
                         token=token_str,
                         exp_date=exp_date
@@ -209,10 +212,12 @@ def groups(request, group_id):
             send_mail(
                 '¡Bienvenido al grupo!',
                 f'Has sido invitado a unirte al grupo {group.name} (ID: {group.id}). '
-                f'Haz clic en el siguiente enlace para aceptar la invitación: {invite_url}',
+                f'Haz clic aquí para aceptar la invitación: <a href="{invite_url}">Haz clic aquí</a>',
                 settings.DEFAULT_FROM_EMAIL,
                 [user.email],
                 fail_silently=False,
+                html_message=f'Has sido invitado a unirte al grupo {group.name} (ID: {group.id}). '
+                             f'Haz clic aquí para aceptar la invitación: <a href="{invite_url}">Haz clic aquí</a>',
             )
 
             return render(request, 'addGroupMember.html', {

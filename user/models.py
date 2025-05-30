@@ -25,6 +25,13 @@ class ApiToken(models.Model):
             return token
         except ApiToken.DoesNotExist:
             return None
+        
+    def createToken(user, token, exp_date):
+        try:
+            api_token = ApiToken.objects.create(user=user, token=token, exp_date=exp_date)
+            return api_token
+        except ApiToken.DoesNotExist:
+            return None
     
 class PasswordToken(models.Model):
     token = models.CharField(max_length=100, verbose_name="Token de contrasenya")

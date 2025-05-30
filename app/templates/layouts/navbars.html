@@ -6,7 +6,7 @@
     <title>Barra de Navegación</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/navbars.css' %}">
-    <link rel="icon" href="{% static 'sup.ico' %}" type="image/x-icon">
+<link rel="icon" type="image/png" href="https://vglxraahlckdanallbfi.supabase.co/storage/v1/object/public/book-covers//9ee148e9-f446-4eab-a005-983ee595bc8e.png">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
 </head>
@@ -98,6 +98,10 @@
 <div id="mergedMenu" class="mergedMenu">
     
     <div class="userThings">
+
+        <a href="{% url 'index' %}"><img alt="Inicio" class="homeButton" src="{% static 'casa.png' %}"></a>
+        <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
+
         <a href="{% url 'history' %}">
             <img class="logos" src="{% static 'historial.png' %}" alt="historial de compra">
         </a>
@@ -111,32 +115,28 @@
     <div class="userThings">
         {% if user.is_authenticated %}
     
-                <a href="{% url 'index' %}"><img alt="Inicio" class="homeButton" src="{% static 'casa.png' %}"></a>
-                <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
+            <div class="userThings">
+                <div>
+                    <a href="{% url 'shoppingCartList' %}">
+                        <img class="shoppingCart" src="{% static 'carrito.png' %}">
+                    </a>
+                </div>
 
-                <div class="userThings">
-                    <div>
-                        <a href="{% url 'shoppingCartList' %}">
-                            <img class="shoppingCart" src="{% static 'carrito.png' %}">
-                        </a>
-                    </div>
-
-                    <div class="userDropdown">
-                        <img alt="Imatge de l'usuari" src="{% static 'user.png' %}" class="userImage" id="userImage" tabindex="0" aria-haspopup="true" aria-expanded="false" onfocus="toggleDropdown()" onblur="delayedCloseDropdown()">
-                        <div class="dropdown-menu" id="dropdownMenu">
-                            <a tabindex="0" href="{% url 'configuration' %}">Editar perfil</a>
-                            <a tabindex="0" href="{% url 'logout' %}">Cerrar sessión</a>
-                        </div>
+                <div class="userDropdown">
+                    <img alt="Imatge de l'usuari" src="{% static 'user.png' %}" class="userImage" id="userImage" tabindex="0" aria-haspopup="true" aria-expanded="false" onfocus="toggleDropdown()" onblur="delayedCloseDropdown()">
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a tabindex="0" href="{% url 'configuration' %}">Editar perfil</a>
+                        <a tabindex="0" href="{% url 'logout' %}">Cerrar sessión</a>
                     </div>
                 </div>
-            {% else %}
-                <a href="{% url 'index' %}"><img class="homeButton" src="{% static 'casa.png' %}"></a>
-                <a href="{% url 'map' %}"><img alt="Mapa" class="homeButton" src="{% static 'mapa.png' %}"></a>
-                <div class="divAuth">
-                    <a class="loginBtn" href="{% url 'login' %}">Iniciar sesión</a>
-                    <a class="registerBtn" href="{% url 'register' %}">Registrarse</a>
-                </div>
-            {% endif %} 
+            </div>
+        {% else %}
+            
+            <div class="divAuth">
+                <a class="loginBtn" href="{% url 'login' %}">Iniciar sesión</a>
+                <a class="registerBtn" href="{% url 'register' %}">Registrarse</a>
+            </div>
+        {% endif %} 
     </div>
 </div>
 

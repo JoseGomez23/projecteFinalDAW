@@ -39,7 +39,9 @@
     <div class="divContent">
         <h1>Iniciar sesión</h1>
 
-        {{error}}
+        {% if error %}
+            <p class="perror">{{error}}</p>
+        {% endif %}
 
         <form method="post">
 

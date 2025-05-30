@@ -20,12 +20,15 @@
                 <h1>Categorias</h1>
             </header>
             {% if user.is_authenticated %}
-                <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
-                    <option value="user">Mi perfil</option>
-                    {% for group in groups %}
-                    <option value="{{ group.id }}">{{ group.name }}</option>
-                    {% endfor %}
-                </select>
+                <div class="groupsDropdownContainer">
+                    <select class="groupsDropdown" id="groupsDropdown" onchange="refreshGroupProducts(this.value)">
+                        <option value="user">Mi perfil</option>
+                        {% for group in groups %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <p>← Selecciona perfil(Por defecto será el personal)</p>
+                </div>
             {% endif %}
             <br>
             <br>

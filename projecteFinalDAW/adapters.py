@@ -4,8 +4,10 @@ from allauth.exceptions import ImmediateHttpResponse
 from django.contrib.auth import get_user_model, login as auth_login
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from datetime import datetime, timedelta
 from app.models import getUserByEmail
-
+from user.models import ApiToken
+import uuid
 User = get_user_model()
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
@@ -19,9 +21,24 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             if user:
                 sociallogin.connect(request, user)
                 user.backend = 'django.contrib.auth.backends.ModelBackend'
+                
+                apiToken = ApiToken.getApiToken(user)
+                
+                if apiToken:
+                    
+                    apiToken.token = str(uuid.uuid4())
+                    apiToken.exp_date = datetime.now() + timedelta(hours=1)
+                    apiToken.save()
+                
+                else:
+                    
+                    token_str = str(uuid.uuid4())
+                    exp_date = datetime.now() + timedelta(hours=1)
+                    
+                    ApiToken.createToken(user, token=token_str, exp_date=exp_date)
+                
                 auth_login(request, user)
                 raise ImmediateHttpResponse(HttpResponseRedirect(reverse('index')))
-            # Si el usuario no existe, dejamos que Allauth continúe el flujo normal de registro.
     
     def is_auto_signup_allowed(self, request, sociallogin):
         return True
