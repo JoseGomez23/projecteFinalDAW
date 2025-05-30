@@ -96,7 +96,7 @@ def login(request):
             if userPdw is None:
                 return render(request, 'login.html', {
                     'form': Login(),
-                    'error': 'Contraseña o usario incorrecto'
+                    'error': 'Contraseña o usuario incorrecto'
                 })
             
             else:

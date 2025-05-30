@@ -67,6 +67,10 @@ body {
     color: red;
 }
 
+.perror{
+    color: red;
+}
+
 .tornarButton {
     display: inline-block;
     padding: 5px 10px;

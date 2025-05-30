@@ -95,3 +95,13 @@
 .afix:hover{
     cursor: pointer;
 }
+
+.searchBar {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    text-align: center;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
